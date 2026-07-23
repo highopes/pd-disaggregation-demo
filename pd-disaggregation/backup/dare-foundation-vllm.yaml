@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dare-foundation-vllm
+  namespace: ai-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm
+      model: foundation-sec-8b-chinese
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vllm
+        model: foundation-sec-8b-chinese
+    spec:
+      containers:
+      - name: vllm
+        image: vllm/vllm-openai:v0.9.0.1
+        args:
+        - --model=sds-ai/Foundation-Sec-8B-Chinese-Chat
+        - --dtype=float16
+        - --gpu-memory-utilization=0.9
+        - --trust-remote-code
+        - --max-model-len=4096
+        env:
+        - name: HF_HOME
+          value: /root/.cache/huggingface
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        resources:
+          limits:
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: hf-cache
+          mountPath: /root/.cache/huggingface
+      volumes:
+      - name: hf-cache
+        persistentVolumeClaim:
+          claimName: hf-cache-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dare-foundation-openai
+  namespace: ai-serving
+spec:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  selector:
+    app: vllm
+    model: foundation-sec-8b-chinese
+  ports:
+  - port: 8000
+    targetPort: 8000
+    nodePort: 30082
+    protocol: TCP

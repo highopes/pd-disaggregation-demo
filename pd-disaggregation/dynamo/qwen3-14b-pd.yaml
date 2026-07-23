@@ -1,0 +1,234 @@
+apiVersion: nvidia.com/v1alpha1
+kind: DynamoGraphDeployment
+metadata:
+  name: qwen3-14b-pd
+  namespace: ai-serving
+  labels:
+    app.kubernetes.io/name: qwen3-14b-pd
+    app.kubernetes.io/version: "1.2.1"
+spec:
+  backendFramework: vllm
+  pvcs:
+    - name: hf-cache-pvc
+      create: false
+      size: "0"
+  services:
+    Frontend:
+      componentType: frontend
+      replicas: 1
+      labels:
+        app: dynamo-qwen-frontend
+        model: qwen3-14b-fp8
+      extraPodMetadata:
+        labels:
+          app: dynamo-qwen-frontend
+          model: qwen3-14b-fp8
+      extraPodSpec:
+        mainContainer:
+          image: nvcr.io/nvidia/ai-dynamo/dynamo-frontend:1.2.1
+          imagePullPolicy: IfNotPresent
+          workingDir: /workspace/examples/backends/vllm
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - >-
+              exec python3 -m dynamo.frontend
+              --http-port 8000
+              --kv-cache-block-size 128
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+
+    VllmPrefillWorker:
+      componentType: worker
+      subComponentType: prefill
+      replicas: 1
+      labels:
+        app: dynamo-qwen-prefill
+        model: qwen3-14b-fp8
+      extraPodMetadata:
+        labels:
+          app: dynamo-qwen-prefill
+          model: qwen3-14b-fp8
+          dynamo-role: prefill
+      resources:
+        requests:
+          gpu: "1"
+          custom:
+            rdma/ib: "1"
+        limits:
+          gpu: "1"
+          custom:
+            rdma/ib: "1"
+      sharedMemory:
+        size: 8Gi
+      volumeMounts:
+        - name: hf-cache-pvc
+          mountPoint: /root/.cache/huggingface
+      envs: &worker-env
+        - name: HF_HOME
+          value: /root/.cache/huggingface
+        - name: UCX_TLS
+          value: rc_x,rc,cuda_copy,cuda_ipc
+        - name: UCX_NET_DEVICES
+          value: mlx5_0:1
+        - name: UCX_IB_ADDR_TYPE
+          value: eth
+        - name: UCX_IB_GID_INDEX
+          value: "3"
+        - name: UCX_IB_TRAFFIC_CLASS
+          value: "106"
+        - name: UCX_RNDV_SCHEME
+          value: get_zcopy
+        - name: UCX_RNDV_THRESH
+          value: "0"
+        - name: UCX_IB_REG_METHODS
+          value: rcache
+        - name: UCX_RCACHE_MAX_UNRELEASED
+          value: "1024"
+        - name: UCX_LOG_LEVEL
+          value: info
+        - name: NIXL_LOG_LEVEL
+          value: INFO
+        - name: DYN_SYSTEM_PORT
+          value: "19191"
+      extraPodSpec:
+        hostNetwork: true
+        dnsPolicy: ClusterFirstWithHostNet
+        nodeSelector:
+          kubernetes.io/hostname: csco-k8s-01
+        terminationGracePeriodSeconds: 60
+        mainContainer:
+          image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+          imagePullPolicy: IfNotPresent
+          workingDir: /workspace/examples/backends/vllm
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - >-
+              ulimit -l unlimited && exec python3 -m dynamo.vllm
+              --model Qwen/Qwen3-14B-FP8
+              --served-model-name Qwen/Qwen3-14B-FP8
+              --dtype auto
+              --tensor-parallel-size 1
+              --gpu-memory-utilization 0.85
+              --max-model-len 8192
+              --trust-remote-code
+              --enforce-eager
+              --no-enable-prefix-caching
+              --block-size 128
+              --disaggregation-mode prefill
+              --kv-transfer-config '{"kv_connector":"NixlConnector","kv_role":"kv_both"}'
+          startupProbe:
+            httpGet:
+              path: /live
+              port: 19191
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 720
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 19191
+            timeoutSeconds: 4
+            periodSeconds: 5
+            failureThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 19191
+            timeoutSeconds: 4
+            periodSeconds: 10
+            failureThreshold: 3
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add:
+                - IPC_LOCK
+                - SYS_RESOURCE
+
+    VllmDecodeWorker:
+      componentType: worker
+      subComponentType: decode
+      replicas: 1
+      labels:
+        app: dynamo-qwen-decode
+        model: qwen3-14b-fp8
+      extraPodMetadata:
+        labels:
+          app: dynamo-qwen-decode
+          model: qwen3-14b-fp8
+          dynamo-role: decode
+      resources:
+        requests:
+          gpu: "1"
+          custom:
+            rdma/ib: "1"
+        limits:
+          gpu: "1"
+          custom:
+            rdma/ib: "1"
+      sharedMemory:
+        size: 8Gi
+      volumeMounts:
+        - name: hf-cache-pvc
+          mountPoint: /root/.cache/huggingface
+      envs: *worker-env
+      extraPodSpec:
+        hostNetwork: true
+        dnsPolicy: ClusterFirstWithHostNet
+        nodeSelector:
+          kubernetes.io/hostname: csco-k8s-02
+        terminationGracePeriodSeconds: 60
+        mainContainer:
+          image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+          imagePullPolicy: IfNotPresent
+          workingDir: /workspace/examples/backends/vllm
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - >-
+              ulimit -l unlimited && exec python3 -m dynamo.vllm
+              --model Qwen/Qwen3-14B-FP8
+              --served-model-name Qwen/Qwen3-14B-FP8
+              --dtype auto
+              --tensor-parallel-size 1
+              --gpu-memory-utilization 0.85
+              --max-model-len 8192
+              --trust-remote-code
+              --enforce-eager
+              --no-enable-prefix-caching
+              --block-size 128
+              --disaggregation-mode decode
+              --kv-transfer-config '{"kv_connector":"NixlConnector","kv_role":"kv_both"}'
+          startupProbe:
+            httpGet:
+              path: /live
+              port: 19191
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 720
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 19191
+            timeoutSeconds: 4
+            periodSeconds: 5
+            failureThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 19191
+            timeoutSeconds: 4
+            periodSeconds: 10
+            failureThreshold: 3
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add:
+                - IPC_LOCK
+                - SYS_RESOURCE

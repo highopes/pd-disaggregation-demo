@@ -1,0 +1,32 @@
+global:
+  nats:
+    install: true
+  etcd:
+    install: true
+  grove:
+    install: true
+  kai-scheduler:
+    install: true
+
+dynamo-operator:
+  discoveryBackend: etcd
+
+etcd:
+  image:
+    repository: bitnamilegacy/etcd
+    tag: 3.5.18-debian-12-r5
+  global:
+    security:
+      allowInsecureImages: true
+  replicaCount: 1
+  persistence:
+    enabled: true
+    size: 1Gi
+
+nats:
+  config:
+    jetstream:
+      fileStore:
+        pvc:
+          enabled: true
+          size: 2Gi

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Set DYNAMO_API_KEY only in the calling shell. Do not commit its value.
+: "${DYNAMO_API_KEY:?set DYNAMO_API_KEY in the current shell}"
+
+kubectl -n ai-serving create secret generic vllm-api-token \
+  --from-literal="auth-header=Bearer ${DYNAMO_API_KEY}" \
+  --dry-run=client -o yaml | kubectl apply -f -

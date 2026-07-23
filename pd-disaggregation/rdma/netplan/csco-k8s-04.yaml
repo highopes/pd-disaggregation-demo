@@ -1,0 +1,14 @@
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    ens65np1:
+      match:
+        macaddress: a0:88:c2:34:e7:f7
+      dhcp4: false
+      dhcp6: false
+      addresses:
+      - 172.31.230.114/24
+      mtu: 9000
+      optional: true
+      link-local: []

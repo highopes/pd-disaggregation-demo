@@ -1,0 +1,93 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: vllm-token-from-lb
+  namespace: ai-serving
+spec:
+  endpointSelector:
+    matchLabels:
+      app: vllm
+  ingress:
+  - fromCIDR:
+    - 192.168.200.8/32
+    toPorts:
+    - ports:
+      - port: "8000"
+        protocol: TCP
+      rules:
+        http:
+        - path: /v1/.*
+          headerMatches:
+          - name: Authorization
+            secret:
+              name: vllm-api-token
+              namespace: ai-serving
+  - fromEntities:
+    - cluster
+  - fromCIDRSet:
+    - cidr: 0.0.0.0/0
+      except:
+      - 192.168.200.8/32
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: '*'
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: coredns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: '*'
+  - toEntities:
+    - all
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: vllm-http-visibility
+  namespace: ai-serving
+spec:
+  enableDefaultDeny:
+    ingress: false
+    egress: false
+  endpointSelector:
+    matchLabels:
+      app: vllm
+  ingress:
+  - fromEntities:
+    - cluster
+    toPorts:
+    - ports:
+      - port: "8000"
+        protocol: TCP
+      rules:
+        http:
+        - {}
+  - fromCIDRSet:
+    - cidr: 0.0.0.0/0
+      except:
+      - 192.168.200.8/32
+    toPorts:
+    - ports:
+      - port: "8000"
+        protocol: TCP
+      rules:
+        http:
+        - {}

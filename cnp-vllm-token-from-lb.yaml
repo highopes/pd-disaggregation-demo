@@ -1,0 +1,67 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: vllm-token-from-lb
+  namespace: ai-serving
+spec:
+  endpointSelector:
+    matchLabels:
+      app: vllm
+
+  ingress:
+  # 1. Traffic from F5: must carry correct Authorization header
+  - fromCIDR:
+    - 192.168.200.8/32   # REPLACE with your LB SNAT IP or SNAT pool CIDR
+    toPorts:
+    - ports:
+      - port: "8000"
+        protocol: TCP
+      rules:
+        http:
+        - path: "/v1/.*"
+          headerMatches:
+          - name: "Authorization"
+            secret:
+              name: vllm-api-token
+              namespace: ai-serving
+
+  # 2. Traffic from inside the Kubernetes cluster (any Pod) - no token required
+  - fromEntities:
+    - cluster
+
+  # 3. Traffic from DC internal IP ranges (not including F5 IP) - no token required
+  - fromCIDRSet:
+    - cidr: 0.0.0.0/0      # REPLACE with your DC internal CIDR
+      except:
+      - 192.168.200.8/32     # exclude LB IP so it only hits the first rule
+
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: "*"
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: coredns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: "*"
+  - toEntities:
+    - all
+

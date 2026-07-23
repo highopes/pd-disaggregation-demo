@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vllm-foundation-instruct-openai
+  namespace: ai-serving
+  labels:
+    release: fsomonitor
+spec:
+  namespaceSelector:
+    matchNames:
+      - ai-serving
+  selector:
+    matchLabels:
+      app: foundation-instruct-openai
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

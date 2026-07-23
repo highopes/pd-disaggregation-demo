@@ -1,0 +1,48 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: vllm-http-visibility
+  namespace: ai-serving
+spec:
+  endpointSelector:
+    matchLabels:
+      app: vllm
+
+  # This policy is intended for visibility; it should not be relied on to enforce default-deny.
+  enableDefaultDeny:
+    ingress: false
+    egress: false
+
+  ingress:
+  # Cluster-internal sources
+  - fromEntities:
+    - cluster
+    toPorts:
+    - ports:
+#      - port: "80"
+#        protocol: TCP
+#      - port: "8080"
+#        protocol: TCP
+      - port: "8000"
+        protocol: TCP
+      rules:
+        http:
+        - {}
+
+  # Non-F5 sources (including DC/internal ranges); exclude F5 SNAT IP to avoid bypassing the token rule.
+  - fromCIDRSet:
+    - cidr: 0.0.0.0/0
+      except:
+      - 192.168.200.8/32
+    toPorts:
+    - ports:
+#      - port: "80"
+#        protocol: TCP
+#      - port: "8080"
+#        protocol: TCP
+      - port: "8000"
+        protocol: TCP
+      rules:
+        http:
+        - {}
+

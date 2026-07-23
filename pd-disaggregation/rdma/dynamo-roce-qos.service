@@ -1,0 +1,12 @@
+[Unit]
+Description=Dynamo RoCE QoS/PFC configuration for the ConnectX-7 PF
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/dynamo-roce-qos.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

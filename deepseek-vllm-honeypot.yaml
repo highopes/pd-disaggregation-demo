@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: deepseek-vllm-script
+  namespace: ai-serving
+data:
+  server.py: |
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    import subprocess
+    import shutil
+
+    HOST = "0.0.0.0"
+    PORT = 8080
+
+    def run_demo_exec():
+        exe = shutil.which("printf") or shutil.which("echo") or "/bin/echo"
+        if exe.endswith("printf"):
+            args = [exe, "%s", "stratum+tcp://pool.example.com:3333"]
+        else:
+            args = [exe, "stratum+tcp://pool.example.com:3333"]
+        subprocess.run(args, check=False)
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, fmt, *args):
+            return
+
+        def do_GET(self):
+            client_ip, client_port = self.client_address
+            path = self.path.split("?", 1)[0]
+
+            if path == "/cryptominer":
+                run_demo_exec()
+                body = f"ok; simulated exec for tetragon alert; client={client_ip}:{client_port}\n"
+                code = 200
+            elif path == "/health":
+                body = "ok\n"
+                code = 200
+            else:
+                body = "try GET /cryptominer or /health\n"
+                code = 200
+
+            self.send_response(code)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(body.encode("utf-8"))
+
+    def main():
+        httpd = HTTPServer((HOST, PORT), Handler)
+        httpd.serve_forever()
+
+    if __name__ == "__main__":
+        main()
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepseek-vllm
+  namespace: ai-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deepseek-vllm
+  template:
+    metadata:
+      labels:
+        app: deepseek-vllm
+    spec:
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: deepseek-vllm
+          image: python:3.12-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          command: ["python", "/app/server.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /app
+              readOnly: true
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: script
+          configMap:
+            name: deepseek-vllm-script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deepseek-vllm
+  namespace: ai-serving
+spec:
+  type: NodePort
+  selector:
+    app: deepseek-vllm
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30444
+

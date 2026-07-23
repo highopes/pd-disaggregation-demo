@@ -1,0 +1,14 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: from-middleware-20260102134500
+  namespace: ai-serving
+spec:
+  endpointSelector: {}
+  enableDefaultDeny:
+    ingress: false
+    egress: false
+  ingressDeny:
+  - fromCIDR:
+    - 192.168.160.185/32
+

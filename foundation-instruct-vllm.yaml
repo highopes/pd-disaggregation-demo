@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foundation-instruct-vllm
+  namespace: ai-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm
+      model: foundation-sec-8b-instruct
+  template:
+    metadata:
+      labels:
+        app: vllm
+        model: foundation-sec-8b-instruct
+    spec:
+      containers:
+      - name: vllm
+        image: vllm/vllm-openai:v0.9.0.1
+        args:
+          - --model=fdtn-ai/Foundation-Sec-8B-Instruct
+          - --dtype=bfloat16
+          - --gpu-memory-utilization=0.9
+          - --trust-remote-code
+          - --max-model-len=4096
+          - --chat-template=/etc/vllm/chat_template.jinja
+          - --download-dir=/root/.cache/huggingface          # 明确下载到PVC
+          - --port=8000                                      # （可选）显式端口
+        env:
+          - name: HF_HOME
+            value: /root/.cache/huggingface
+          - name: HF_HUB_ENABLE_HF_TRANSFER                   # 禁用 hf_transfer，避免翻墙代理过载
+            value: "0"
+          # 如需代理或超时，可按需加：
+          # - name: HF_HUB_OFFLINE
+          #   value: "0"
+          # - name: HF_HUB_TIMEOUT
+          #   value: "60"
+        ports:
+          - containerPort: 8000
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+        volumeMounts:
+          - name: hf-cache
+            mountPath: /root/.cache/huggingface
+          - name: chat-template
+            mountPath: /etc/vllm
+            readOnly: true
+        readinessProbe:                # 就绪探针决定是否对外服务
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 60        # 给下载&加载权重充足时间
+      volumes:
+        - name: hf-cache
+          persistentVolumeClaim:
+            claimName: hf-cache-pvc
+        - name: chat-template
+          configMap:
+            name: foundation-instruct-chat-template
+            items:
+              - key: chat_template.jinja
+                path: chat_template.jinja
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foundation-instruct-openai
+  namespace: ai-serving
+spec:
+  type: NodePort
+  selector:
+    app: vllm
+    model: foundation-sec-8b-instruct
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30083
+

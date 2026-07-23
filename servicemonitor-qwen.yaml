@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vllm-qwen-openai
+  namespace: ai-serving
+  labels:
+    release: fsomonitor
+spec:
+  namespaceSelector:
+    matchNames:
+      - ai-serving
+  selector:
+    matchLabels:
+      app: qwen-openai
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+
