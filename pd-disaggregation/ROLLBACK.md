@@ -2,6 +2,9 @@
 
 以下命令只在决定撤销本 Demo 时执行。备份文件不含 Secret 数据；`vllm-api-token` 与 `hf-cache-pvc` 始终复用现有集群对象。
 
+若只回退 MTU/固定节点/Local Service 改进而保留其余 Phase 1，请先参考
+`pd-disaggregation/backup/phase1-improvement-before.md`；完整回滚仍按下列顺序执行。
+
 ## 1. 移除 Dynamo 工作负载与平台
 
 ```bash

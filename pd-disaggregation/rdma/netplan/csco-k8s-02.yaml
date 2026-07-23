@@ -9,6 +9,6 @@ network:
       dhcp6: false
       addresses:
       - 172.31.230.112/24
-      mtu: 9000
+      mtu: 4200
       optional: true
       link-local: []

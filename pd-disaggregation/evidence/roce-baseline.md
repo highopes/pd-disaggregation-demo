@@ -2,12 +2,19 @@
 
 时间：2026-07-23（Asia/Shanghai）。测试路径为 `csco-k8s-01/ens65np0/mlx5_0:1` 到 `csco-k8s-02/ens65np1/mlx5_0:1`，backend IPv4 分别为 `172.31.230.111` 与 `172.31.230.112`。
 
-## L2/L3 与 MTU
+## 初始 L2/L3 与 MTU 基准
 
 - 双向普通 ICMP：各 3/3 成功，0% loss，平均 RTT 约 0.27–0.37 ms。
 - 双向 `8972` byte、DF ICMP：各 3/3 成功，0% loss。
 - 两端 netdev MTU 9000；Nexus 物理端口与 no-drop queue MTU 9216。
 - IPv4 RoCEv2 GID 位于 `mlx5_0` port 1、GID index 3。
+
+以上是 MTU 分层改进前的历史基准。最终配置已收紧为：ConnectX-7
+netdev 4200、Nexus RoCE no-drop qos-group 3 为 4200、Nexus 端口/default
+class 保持 9216；RDMA `active_mtu` 在改进前后均为 4096。
+
+改进后从 node1 到 node2 使用 payload 4172 的 DF ping（总 IPv4 frame
+4200）实测 3/3 成功、0% loss。
 
 ## RDMA write bandwidth
 

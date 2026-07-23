@@ -5,6 +5,8 @@ metadata:
   namespace: ai-serving
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: vllm
@@ -15,6 +17,8 @@ spec:
         app: vllm
         model: foundation-sec-8b-instruct
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: csco-k8s-04
       containers:
       - name: vllm
         image: vllm/vllm-openai:v0.9.0.1
@@ -25,7 +29,6 @@ spec:
           - --trust-remote-code
           - --max-model-len=4096
           - --chat-template=/etc/vllm/chat_template.jinja
-          - --download-dir=/root/.cache/huggingface          # 明确下载到PVC
           - --port=8000                                      # （可选）显式端口
         env:
           - name: HF_HOME
@@ -72,6 +75,7 @@ metadata:
   namespace: ai-serving
 spec:
   type: NodePort
+  externalTrafficPolicy: Local
   selector:
     app: vllm
     model: foundation-sec-8b-instruct
@@ -79,4 +83,3 @@ spec:
     - port: 8000
       targetPort: 8000
       nodePort: 30083
-

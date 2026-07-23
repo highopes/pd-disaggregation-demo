@@ -56,7 +56,15 @@ def main() -> int:
     for command in commands:
         child.sendline(command)
         try:
-            child.expect(r"# *$")
+            if command.lower() == "copy running-config startup-config":
+                # NX-OS renders a progress bar containing many '#'
+                # characters. Waiting on the generic privileged prompt can
+                # therefore return before the asynchronous disk write has
+                # finished. The final completion sentence is unambiguous.
+                child.expect(r"Copy complete\.")
+                child.expect(r"# *$")
+            else:
+                child.expect(r"# *$")
         except (pexpect.EOF, pexpect.TIMEOUT):
             print(f"FAILED {command}: prompt timeout", file=sys.stderr)
             failed = True

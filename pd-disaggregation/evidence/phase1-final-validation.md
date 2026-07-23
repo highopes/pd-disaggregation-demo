@@ -70,14 +70,23 @@ CRC、discard、priority-3 discard、buffer/congestion error 与 pause-storm err
 
 ## RoCE 与持久化
 
-- VLAN 2310；Linux MTU 9000；Nexus/no-drop queue MTU 9216；DSCP 26 → qos-group/priority 3；PFC cos 3。
-- jumbo DF ping（payload 8972）双向成功；`ib_write_bw` traffic class 106 实测 `109.85 Gbit/s`。
+- VLAN 2310；ConnectX-7 netdev MTU 4200、RDMA `active_mtu` 4096；Nexus 端口/default class 9216、RoCE no-drop qos-group 3 MTU 4200；DSCP 26 → qos-group/priority 3；PFC cos 3。
+- MTU 4200 的 DF ping（payload 4172）成功且 0% loss；改进前完成的 `ib_write_bw` traffic class 106 实测为 `109.85 Gbit/s`，其 RDMA path MTU 同样为 4096。
 - 四节点 `dynamo-roce-qos.service` 均 enabled/active；Netplan、QoS 脚本和 systemd unit 均落盘。
 - P/D 节点 `nvidia_peermem` 已加载；四节点均发布 `rdma/ib=1` 与 `nvidia.com/gpu=1`。
-- Nexus startup-config 已保存四端口的 VLAN 2310、MTU 9216、PFC、QOS_CLASSIFICATION，以及 network-qos 中 cos 3 PFC/no-drop 与 MTU 9216。
+- Nexus startup-config 已保存四端口的 VLAN 2310、端口 MTU 9216、PFC、QOS_CLASSIFICATION，以及 network-qos 中 cos 3 PFC/no-drop MTU 4200、default MTU 9216。
 
 ## 企业版可观测性与已知环境问题
 
 只使用现有 CEE agent 内置 `hubble v1.18.7-cee.1`、Hubble UI Enterprise、Timescape Enterprise 与现有 Prometheus/Grafana；没有安装任何社区版 Cilium/Hubble/Tetragon 工具。Hubble health 为 OK，UI NodePort 返回 HTTP 200，四个 hubble-enterprise agent 和 Timescape 均 Running。
 
 当前集群的 Prometheus v0.55.1 与 v0.82.2 两套 operator 同时跨命名空间 reconcile，造成部分第二副本反复重建；`prometheus-k8s-0` 仍为 2/2 Running 并抓取 Frontend `/metrics`。本任务未修改这些 operator/CR；后续应通过限定 watch scope 单独治理，不能直接归因于本次 `ai-serving` CNP。
+
+## Phase 1 MTU 与 Service 改进
+
+- 四节点 ConnectX-7 backend netdev 已从 9000 调整为 4200；4200-byte DF ping（payload 4172）为 3/3、0% loss，RDMA `active_mtu` 保持 4096。
+- Nexus running/startup 均验证为端口/default class 9216、RoCE no-drop `qos-group 3` 4200；startup-config 保存时间已更新。
+- `qwen3-14b-pd-frontend` 与兼容 Service `qwen-openai` 实测指向同一个 Frontend Endpoint。
+- Dynamo Frontend 已显式固定 `csco-k8s-03`；`qwen-openai` 保持 `externalTrafficPolicy: Local`，F5 固定使用 node3:30080。
+- `foundation-instruct-openai` 已改为 `externalTrafficPolicy: Local`；Foundation Pod 显式固定 `csco-k8s-04`，F5 固定使用 node4:30083。
+- 改动后 Qwen 与 Foundation `/v1/models` 均返回 HTTP 200。

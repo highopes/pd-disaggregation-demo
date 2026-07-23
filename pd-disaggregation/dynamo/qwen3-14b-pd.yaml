@@ -24,6 +24,8 @@ spec:
           app: dynamo-qwen-frontend
           model: qwen3-14b-fp8
       extraPodSpec:
+        nodeSelector:
+          kubernetes.io/hostname: csco-k8s-03
         mainContainer:
           image: nvcr.io/nvidia/ai-dynamo/dynamo-frontend:1.2.1
           imagePullPolicy: IfNotPresent
