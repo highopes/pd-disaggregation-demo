@@ -116,8 +116,11 @@ spec:
               --served-model-name Qwen/Qwen3-14B-FP8
               --dtype auto
               --tensor-parallel-size 1
-              --gpu-memory-utilization 0.85
-              --max-model-len 8192
+              --gpu-memory-utilization 0.90
+              --max-model-len 40960
+              --max-num-seqs 1
+              --kv-cache-dtype fp8
+              --calculate-kv-scales
               --trust-remote-code
               --enforce-eager
               --no-enable-prefix-caching
@@ -199,8 +202,11 @@ spec:
               --served-model-name Qwen/Qwen3-14B-FP8
               --dtype auto
               --tensor-parallel-size 1
-              --gpu-memory-utilization 0.85
-              --max-model-len 8192
+              --gpu-memory-utilization 0.90
+              --max-model-len 40960
+              --max-num-seqs 1
+              --kv-cache-dtype fp8
+              --calculate-kv-scales
               --trust-remote-code
               --enforce-eager
               --no-enable-prefix-caching

@@ -37,6 +37,7 @@ node4 的 CX-7 no-carrier 是任务前既有物理状态；Phase 1 P/D 不依赖
 - NVIDIA L4；driver `575.51.03`，CUDA compatibility 12.9；NVIDIA device plugin `0.17.2`。
 - Dynamo platform/chart/runtime `1.2.1`；Helm artifact SHA-256 见 [chart-source.md](pd-disaggregation/dynamo/chart-source.md)。
 - Worker 实测为 vLLM `0.20.1+cu129`、NIXL `0.10.1`（git `d5c127e5`）、UCX `1.20.1`（CUDA/verbs/gdrcopy）。
+- Qwen3-14B-FP8 原生 context 为 40,960；P/D 使用 `gpu-memory-utilization=0.90`、FP8 KV cache、`max-num-seqs=1`，两张 L4 均实测得到 54,016-token KV pool。
 - Mellanox RDMA shared device plugin `v1.5.3`，资源名 `rdma/ib`。
 - ConnectX-7 MT2910，firmware `28.43.2566`，200G；node1/node2 GPU 与 NIC 同 NUMA、拓扑为 PHB。
 - ISOVALENT Cilium `1.18.7-cee.1`；Hubble Enterprise `1.13.4`、Timescape `1.8.4`、Hubble UI `1.3.12`、Tetragon `1.18.0`。
@@ -142,7 +143,7 @@ kubectl apply --dry-run=server -f pd-disaggregation/cilium/frontend-service-poli
 kubectl apply -f pd-disaggregation/cilium/frontend-service-policy.yaml
 ```
 
-Prefill/Decode 均请求和限制 `nvidia.com/gpu: 1`、`rdma/ib: 1`，使用 hostNetwork 和固定 nodeSelector；Frontend 是普通 Cilium Pod。两端模型、dtype、TP、block size、max model length 和 `NixlConnector/kv_both` 配置一致。worker 健康端口为 `19191`，避免与 node2 既有的 9090 监听冲突。UCX 显式设置 `UCX_TLS=rc_x,rc,cuda_copy,cuda_ipc`、`UCX_NET_DEVICES=mlx5_0:1`、GID 3、traffic class 106；没有把 `tcp` 放入 transport list。
+Prefill/Decode 均请求和限制 `nvidia.com/gpu: 1`、`rdma/ib: 1`，使用 hostNetwork 和固定 nodeSelector；Frontend 是普通 Cilium Pod。两端模型、dtype、TP、block size、max model length 和 `NixlConnector/kv_both` 配置一致。为完整开放 Qwen3 原生 40,960 context，两端都设置 `--gpu-memory-utilization 0.90 --max-model-len 40960 --max-num-seqs 1 --kv-cache-dtype fp8 --calculate-kv-scales`；这是以单请求最大 context 为目标的 Demo 配置，不代表并发容量优化。FP8 KV 是在 FP8 权重之外的额外容量换精度优化；本次长上下文校验正确不等于所有业务质量无损，正式使用前仍需领域评测。prefix caching 保持关闭，使每次验收请求都真实执行 Prefill。worker 健康端口为 `19191`，避免与 node2 既有的 9090 监听冲突。UCX 显式设置 `UCX_TLS=rc_x,rc,cuda_copy,cuda_ipc`、`UCX_NET_DEVICES=mlx5_0:1`、GID 3、traffic class 106；没有把 `tcp` 放入 transport list。
 
 Frontend 也显式使用 `nodeSelector` 固定在 `csco-k8s-03`。这是 `qwen-openai` 使用 `externalTrafficPolicy: Local` 的必要配套：Frontend 重建后不会漂移，F5 的 NodePort pool member 可稳定配置为 `192.168.160.113:30080`。
 
@@ -330,20 +331,23 @@ external_no_key_http=200
 
 ```bash
 request_tag="pd-evidence-$(date +%s)"
-long_body=$(printf '天地玄黄宇宙洪荒%.0s' {1..600})
+repeat_count=6761
+long_body=$(printf '天地玄黄宇宙洪荒%.0s' $(seq 1 "$repeat_count"))
 body_chars=$(printf '%s' "$long_body" | LC_ALL=C.UTF-8 wc -m)
-test "$body_chars" -eq 4800 || {
+expected_answer=$((8 * repeat_count))
+test "$body_chars" -eq "$expected_answer" || {
   echo "unexpected body length: $body_chars" >&2
   exit 1
 }
 long_prompt=$(printf \
-  '/no_think\n以下正文由八个汉字“天地玄黄宇宙洪荒”连续重复600次。请计算正文包含多少个汉字，只回复阿拉伯数字，不要解释。\n正文：%s' \
-  "$long_body")
+  '正文：%s\n校验说明：上面的正文由八个汉字“天地玄黄宇宙洪荒”连续重复%d次；8 × %d = %d。请只回复校验结果%d，不要解释。' \
+  "$long_body" "$repeat_count" "$repeat_count" "$expected_answer" "$expected_answer")
 
-jq -n --arg prompt "$long_prompt" \
-  '{model:"Qwen/Qwen3-14B-FP8",messages:[{role:"user",content:$prompt}],max_tokens:64,temperature:0}' \
+printf '%s' "$long_prompt" \
+  | jq -Rs \
+      '{model:"Qwen/Qwen3-14B-FP8",messages:[{role:"user",content:.}],chat_template_kwargs:{enable_thinking:false},max_tokens:64,temperature:0}' \
   | ssh root@192.168.160.183 \
-      "curl --connect-timeout 10 --max-time 120 -sS \
+      "curl --connect-timeout 10 --max-time 300 -sS \
        -H 'Content-Type: application/json' \
        -H 'X-Request-ID: $request_tag' \
        --data-binary @- \
@@ -352,9 +356,11 @@ jq -n --arg prompt "$long_prompt" \
   | tee "$evidence_dir/08-long-prompt-response.txt"
 ```
 
-正文固定为 8 × 600 = 4800 个汉字，发送前的 `wc -m` 断言可防止 shell locale 或复制错误改变测试规模。`/no_think` 用于关闭长 reasoning，`max_tokens:64` 再从协议层限制最大输出；模型总上下文为 8192，因此该用例给输出和模板开销留有充分余量。
+正文固定为 8 × 6761 = 54,088 个汉字，发送前的 `wc -m` 断言可防止 shell locale 或复制错误改变测试规模。`chat_template_kwargs.enable_thinking=false` 关闭 Qwen3 reasoning，`max_tokens:64` 再限制最大输出。大 Prompt 必须经 stdin 交给 `jq -Rs`；不要改回 `jq --arg`，否则约 54K 汉字会触发 Linux `Argument list too long`，远端收到空 JSON 后返回的 400 与模型 context 无关。
 
-期望得到 OpenAI-compatible JSON、`http=200`、模型名、token usage，以及包含答案 `4800` 的 completion。2026-07-24 实测为 3650 个输入 token、9 个输出 token、总计 3659 tokens，HTTP 200，总时间约 3.31 秒。此前用于最大 KV/计数器基线的另一条长请求为 4522 个输入 token、8 个输出 token，HTTP 200，总时间约 3.05 秒；它仍保留在证据中用于历史对照，不应把本次 3650-token 请求套用成相同的 KV 字节增量。
+该固定用例经 Qwen tokenizer（含 chat template）计算为 40,637 个输入 tokens；加上 64-token 输出上限后仍有 259-token 设计余量。期望得到 OpenAI-compatible JSON、`http=200`、模型名、token usage，以及答案 `54088`。2026-07-24 实测为 40,637 输入 tokens、7 输出 tokens、总计 40,644，HTTP 200，总时间约 31.94 秒，实际占用模型 40,960 context 的 99.21%。如果修改正文、指令、chat template 或模型版本，必须用实际 tokenizer 重新计算，不能继续假定 6761 次安全。
+
+同一请求的 Prefill 日志显示约 30.57 秒完成约 40K prompt 计算；Decode 的 NIXL metric 显示 3,180 MiB FP8 KV 经 RoCE 传输仅用 507.228 ms，吞吐 6269.37 MB/s。约 60 倍的时间尺度差异直观说明了 Decode 使用 Prefill 已计算 KV、而不是自己重算整个 Prompt 的价值；这不是严格的 aggregated-vs-disaggregated 端到端 benchmark，不应宣称为 60 倍业务加速。
 
 ### 5. 证明 Prefill 与 Decode 真正分离
 
@@ -392,6 +398,7 @@ done
 - 小请求 UUID `0d878785-29ca-4bad-9a55-0d275ba63df1` 同时出现在三端；20 MiB KV 为 26.414 ms、757.174 MB/s。
 - 长请求 UUID `997c523a-f2c9-4804-9ade-802c017c894c` 同时出现在三端；720 MiB KV 为 240.698 ms、2991.3 MB/s。
 - worker 重建后的 UUID `cf114b70-ed27-4ac1-b674-922c9c91d04a` 再次贯穿三端，证明重建后 P/D 仍有效。
+- 40K-context 请求 UUID `6ac7e904-dba9-4fce-ad0d-aafce2e6250a` 包含 40,637 输入 tokens；3,180 MiB FP8 KV 为 507.228 ms、6269.37 MB/s，回答与 HTTP 状态均正确。
 
 注意：Dynamo 用 TCP 承载 request/control plane 是正常设计。`TCP fallback` 的否定结论只针对 NIXL KV data plane，判断依据是 UCX transport、NIXL transfer 和 CX-7 counters，而不是日志中完全不能出现单词 TCP。
 
@@ -425,7 +432,7 @@ python3 pd-disaggregation/scripts/nexus_read.py \
 - priority 3 discard、CRC、RDMA error、pause storm 等错误 delta 为 0。
 - 有拥塞时 PFC pause 增加是有效 lossless 证据；没有拥塞时 pause=0 也不代表失败。
 
-此前 720 MiB KV 请求的对照值：node1 RDMA TX `+765,667,142` bytes，node2 RDMA RX `+765,668,302` bytes；两侧 priority-3 与 Nexus 对应方向约增加 766.4 MB；Nexus jumbo packets `+184,320`，所有关键 error/discard delta 为 0。
+当前第 4 步请求的 NIXL application metric 为 3,180 MiB，主机与 Nexus 计数器 delta 应在同一数量级并包含协议开销；必须使用同一次请求的 before/after 做差，不能直接套用历史值。此前 720 MiB KV 请求的对照值为：node1 RDMA TX `+765,667,142` bytes，node2 RDMA RX `+765,668,302` bytes；两侧 priority-3 与 Nexus 对应方向约增加 766.4 MB；Nexus jumbo packets `+184,320`，所有关键 error/discard delta 为 0。
 
 ### 7. 企业版 Hubble flow 证据
 
@@ -604,9 +611,9 @@ kubectl logs -n ai-serving "$decode" --since=15m \
   | grep 'KV Transfer metrics' | tail -1
 ```
 
-如果短请求只产生较小 KV，可以展示已保存的长 Prompt 验收证据：4522 输入 tokens 对应 720 MiB KV，NIXL 实测约 2991.3 MB/s；同时 CX-7/Nexus 两端约增加 766 MB 且错误 delta 为 0。
+如果短请求只产生较小 KV，可以展示 40K-context 验收证据：40,637 输入 tokens 对应 3,180 MiB FP8 KV，Prefill 约 30.57 秒，NIXL/RoCE 传输约 0.507 秒、6269.37 MB/s。历史 4522-token/BF16-auto-KV 证据为 720 MiB，CX-7/Nexus 两端约增加 766 MB 且错误 delta 为 0；KV dtype 已改变，不能直接按历史每-token 字节数外推当前流量。
 
-管理层信息：Prefill 与 Decode 可以按业务瓶颈分别扩展；专用 RoCE 数据面减少大 KV 移动对普通业务网络的影响。109.85 Gbit/s 是合成 RoCE 链路基准，2991.3 MB/s 是一次真实 KV transfer，两者含义不同。
+管理层信息：Prefill 与 Decode 可以按业务瓶颈分别扩展；专用 RoCE 数据面减少大 KV 移动对普通业务网络的影响。109.85 Gbit/s 是合成 RoCE 链路基准，6269.37 MB/s 是一次真实 FP8 KV transfer，两者含义不同。
 
 ### 6. 用安全与可恢复性收尾（1–2 分钟）
 

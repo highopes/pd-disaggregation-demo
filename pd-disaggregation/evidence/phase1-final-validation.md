@@ -49,6 +49,25 @@ ComfyUI 必须经认证网关访问。本次最终回归只确认 workload、Pod
 
 聊天请求 `b0a2b5ae-7713-422b-a185-094689a5b7f2` 在新 Prefill 与新 Decode 的日志中均可关联。Decode 报告 `NIXL compatibility check passed`；20 MiB KV transfer 用时 35.717 ms，吞吐 `559.957 MB/s`。这证明重建后不只是健康探针恢复，真实 P/D 与 KV transfer 数据路径也已恢复。
 
+### 2026-07-24 原生 40K context 调优
+
+为在单张 L4 上完整开放 Qwen3-14B-FP8 原生 40,960 context，Prefill/Decode 同步调整为 `gpu-memory-utilization=0.90`、`max-model-len=40960`、`max-num-seqs=1`、FP8 KV cache 和动态 KV scales；prefix caching 保持关闭。两个新 Worker 均为 1/1 Running、0 restart，启动日志一致显示：
+
+```text
+Available KV cache memory: 4.12 GiB
+GPU KV cache size: 54,016 tokens
+Maximum concurrency for 40,960 tokens per request: 1.32x
+```
+
+最终请求 `6ac7e904-dba9-4fce-ad0d-aafce2e6250a` 从 `.183` 无 Token 发起，正文为 54,088 个汉字；Qwen chat template 实际输入 40,637 tokens，输出 7 tokens，总计 40,644，HTTP 200、总耗时 31.938 秒，模型正确返回校验值 `54088`。Prefill 从接收至完成约 30.57 秒；Decode 报告 NIXL compatibility passed，并成功传输 3,180 MiB FP8 KV：
+
+```text
+Avg xfer time (ms)=507.228
+Throughput (MB/s)=6269.37
+```
+
+Prefill 计算与 NIXL 传输约为 60 倍的时间尺度差异，适合解释 Decode 复用已计算 KV 而非重新执行整个长 Prompt 的价值；该数字不是 aggregated-vs-disaggregated 的严格端到端加速比。
+
 ## 真实 P/D 与 KV transfer
 
 小请求 `0d878785-29ca-4bad-9a55-0d275ba63df1` 同时出现在 Frontend、node1 Prefill 和 node2 Decode。Frontend 成功完成请求；Decode 报告 NIXL compatibility check passed，20 MiB KV transfer 为 26.414 ms、757.174 MB/s。
