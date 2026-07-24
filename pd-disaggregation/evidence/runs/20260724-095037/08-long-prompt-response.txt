@@ -1,2 +1,2 @@
-{"message":"This model's maximum context length is 8192 tokens. However, your messages resulted in 9608 tokens. Please reduce the length of the messages.","type":"Bad Request","code":400}
-http=400 total=0.052870s
+{"id":"chatcmpl-00b1b273-dcf2-4448-adbd-d6d1f42e2e54","choices":[{"index":0,"message":{"content":"<think>\n\n</think>\n\n4800","role":"assistant","reasoning_content":null},"finish_reason":"stop","logprobs":null}],"created":1784864648,"model":"Qwen/Qwen3-14B-FP8","service_tier":null,"system_fingerprint":null,"object":"chat.completion","usage":{"prompt_tokens":3650,"completion_tokens":9,"total_tokens":3659}}
+http=200 total=2.408540s

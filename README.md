@@ -618,13 +618,13 @@ kubectl logs -n ai-serving "$decode" --since=15m \
 
 不建议在正式 CxO 演示中现场删除 worker Pod：模型恢复需要时间，且这不会比展示已保存的重建证据增加业务价值。若必须演示自愈，应在独立彩排窗口完成并预留模型加载时间。
 
-### 演示时避免过度声明
+### 演示时注意
 
-- Hubble UI Enterprise 证明 API flow、L7 与 policy，不单独证明 KV 使用 RoCE。
+- Hubble UI Enterprise 证明 API flow、L7 与 policy，不用于证明 KV 使用 RoCE。
 - Grafana 的 HTTP 时延是端到端观察，不等于纯 GPU kernel 时间。
 - 一次请求不是容量 benchmark；讨论容量需单独设计并发、SLO 和统计周期。
-- 不把合成 `ib_write_bw`、CUDA-memory UCX 和真实 KV throughput 混成一个数字。
-- 不展示或朗读 Nexus、API、F5、Grafana 的任何凭据。
+- 不要把合成 `ib_write_bw`、CUDA-memory UCX 和真实 KV throughput 混成一个数字。
+- 注意避免透露 Nexus、API、F5、Grafana 的任何凭据。
 
 ## 已发现问题与未来规划
 
