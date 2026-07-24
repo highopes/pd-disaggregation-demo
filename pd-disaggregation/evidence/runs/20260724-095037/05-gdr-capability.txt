@@ -1,3 +1,75 @@
-=== prefill / qwen3-14b-pd-0-vllmprefillworker-rhnlm ===
-Failed to initialize NVML: Unknown Error
-command terminated with exit code 255
+=== prefill / qwen3-14b-pd-0-vllmprefillworker-stkkv ===
+NVIDIA L4, 575.51.03, 00000000:03:00.0
+# Memory domain: self
+#         memory types: host (access,reg_nonblock,reg,cache)
+#      Transport: self
+# Memory domain: tcp
+#         memory types: 
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+# Memory domain: sysv
+#         memory types: host (access,alloc,cache)
+#      Transport: sysv
+# Memory domain: posix
+#         memory types: host (access,alloc,cache)
+#      Transport: posix
+# Memory domain: cuda_cpy
+#     Component: cuda_cpy
+#         memory types: host (access,reg), cuda (access,alloc,reg,detect,dmabuf), cuda-managed (access,alloc,reg,cache,detect)
+#      Transport: cuda_copy
+#         Device: cuda
+# Memory domain: cuda_ipc
+#     Component: cuda_ipc
+#         memory types: cuda (access,reg,cache)
+#      Transport: cuda_ipc
+#         Device: cuda
+# Memory domain: mlx5_0
+#         memory types: host (access,reg_nonblock,reg,cache,gva), cuda (reg,cache), rdma (alloc,cache)
+#      Transport: rc_verbs
+#      Transport: ud_verbs
+#      Transport: dc_mlx5
+#      Transport: rc_mlx5
+#      Transport: ud_mlx5
+# Memory domain: cma
+#         memory types: 
+#      Transport: cma
+=== decode / qwen3-14b-pd-0-vllmdecodeworker-9d6v6 ===
+NVIDIA L4, 575.51.03, 00000000:03:00.0
+# Memory domain: self
+#         memory types: host (access,reg_nonblock,reg,cache)
+#      Transport: self
+# Memory domain: tcp
+#         memory types: 
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+# Memory domain: sysv
+#         memory types: host (access,alloc,cache)
+#      Transport: sysv
+# Memory domain: posix
+#         memory types: host (access,alloc,cache)
+#      Transport: posix
+# Memory domain: cuda_cpy
+#     Component: cuda_cpy
+#         memory types: host (access,reg), cuda (access,alloc,reg,detect,dmabuf), cuda-managed (access,alloc,reg,cache,detect)
+#      Transport: cuda_copy
+#         Device: cuda
+# Memory domain: cuda_ipc
+#     Component: cuda_ipc
+#         memory types: cuda (access,reg,cache)
+#      Transport: cuda_ipc
+#         Device: cuda
+# Memory domain: mlx5_0
+#         memory types: host (access,reg_nonblock,reg,cache,gva), cuda (reg,cache), rdma (alloc,cache)
+#      Transport: rc_verbs
+#      Transport: ud_verbs
+#      Transport: dc_mlx5
+#      Transport: rc_mlx5
+#      Transport: ud_mlx5
+# Memory domain: cma
+#         memory types: 
+#      Transport: cma
+GDR capability validation: PASS

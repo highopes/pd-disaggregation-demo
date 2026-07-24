@@ -330,10 +330,18 @@ external_no_key_http=200
 
 ```bash
 request_tag="pd-evidence-$(date +%s)"
-long_prompt=$(printf '分布式推理需要高带宽、低延迟、可观测和可恢复。%.0s' {1..600})
+long_body=$(printf '天地玄黄宇宙洪荒%.0s' {1..600})
+body_chars=$(printf '%s' "$long_body" | LC_ALL=C.UTF-8 wc -m)
+test "$body_chars" -eq 4800 || {
+  echo "unexpected body length: $body_chars" >&2
+  exit 1
+}
+long_prompt=$(printf \
+  '/no_think\n以下正文由八个汉字“天地玄黄宇宙洪荒”连续重复600次。请计算正文包含多少个汉字，只回复阿拉伯数字，不要解释。\n正文：%s' \
+  "$long_body")
 
 jq -n --arg prompt "$long_prompt" \
-  '{model:"Qwen/Qwen3-14B-FP8",messages:[{role:"user",content:$prompt}],max_tokens:8,temperature:0}' \
+  '{model:"Qwen/Qwen3-14B-FP8",messages:[{role:"user",content:$prompt}],max_tokens:64,temperature:0}' \
   | ssh root@192.168.160.183 \
       "curl --connect-timeout 10 --max-time 120 -sS \
        -H 'Content-Type: application/json' \
@@ -344,7 +352,9 @@ jq -n --arg prompt "$long_prompt" \
   | tee "$evidence_dir/08-long-prompt-response.txt"
 ```
 
-期望得到 OpenAI-compatible JSON、`http=200`、模型名和 token usage。此前长请求包含 4522 个输入 token、8 个输出 token，HTTP 200，总时间约 3.05 秒。
+正文固定为 8 × 600 = 4800 个汉字，发送前的 `wc -m` 断言可防止 shell locale 或复制错误改变测试规模。`/no_think` 用于关闭长 reasoning，`max_tokens:64` 再从协议层限制最大输出；模型总上下文为 8192，因此该用例给输出和模板开销留有充分余量。
+
+期望得到 OpenAI-compatible JSON、`http=200`、模型名、token usage，以及包含答案 `4800` 的 completion。2026-07-24 实测为 3650 个输入 token、9 个输出 token、总计 3659 tokens，HTTP 200，总时间约 3.31 秒。此前用于最大 KV/计数器基线的另一条长请求为 4522 个输入 token、8 个输出 token，HTTP 200，总时间约 3.05 秒；它仍保留在证据中用于历史对照，不应把本次 3650-token 请求套用成相同的 KV 字节增量。
 
 ### 5. 证明 Prefill 与 Decode 真正分离
 
