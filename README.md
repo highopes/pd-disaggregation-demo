@@ -360,7 +360,7 @@ printf '%s' "$long_prompt" \
 
 该固定用例经 Qwen tokenizer（含 chat template）计算为 40,637 个输入 tokens；加上 64-token 输出上限后仍有 259-token 设计余量。期望得到 OpenAI-compatible JSON、`http=200`、模型名、token usage，以及答案 `54088`。2026-07-24 实测为 40,637 输入 tokens、7 输出 tokens、总计 40,644，HTTP 200，总时间约 31.94 秒，实际占用模型 40,960 context 的 99.21%。如果修改正文、指令、chat template 或模型版本，必须用实际 tokenizer 重新计算，不能继续假定 6761 次安全。
 
-同一请求的 Prefill 日志显示约 30.57 秒完成约 40K prompt 计算；Decode 的 NIXL metric 显示 3,180 MiB FP8 KV 经 RoCE 传输仅用 507.228 ms，吞吐 6269.37 MB/s。约 60 倍的时间尺度差异直观说明了 Decode 使用 Prefill 已计算 KV、而不是自己重算整个 Prompt 的价值；这不是严格的 aggregated-vs-disaggregated 端到端 benchmark，不应宣称为 60 倍业务加速。
+同一请求的 Prefill 日志显示约 30.57 秒完成约 40K prompt 计算；Decode 的 NIXL metric 显示 3,180 MiB FP8 KV 经 RoCE 传输仅用 507.228 ms，吞吐 6269.37 MB/s。约 60 倍的时间尺度差异直观说明了 Decode 使用 Prefill 已计算 KV、而不是自己重算整个 Prompt 的价值；注意这不是严格的 aggregated-vs-disaggregated 端到端 benchmark，所以谨慎使用 60 倍业务加速这种提法。
 
 ### 5. 证明 Prefill 与 Decode 真正分离
 
