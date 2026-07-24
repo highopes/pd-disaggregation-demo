@@ -30,6 +30,25 @@ ComfyUI 必须经认证网关访问。本次最终回归只确认 workload、Pod
 - CUDA-memory `ucx_perftest` 使用 64 MiB、100 iterations；UCX 明确选择 `tag(rc_mlx5/mlx5_0:1)`，结果为 `4663.53 MB/s`。
 - worker 使用 `UCX_TLS=rc_x,rc,cuda_copy,cuda_ipc`；transport list 不含 `tcp`，NIXL 加载 UCX backend。
 
+### 2026-07-24 NVML 故障恢复复验
+
+旧 Prefill/Decode worker 内执行 `nvidia-smi` 时均出现 `Failed to initialize NVML: Unknown Error`，新建 PyTorch 进程也无法初始化 CUDA；与此同时，csco-k8s-01 与 csco-k8s-02 宿主机的 `nvidia-smi` 均正常识别 NVIDIA L4 与 driver 575.51.03。该现象与运行中容器的 NVIDIA device/cgroup 访问失效一致，但本次没有把未经证明的宿主机事件写成确定根因。
+
+在维护窗口只删除两个 Grove 管理的 worker Pod，由控制器原位重建；未修改 DGD、Service、Cilium/Hubble、F5 或交换机配置。恢复后实测：
+
+| 检查项 | 结果 |
+|---|---|
+| DGD | `qwen3-14b-pd` Ready=True |
+| Prefill | `qwen3-14b-pd-0-vllmprefillworker-stkkv`，csco-k8s-01，1/1 Running，0 restart |
+| Decode | `qwen3-14b-pd-0-vllmdecodeworker-9d6v6`，csco-k8s-02，1/1 Running，0 restart |
+| NVML | 两个 Pod 均识别 NVIDIA L4、driver 575.51.03 |
+| 新 CUDA context | 两个 Pod 均为 `cuda_available=True`、`cuda_devices=1` |
+| UCX capability | `mlx5_0` 支持 CUDA registration/cache，并提供 `rc_mlx5`/`dc_mlx5` |
+| 主动 CUDA-memory 测试 | Send/Recv memory 均为 CUDA，跨节点为 `tag(rc_mlx5/mlx5_0:1)`，总带宽 `4748.39 MB/s` |
+| API | 集群内无 Token `/v1/models` HTTP 200；`.183` 无 Token `/v1/models` 与聊天均 HTTP 200 |
+
+聊天请求 `b0a2b5ae-7713-422b-a185-094689a5b7f2` 在新 Prefill 与新 Decode 的日志中均可关联。Decode 报告 `NIXL compatibility check passed`；20 MiB KV transfer 用时 35.717 ms，吞吐 `559.957 MB/s`。这证明重建后不只是健康探针恢复，真实 P/D 与 KV transfer 数据路径也已恢复。
+
 ## 真实 P/D 与 KV transfer
 
 小请求 `0d878785-29ca-4bad-9a55-0d275ba63df1` 同时出现在 Frontend、node1 Prefill 和 node2 Decode。Frontend 成功完成请求；Decode 报告 NIXL compatibility check passed，20 MiB KV transfer 为 26.414 ms、757.174 MB/s。

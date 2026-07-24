@@ -1,0 +1,59 @@
+=== terminal length 0 ===
+RoCE_LF2
+=== show policy-map system type network-qos ===
+Type network-qos policy-maps
+  ============================
+  policy-map type network-qos qos_network
+    class type network-qos c-8q-nq3
+      match qos-group 3
+      mtu 4200
+      pause pfc-cos 3
+    class type network-qos c-8q-nq-default
+      match qos-group 0
+      mtu 9216
+
+RoCE_LF2
+=== show running-config interface Ethernet1/1/1 ===
+!Command: show running-config interface Ethernet1/1/1
+!Running configuration last done at: Thu Jul 23 11:11:12 2026
+!Time: Fri Jul 24 01:54:22 2026
+
+version 10.4(3) Bios:version 01.11 
+
+interface Ethernet1/1/1
+  description DYNAMO_ROCE_CSCO-K8S-01
+  ttag
+  ttag-strip
+  switchport
+  switchport access vlan 2310
+  priority-flow-control mode on
+  priority-flow-control watch-dog-interval on
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  mtu 9216
+  service-policy type qos input QOS_CLASSIFICATION
+  no shutdown
+
+RoCE_LF2
+=== show running-config interface Ethernet1/1/2 ===
+!Command: show running-config interface Ethernet1/1/2
+!Running configuration last done at: Thu Jul 23 11:11:12 2026
+!Time: Fri Jul 24 01:54:23 2026
+
+version 10.4(3) Bios:version 01.11 
+
+interface Ethernet1/1/2
+  description DYNAMO_ROCE_CSCO-K8S-02
+  ttag
+  ttag-strip
+  switchport
+  switchport access vlan 2310
+  priority-flow-control mode on
+  priority-flow-control watch-dog-interval on
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  mtu 9216
+  service-policy type qos input QOS_CLASSIFICATION
+  no shutdown
+
+RoCE_LF2

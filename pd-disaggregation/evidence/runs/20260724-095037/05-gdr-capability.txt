@@ -1,0 +1,3 @@
+=== prefill / qwen3-14b-pd-0-vllmprefillworker-rhnlm ===
+Failed to initialize NVML: Unknown Error
+command terminated with exit code 255

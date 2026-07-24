@@ -91,6 +91,8 @@ systemctl daemon-reload
 systemctl enable --now dynamo-roce-qos.service
 ```
 
+`systemctl daemon-reload` 在使用 systemd cgroup 与 NVIDIA legacy runtime hook 的环境中可能使已经运行的 GPU 容器丢失设备访问。首次构建应先完成本节，再部署 P/D；若集群中已有 GPU workload，必须安排维护窗口，并按[已发现问题与未来规划](#已发现问题与未来规划)中的 NVML 处置流程在 reload 后检查和重建受影响 Pod。不要为了规避风险省略首次安装 unit 所必需的 reload。
+
 仅 node1/node2：
 
 ```bash
@@ -274,6 +276,8 @@ pd-disaggregation/scripts/validate-gdr.sh \
 ```
 
 成功输出应包含 NVIDIA L4、driver 575.51.03，以及 mlx5 memory domain 对 CUDA memory 的 registration/cache 支持。`cuda_copy` 只能说明 CUDA memory transport 可用；真正的 GDR 强证据还需要 CUDA-memory `ucx_perftest`。
+
+如果脚本输出 `Failed to initialize NVML: Unknown Error`，立即停止 GDR 验收，不得把该次结果记为 PASS。根因判定、维护窗口重建命令和 CDI 长期修复路线统一见[已发现问题与未来规划](#已发现问题与未来规划)。
 
 以下测试会实际占用两张 L4 和 RoCE 链路，只在无业务或演示维护窗口执行。打开两个终端。
 
@@ -485,7 +489,7 @@ Grafana 使用现有访问地址和现有登录凭据，不要把凭据写进 RE
 7. Hubble UI Enterprise 和 Grafana 的截图，截图中包含时间范围与过滤条件。
 8. 明确的 PASS/PARTIAL PASS/FAIL 和未完成项，不能用截图代替结论。
 
-此前完整结果见 [phase1-final-validation.md](pd-disaggregation/evidence/phase1-final-validation.md)：Phase 1 为 PASS；CUDA-memory UCX 为 4663.53 MB/s，RoCE `ib_write_bw` 历史基准为 109.85 Gbit/s，真实 720 MiB KV transfer 为 2991.3 MB/s。合成 RDMA 带宽、CUDA-memory 带宽和真实 KV 吞吐是不同指标，不应在报告中混为同一个性能数字。
+此前完整结果见 [phase1-final-validation.md](pd-disaggregation/evidence/phase1-final-validation.md)：Phase 1 为 PASS；CUDA-memory UCX 初次验收为 4663.53 MB/s、NVML 故障恢复后复验为 4748.39 MB/s，RoCE `ib_write_bw` 历史基准为 109.85 Gbit/s，真实 720 MiB KV transfer 为 2991.3 MB/s。合成 RDMA 带宽、CUDA-memory 带宽和真实 KV 吞吐是不同指标，不应在报告中混为同一个性能数字。
 
 保留服务回归中，Foundation API 返回 HTTP 200。ComfyUI 必须通过认证网关访问，因此只检查其 workload、Pod 和容器 Ready；不要绕过认证网关做 ComfyUI 直连测试。
 
@@ -612,23 +616,131 @@ kubectl logs -n ai-serving "$decode" --since=15m \
 - 不把合成 `ib_write_bw`、CUDA-memory UCX 和真实 KV throughput 混成一个数字。
 - 不展示或朗读 Nexus、API、F5、Grafana 的任何凭据。
 
-## Troubleshooting
+## 已发现问题与未来规划
 
-- `RuntimeClass "nvidia" not found`：containerd 已有 nvidia handler，但 KAI 会注入 RuntimeClass；应用 `nvidia-runtimeclass.yaml`。
-- KAI scheduler 报 `Unauthorized`：Helm upgrade 可能重建 ServiceAccount，而旧 scheduler Pod 仍持有绑定旧 UID 的 token；只滚动 `deployment/kai-scheduler-default`，不要改 RBAC。
-- NVCR 长层在 401 后从 0 开始：使用 `resumable-nvcr-pull.sh`；根因和 challenge 见 [image-download-recovery.md](pd-disaggregation/evidence/image-download-recovery.md)。
-- node4 backend down：先修物理链路；不要把任务前 no-carrier 当作软件回归。
-- Local NodePort 返回无后端：F5 必须访问实际承载 Pod 的固定节点；Qwen 使用 node3:30080，Foundation 使用 node4:30083，不要把所有节点都无差别加入这两个 Local Service 的 pool。
-- PFC pause counter 为 0：无拥塞时是正常现象；仍需确认 PFC operational bitmap、priority mapping、error/discard 为 0。
-- Hubble：只使用 CEE agent 内置 CLI、经现有 F5 发布的 Hubble UI Enterprise 和现有 Grafana；Timescape 组件保持不变，但不把 Timescape UI 当作本指南入口，也不向企业版集群安装社区 chart/CLI。
-- 当前集群有两套 Prometheus Operator（v0.55.1 与 v0.82.2）跨命名空间 reconcile，造成部分第二副本反复重建；现有 `prometheus-k8s-0` 仍为 `2/2 Running`。本任务未改动这些 operator/CR，修复时应先划分各 operator 的 watch scope，不能在本 Demo 中直接删除其中一套。
+本节统一记录当前已知风险、现场处置方法和后续 Phase 边界。Phase 1 功能验收已经 PASS；下列“计划”不表示已经实施，也不应在 CxO 演示前临时变更生产路径。
+
+### 1. GPU 容器丢失 NVML/CUDA 访问
+
+#### 最可能根因
+
+2026-07-24 的故障表现为：csco-k8s-01/02 宿主机 `nvidia-smi` 正常，旧 Prefill/Decode Pod 内均报 `Failed to initialize NVML: Unknown Error`，新建 PyTorch 进程也无法初始化 CUDA；相同镜像由 Grove 重建后立即恢复，期间没有重启宿主机、驱动或 containerd。这排除了模型、镜像、RoCE、GPU 硬件和宿主机驱动作为首要原因。
+
+最可能的触发点是安装 `dynamo-roce-qos.service` 时执行的 `systemctl daemon-reload`：在 systemd cgroup 与 NVIDIA legacy runtime hook 组合中，hook 添加的 GPU device/cgroup 权限不完全属于底层 OCI runtime 配置，systemd reload 或容器资源更新可能覆盖这些权限。NVIDIA 官方记录的典型结果正是 `Failed to initialize NVML: Unknown Error`，删除并重建容器后恢复。参见 [NVIDIA Container Toolkit Troubleshooting](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/troubleshooting.html#containers-losing-access-to-gpus-with-error-failed-to-initialize-nvml-unknown-error)。由于故障发生时没有保存 systemd/cgroup 审计时间线，这一判断为高概率根因，不写成已经完成法证证明的唯一根因。
+
+旧 vLLM 仍可能短暂回答请求，因为它在权限丢失前已经建立 CUDA context；新进程却无法重新打开 GPU。因此，HTTP 200 或旧推理进程存活不能替代 Pod 内新进程的 NVML/CUDA 检查。
+
+#### 发现同类故障时的操作
+
+先解析当前 Pod 名称并检查 Pod 内 GPU。不要复制历史 Pod 后缀：
+
+```bash
+selector='nvidia.com/dynamo-graph-deployment-name=qwen3-14b-pd'
+prefill=$(kubectl get pod -n ai-serving -l "$selector,dynamo-role=prefill" \
+  -o jsonpath='{.items[0].metadata.name}')
+decode=$(kubectl get pod -n ai-serving -l "$selector,dynamo-role=decode" \
+  -o jsonpath='{.items[0].metadata.name}')
+
+for pod in "$prefill" "$decode"; do
+  echo "=== $pod ==="
+  kubectl exec -n ai-serving "$pod" -- nvidia-smi
+  kubectl exec -n ai-serving "$pod" -- python3 -c \
+    'import torch; print(torch.cuda.is_available(), torch.cuda.device_count())'
+done
+```
+
+再检查对应宿主机：
+
+```bash
+ssh root@192.168.160.111 nvidia-smi
+ssh root@192.168.160.112 nvidia-smi
+```
+
+- 宿主机也失败：停止这里的 Pod 重建循环，转入驱动、GPU、PCIe/Xid 与节点故障排查。
+- 宿主机成功而 Pod 失败：符合本次 device/cgroup 访问丢失特征。不要重启宿主机驱动；进入维护窗口，只重建实际失败的 Grove worker。
+
+当前 Prefill/Decode 各只有一个副本，删除任一 worker 都可能中断服务。确认 Pod 的 owner 为 `PodClique`，并在维护窗口执行；下面示例用于两个角色都失败的情况，若只有一个失败就只删除该 Pod：
+
+```bash
+kubectl get pod -n ai-serving "$prefill" "$decode" \
+  -o custom-columns='NAME:.metadata.name,OWNER:.metadata.ownerReferences[0].kind,NODE:.spec.nodeName'
+
+kubectl delete pod -n ai-serving "$prefill" "$decode" --wait=false
+kubectl get pod -n ai-serving -l "$selector" -w
+```
+
+看到新 Prefill/Decode Pod 后按 Ctrl-C，重新解析名称并等待 Ready：
+
+```bash
+prefill=$(kubectl get pod -n ai-serving -l "$selector,dynamo-role=prefill" \
+  -o jsonpath='{.items[0].metadata.name}')
+decode=$(kubectl get pod -n ai-serving -l "$selector,dynamo-role=decode" \
+  -o jsonpath='{.items[0].metadata.name}')
+
+kubectl wait -n ai-serving --for=condition=Ready "pod/$prefill" --timeout=20m
+kubectl wait -n ai-serving --for=condition=Ready "pod/$decode" --timeout=20m
+kubectl wait -n ai-serving --for=condition=Ready \
+  dynamographdeployment/qwen3-14b-pd --timeout=20m
+
+pd-disaggregation/scripts/validate-gdr.sh
+EXTERNAL_CLIENT_SSH=root@192.168.160.183 \
+  DYNAMO_ENDPOINT=http://192.168.160.113:30080 \
+  pd-disaggregation/scripts/validate-api.sh
+```
+
+`validate-gdr.sh` 必须以 `GDR capability validation: PASS` 结束。需要形成强 GDR 证据时，再在无业务窗口执行“验证与证据”第 3 节的 CUDA-memory `ucx_perftest`；日常恢复不必重复主动压测。
+
+本次恢复后的实测结果为：DGD `Ready=True`；两个新 worker 的 NVML 和新 PyTorch CUDA context 均成功；CUDA-memory `ucx_perftest` 选择 `tag(rc_mlx5/mlx5_0:1)`，总带宽 `4748.39 MB/s`；`.183` 无 Token 模型列表与聊天均为 HTTP 200；真实 20 MiB NIXL KV transfer 为 `559.957 MB/s`。完整记录见 [phase1-final-validation.md](pd-disaggregation/evidence/phase1-final-validation.md)。
+
+#### 复发控制
+
+- 在 CDI 完成前，把 GPU 节点上的 `systemctl daemon-reload`、unit/package 更新和容器资源修改都视为维护操作。
+- 配置管理只在 unit 文件实际变化时 reload；合并多项 systemd 修改，避免自动化每次运行都无条件 reload。
+- 首次建环境时先完成 OS/systemd/RDMA 配置，再创建 GPU workload。已存在 GPU workload 时，reload 后立即执行宿主机与 Pod 对照检查，并计划重建受影响 Pod。
+- 增加维护后 NVML/CUDA canary 或告警。检查必须启动新进程，不能只看已有 vLLM 的 HTTP health。
+- 如需无感自愈，应先设计 Prefill/Decode 冗余与故障切换；当前单副本架构无法保证 worker 重建期间零中断。
+
+### 2. CDI 升级计划
+
+CDI 将 GPU 设备写入标准 OCI/CDI 配置，由 containerd 正式处理设备注入，能避免 legacy hook 权限在容器更新时被覆盖，是这一类故障的长期解决方向。NVIDIA GPU Operator 25.10 及以后默认使用 CDI，参见 [NVIDIA GPU Operator CDI Support](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/cdi.html)。
+
+当前环境已有可工作的宿主机 driver、Container Toolkit/containerd runtime 和 NVIDIA device plugin 0.17.2，Phase 1 明确没有引入 GPU Operator。不要为了启用 CDI 直接安装 GPU Operator 覆盖现有组件。CDI 应作为独立维护变更，按以下顺序进行：
+
+1. 只读盘点四节点的 containerd、`runc`、NVIDIA Container Toolkit/device plugin 版本、cgroup driver、runtime mode、`/dev/char` 链接和现有 CDI spec。
+2. 按 NVIDIA AI Enterprise、当前 Kubernetes/containerd 与驱动 575.51.03 的支持矩阵确定目标版本；选择由现有 Toolkit/device plugin 启用 CDI，或在未来统一交由 GPU Operator 管理，不能让两套生命周期管理器同时覆盖 runtime。
+3. 备份 containerd、NVIDIA runtime/device plugin 配置，在单节点维护窗口验证 CDI 注入；GPU Pod 必须通过 `nvidia-smi`、新 PyTorch CUDA context、重建后访问和资源调度检查。
+4. 再分节点滚动迁移，验证 `nvidia_peermem`、`rdma/ib`、UCX CUDA registration、主动 CUDA-memory RoCE、Dynamo P/D、Foundation 与 ComfyUI 回归。
+5. 完成一次 `systemctl daemon-reload` 后“不重建 Pod”的专项复测，只有运行中 GPU Pod 继续通过新进程 NVML/CUDA 检查，才能关闭本问题。
+
+### 3. Prometheus Operator 所有权冲突
+
+当前集群存在 v0.55.1 与 v0.82.2 两套 Prometheus Operator，并且都跨命名空间 reconcile，导致部分第二副本反复重建。现有 `prometheus-k8s-0` 仍为 `2/2 Running`，Frontend `/metrics` 可被抓取，因此这不是 Phase 1 的阻塞项，也不能归因于本次 `ai-serving` CNP。
+
+后续治理应先盘点两套 Operator 的 Helm/manifest 所有者、watch scope、Prometheus/Alertmanager CR、ServiceMonitor/PodMonitor selector 与 Grafana datasource，再为每个 namespace/CR 指定唯一控制器。修改前导出非敏感 CR 和 values 备份，分阶段收窄 watch scope 并观察 reconcile；不要在未确定资源所有权时直接删除其中一套 Operator。治理完成的验收条件是副本不再抖动、target/recording rule/alert 正常、现有 Grafana Dashboard 数据连续。
+
+### 4. 其他已知问题与固定处置
+
+| 问题或边界 | 当前处置 |
+|---|---|
+| `RuntimeClass "nvidia" not found` | containerd 已有 nvidia handler，但 KAI 会注入 RuntimeClass；应用 `pd-disaggregation/dynamo/nvidia-runtimeclass.yaml`。CDI 迁移后按新 runtime 策略重新评估，不保留互相冲突的 legacy 配置。 |
+| KAI scheduler `Unauthorized` | Helm upgrade 可能重建 ServiceAccount，旧 scheduler Pod 仍持有旧 UID token；只滚动 `deployment/kai-scheduler-default`，不要扩大 RBAC。 |
+| NVCR 大层在 401 后重新下载 | 使用 `resumable-nvcr-pull.sh`，再通过 CX-7 本地复制；见 [image-download-recovery.md](pd-disaggregation/evidence/image-download-recovery.md)。 |
+| node4 CX-7 no-carrier | 这是任务前既有物理问题。Phase 1 P/D 不依赖 node4 backend；需要把 node4 纳入未来 RDMA/GDS 数据面前先修复光模块、线缆或交换机链路。 |
+| Local NodePort 无后端 | F5 只访问实际承载 Pod 的固定节点：Qwen 为 node3:30080，Foundation 为 node4:30083，不把所有节点无差别加入 Local Service pool。 |
+| PFC pause counter 为 0 | 无拥塞时正常；同时确认 PFC operational bitmap、priority mapping 以及 error/discard 为 0。 |
+| 企业版可观测性 | 只使用 CEE agent 内置 CLI、现有 F5 发布的 Hubble UI Enterprise 和现有 Grafana。Timescape 组件保持不变，但不把 Timescape UI 当作本指南入口，也不安装社区版 Cilium/Hubble/Tetragon chart 或 CLI。 |
+
+### 5. Phase 状态与路线图
+
+| 阶段 | 状态 | 内容与边界 |
+|---|---|---|
+| Phase 0 | 已完成 | 当前环境只读发现、CX-7/Nexus 映射、既有 workload/共享资源识别、配置和非敏感备份。 |
+| Phase 1 | **PASS** | Dynamo Qwen3-14B-FP8 Prefill/Decode、NIXL/UCX/RoCEv2、GPUDirect RDMA、CX-7/Nexus lossless fabric、来源型 Cilium API 策略、Hubble UI Enterprise/Prometheus/Grafana 证据、Pod 重建与保留服务回归。Timescape 保持现状但不是演示 UI。 |
+| Phase 1 运维加固 | 计划中，建议先于 Phase 2 | CDI 迁移、Prometheus Operator 所有权治理、systemd/GPU 维护规范和 NVML canary；按未来数据面需求修复 node4 CX-7。它们不改变 Phase 1 已通过的功能结论。 |
+| Phase 2 | 尚未实施 | VAST G4 KV Cache Storage、KV offload/reload 与 GPUDirect Storage。开始前必须重新执行 discovery/backup，确认 VAST、GDS、GPU/driver/container runtime、RDMA 与多节点拓扑支持矩阵。 |
+
+当前任务没有批准或定义 Phase 3。高可用副本、容量/并发 benchmark、跨故障域扩展等可以作为未来候选项，但在形成独立需求、SLO 和资源预算前不宣称属于已实施路线图。
 
 ## 回滚
 
 完整顺序和命令见 [ROLLBACK.md](pd-disaggregation/ROLLBACK.md)。备份位于 `pd-disaggregation/backup/`，包括旧 Qwen、旧 Dare、共享资源记录和改造前 CNP；Secret 值未导出。
-
-## Phase 范围
-
-Phase 1 包含 Dynamo P/D、NIXL/UCX/RoCEv2、CX-7/Nexus lossless fabric、GPUDirect RDMA、按来源区分的 Cilium API 访问控制、Hubble UI Enterprise/Prometheus/Grafana 可观测性、Pod 重建与保留服务回归。Timescape 组件保持现状，但不是本文演示使用的 UI。
-
-Phase 2 尚未实施：VAST G4 KV Cache Storage、KV offload/reload 和 GPUDirect Storage 均不在本阶段范围内。

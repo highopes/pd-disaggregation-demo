@@ -1,0 +1,76 @@
+=== prefill / qwen3-14b-pd-0-vllmprefillworker-rhnlm ===
+ip: not present in runtime image
+rdma: not present in runtime image
+hca_id:	mlx5_0
+	transport:			InfiniBand (0)
+	fw_ver:				28.43.2566
+	node_guid:			a088:c203:0034:e8e6
+	sys_image_guid:			a088:c203:0034:e8e6
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000000834
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
+
+total 0
+crw-rw-rw- 1 root root  10, 120 Jul 23 06:58 rdma_cm
+crw------- 1 root root 231,   0 Jul 23 06:58 umad0
+crw-rw-rw- 1 root root 231, 192 Jul 23 06:58 uverbs0
+UCX_IB_ADDR_TYPE=eth
+UCX_IB_GID_INDEX=3
+UCX_IB_REG_METHODS=rcache
+UCX_IB_TRAFFIC_CLASS=106
+UCX_LOG_LEVEL=info
+UCX_NET_DEVICES=mlx5_0:1
+UCX_RCACHE_MAX_UNRELEASED=1024
+UCX_RNDV_SCHEME=get_zcopy
+UCX_RNDV_THRESH=0
+UCX_TLS=rc_x,rc,cuda_copy,cuda_ipc
+=== decode / qwen3-14b-pd-0-vllmdecodeworker-2qmtq ===
+ip: not present in runtime image
+rdma: not present in runtime image
+hca_id:	mlx5_0
+	transport:			InfiniBand (0)
+	fw_ver:				28.43.2566
+	node_guid:			a088:c203:0034:e8e7
+	sys_image_guid:			a088:c203:0034:e8e6
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000000834
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
+
+total 0
+crw-rw-rw- 1 root root  10, 119 Jul 23 06:58 rdma_cm
+crw------- 1 root root 231,   0 Jul 23 06:58 umad0
+crw-rw-rw- 1 root root 231, 192 Jul 23 06:58 uverbs0
+UCX_IB_ADDR_TYPE=eth
+UCX_IB_GID_INDEX=3
+UCX_IB_REG_METHODS=rcache
+UCX_IB_TRAFFIC_CLASS=106
+UCX_LOG_LEVEL=info
+UCX_NET_DEVICES=mlx5_0:1
+UCX_RCACHE_MAX_UNRELEASED=1024
+UCX_RNDV_SCHEME=get_zcopy
+UCX_RNDV_THRESH=0
+UCX_TLS=rc_x,rc,cuda_copy,cuda_ipc
+NAME                                     NODE          HOST_NETWORK   IP
+qwen3-14b-pd-0-frontend-2bvbr            csco-k8s-03   <none>         10.244.2.94
+qwen3-14b-pd-0-vllmdecodeworker-2qmtq    csco-k8s-02   true           192.168.160.112
+qwen3-14b-pd-0-vllmprefillworker-rhnlm   csco-k8s-01   true           192.168.160.111

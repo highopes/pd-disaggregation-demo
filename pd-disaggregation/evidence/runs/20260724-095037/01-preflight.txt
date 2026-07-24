@@ -1,0 +1,65 @@
+Client Version: v1.31.9
+Kustomize Version: v5.4.2
+Server Version: v1.31.9
+NAME: dynamo-platform
+LAST DEPLOYED: Thu Jul 23 11:06:42 2026
+NAMESPACE: dynamo-system
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+NOTES:
+# SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+NAME          GPU   RDMA
+csco-k8s-01   1     1
+csco-k8s-02   1     1
+csco-k8s-03   1     1
+csco-k8s-04   1     1
+NAME                                                              READY   STATUS    RESTARTS      AGE   IP             NODE          NOMINATED NODE   READINESS GATES
+admission-f4b4fd68d-twbdp                                         1/1     Running   0             22h   10.244.0.221   csco-k8s-01   <none>           <none>
+binder-84f67f5bc8-qwr25                                           1/1     Running   0             22h   10.244.0.146   csco-k8s-01   <none>           <none>
+dynamo-platform-dynamo-operator-controller-manager-f59455c7dnwf   1/1     Running   0             22h   10.244.3.222   csco-k8s-04   <none>           <none>
+dynamo-platform-etcd-0                                            1/1     Running   0             22h   10.244.1.211   csco-k8s-02   <none>           <none>
+dynamo-platform-nats-0                                            2/2     Running   0             22h   10.244.0.213   csco-k8s-01   <none>           <none>
+grove-operator-57f88fd46b-tcscz                                   1/1     Running   2 (22h ago)   22h   10.244.3.27    csco-k8s-04   <none>           <none>
+kai-operator-8655776f84-8kbqz                                     1/1     Running   0             22h   10.244.0.16    csco-k8s-01   <none>           <none>
+kai-scheduler-default-5c8f4dbc4d-w4678                            1/1     Running   0             22h   10.244.3.115   csco-k8s-04   <none>           <none>
+pod-grouper-59cd77ddb-42mn5                                       1/1     Running   0             22h   10.244.0.157   csco-k8s-01   <none>           <none>
+podgroup-controller-6877bff8b6-dq9vg                              1/1     Running   0             22h   10.244.0.166   csco-k8s-01   <none>           <none>
+queue-controller-b478dc8b8-rhp7f                                  1/1     Running   0             22h   10.244.3.130   csco-k8s-04   <none>           <none>
+NAME                      READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+rdma-shared-dp-ds-84dks   1/1     Running   0          22h   192.168.160.113   csco-k8s-03   <none>           <none>
+rdma-shared-dp-ds-jv5rv   1/1     Running   0          22h   192.168.160.114   csco-k8s-04   <none>           <none>
+rdma-shared-dp-ds-r92sp   1/1     Running   0          22h   192.168.160.112   csco-k8s-02   <none>           <none>
+rdma-shared-dp-ds-xnzqh   1/1     Running   0          22h   192.168.160.111   csco-k8s-01   <none>           <none>
+NAME     HANDLER   AGE
+nvidia   nvidia    22h
+clustertopologies.grove.io                             2026-07-23T03:03:35Z
+configs.kai.scheduler                                  2026-07-23T03:03:35Z
+dynamocheckpoints.nvidia.com                           2026-07-23T03:03:33Z
+dynamocomponentdeployments.nvidia.com                  2026-07-23T03:03:33Z
+dynamographdeploymentrequests.nvidia.com               2026-07-23T03:03:33Z
+dynamographdeployments.nvidia.com                      2026-07-23T03:03:34Z
+dynamographdeploymentscalingadapters.nvidia.com        2026-07-23T03:03:34Z
+dynamomodels.nvidia.com                                2026-07-23T03:03:35Z
+dynamoworkermetadatas.nvidia.com                       2026-07-23T03:03:35Z
+podcliques.grove.io                                    2026-07-23T03:03:35Z
+podcliquescalinggroups.grove.io                        2026-07-23T03:03:35Z
+podcliquesets.grove.io                                 2026-07-23T03:03:36Z
+podgangs.scheduler.grove.io                            2026-07-23T03:03:36Z
+schedulingshards.kai.scheduler                         2026-07-23T03:03:35Z
+topologies.kai.scheduler                               2026-07-23T03:03:35Z
+NAME           STATUS   VOLUME        CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+hf-cache-pvc   Bound    hf-cache-pv   2Ti        RWX                           <unset>                 405d
