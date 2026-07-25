@@ -1,0 +1,531 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"foundation-instruct-openai","namespace":"ai-serving"},"spec":{"externalTrafficPolicy":"Local","ports":[{"nodePort":30083,"port":8000,"targetPort":8000}],"selector":{"app":"vllm","model":"foundation-sec-8b-instruct"},"type":"NodePort"}}
+    creationTimestamp: "2025-08-14T05:46:31Z"
+    labels:
+      app: foundation-instruct-openai
+    name: foundation-instruct-openai
+    namespace: ai-serving
+    resourceVersion: "2032506160"
+    uid: fe16dc67-eaec-4af5-ada1-74c80bd467c9
+  spec:
+    clusterIP: 10.101.31.150
+    clusterIPs:
+    - 10.101.31.150
+    externalTrafficPolicy: Local
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 30083
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: vllm
+      model: foundation-sec-8b-instruct
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"foundation-openai","namespace":"ai-serving"},"spec":{"ports":[{"nodePort":30081,"port":8000,"targetPort":8000}],"selector":{"app":"vllm","model":"foundation-sec-8b"},"type":"NodePort"}}
+    creationTimestamp: "2025-06-01T13:31:44Z"
+    name: foundation-openai
+    namespace: ai-serving
+    resourceVersion: "353809"
+    uid: 675db8e3-c165-448d-acb3-8e0a23698798
+  spec:
+    clusterIP: 10.98.60.134
+    clusterIPs:
+    - 10.98.60.134
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - nodePort: 30081
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: vllm
+      model: foundation-sec-8b
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"qwen-openai"},"name":"qwen-openai","namespace":"ai-serving"},"spec":{"externalTrafficPolicy":"Local","ports":[{"name":"http","nodePort":30080,"port":8000,"protocol":"TCP","targetPort":8000}],"selector":{"app":"dynamo-qwen-frontend","model":"qwen3-14b-fp8"},"type":"NodePort"}}
+    creationTimestamp: "2025-06-02T03:37:48Z"
+    labels:
+      app: qwen-openai
+    name: qwen-openai
+    namespace: ai-serving
+    resourceVersion: "2031371403"
+    uid: 02000616-9789-48c0-b654-52c7910433b4
+  spec:
+    clusterIP: 10.101.55.103
+    clusterIPs:
+    - 10.101.55.103
+    externalTrafficPolicy: Local
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 30080
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: dynamo-qwen-frontend
+      model: qwen3-14b-fp8
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-07-23T03:11:09Z"
+    labels:
+      app.kubernetes.io/component: pcs-headless-service
+      app.kubernetes.io/managed-by: grove-operator
+      app.kubernetes.io/name: qwen3-14b-pd-0
+      app.kubernetes.io/part-of: qwen3-14b-pd
+      grove.io/podcliqueset-replica-index: "0"
+    name: qwen3-14b-pd-0
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: grove.io/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PodCliqueSet
+      name: qwen3-14b-pd
+      uid: e8d74d04-e60a-4fe9-8dba-c5b8d5fbb916
+    resourceVersion: "2030697103"
+    uid: 28c45e2c-4c8a-4b08-a30b-b84c58d9db40
+  spec:
+    clusterIP: None
+    clusterIPs:
+    - None
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    publishNotReadyAddresses: true
+    selector:
+      app.kubernetes.io/managed-by: grove-operator
+      app.kubernetes.io/part-of: qwen3-14b-pd
+      grove.io/podcliqueset-replica-index: "0"
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      nvidia.com/last-applied-generation: "1"
+      nvidia.com/last-applied-hash: cabe99a651cdfd51995e6ac8a4b6fa88fa9e67357ef61776532cf377083c5a83
+    creationTimestamp: "2026-07-23T03:11:08Z"
+    labels:
+      app: dynamo-qwen-frontend
+      model: qwen3-14b-fp8
+    name: qwen3-14b-pd-frontend
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: nvidia.com/v1beta1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DynamoGraphDeployment
+      name: qwen3-14b-pd
+      uid: c875d4a7-4df1-44ee-a0e0-0c372b8d02f2
+    resourceVersion: "2030697042"
+    uid: 4a9836d1-caf1-41e0-96ab-3fd5f380d62d
+  spec:
+    clusterIP: 10.111.42.43
+    clusterIPs:
+    - 10.111.42.43
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+      targetPort: http
+    selector:
+      nvidia.com/dynamo-component: Frontend
+      nvidia.com/dynamo-component-type: frontend
+      nvidia.com/dynamo-namespace: ai-serving-qwen3-14b-pd
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Endpoints
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-23T11:06:34Z"
+    creationTimestamp: "2025-08-14T05:46:31Z"
+    labels:
+      app: foundation-instruct-openai
+    name: foundation-instruct-openai
+    namespace: ai-serving
+    resourceVersion: "2032507720"
+    uid: fbc768bd-e947-46ec-ace7-e4865db82d73
+  subsets:
+  - addresses:
+    - ip: 10.244.3.196
+      nodeName: csco-k8s-04
+      targetRef:
+        kind: Pod
+        name: foundation-instruct-vllm-7768dbb67-z6rrr
+        namespace: ai-serving
+        uid: 5d1660b4-f414-4ce8-898a-73183b6aed7f
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+- apiVersion: v1
+  kind: Endpoints
+  metadata:
+    creationTimestamp: "2025-06-01T13:31:44Z"
+    name: foundation-openai
+    namespace: ai-serving
+    resourceVersion: "1633698543"
+    uid: 5f80afb1-8bc4-40fe-b43c-17e7e868ed5b
+- apiVersion: v1
+  kind: Endpoints
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-23T11:04:40Z"
+    creationTimestamp: "2025-06-02T03:37:48Z"
+    labels:
+      app: qwen-openai
+    name: qwen-openai
+    namespace: ai-serving
+    resourceVersion: "2032507506"
+    uid: fc83c93b-4652-4524-b982-3e06fd0cd0d6
+  subsets:
+  - addresses:
+    - ip: 10.244.2.94
+      nodeName: csco-k8s-03
+      targetRef:
+        kind: Pod
+        name: qwen3-14b-pd-0-frontend-2bvbr
+        namespace: ai-serving
+        uid: f5cc2dff-d64e-48dd-a371-465ee91a2bd9
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+- apiVersion: v1
+  kind: Endpoints
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-24T08:14:53Z"
+    creationTimestamp: "2026-07-23T03:11:09Z"
+    labels:
+      app.kubernetes.io/component: pcs-headless-service
+      app.kubernetes.io/managed-by: grove-operator
+      app.kubernetes.io/name: qwen3-14b-pd-0
+      app.kubernetes.io/part-of: qwen3-14b-pd
+      grove.io/podcliqueset-replica-index: "0"
+      service.kubernetes.io/headless: ""
+    name: qwen3-14b-pd-0
+    namespace: ai-serving
+    resourceVersion: "2037329706"
+    uid: 66c908dd-7e87-49ce-a4ed-0c3a559ebeed
+  subsets:
+  - addresses:
+    - hostname: qwen3-14b-pd-0-frontend-0
+      ip: 10.244.2.94
+      nodeName: csco-k8s-03
+      targetRef:
+        kind: Pod
+        name: qwen3-14b-pd-0-frontend-2bvbr
+        namespace: ai-serving
+        uid: f5cc2dff-d64e-48dd-a371-465ee91a2bd9
+    - hostname: qwen3-14b-pd-0-vllmprefillworker-0
+      ip: 192.168.160.111
+      nodeName: csco-k8s-01
+      targetRef:
+        kind: Pod
+        name: qwen3-14b-pd-0-vllmprefillworker-98f5n
+        namespace: ai-serving
+        uid: 8709957d-6cba-47ad-a2c2-e197be0518af
+    - hostname: qwen3-14b-pd-0-vllmdecodeworker-0
+      ip: 192.168.160.112
+      nodeName: csco-k8s-02
+      targetRef:
+        kind: Pod
+        name: qwen3-14b-pd-0-vllmdecodeworker-m6hvx
+        namespace: ai-serving
+        uid: 2f569fde-907a-4003-bbcb-80255cb0600d
+- apiVersion: v1
+  kind: Endpoints
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-23T11:04:40Z"
+    creationTimestamp: "2026-07-23T03:11:08Z"
+    labels:
+      app: dynamo-qwen-frontend
+      model: qwen3-14b-fp8
+    name: qwen3-14b-pd-frontend
+    namespace: ai-serving
+    resourceVersion: "2032507510"
+    uid: 248f7ea2-89ce-4b9b-8b65-afed94cbe20f
+  subsets:
+  - addresses:
+    - ip: 10.244.2.94
+      nodeName: csco-k8s-03
+      targetRef:
+        kind: Pod
+        name: qwen3-14b-pd-0-frontend-2bvbr
+        namespace: ai-serving
+        uid: f5cc2dff-d64e-48dd-a371-465ee91a2bd9
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.3.196
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: csco-k8s-04
+    targetRef:
+      kind: Pod
+      name: foundation-instruct-vllm-7768dbb67-z6rrr
+      namespace: ai-serving
+      uid: 5d1660b4-f414-4ce8-898a-73183b6aed7f
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-23T11:06:34Z"
+    creationTimestamp: "2025-08-14T05:46:31Z"
+    generateName: foundation-instruct-openai-
+    generation: 614
+    labels:
+      app: foundation-instruct-openai
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: foundation-instruct-openai
+    name: foundation-instruct-openai-b2f25
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: foundation-instruct-openai
+      uid: fe16dc67-eaec-4af5-ada1-74c80bd467c9
+    resourceVersion: "2032507722"
+    uid: b9aeef92-438a-40be-87e6-86a470c2ed01
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints: null
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-04-27T08:57:30Z"
+    creationTimestamp: "2025-06-01T13:31:44Z"
+    generateName: foundation-openai-
+    generation: 42
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: foundation-openai
+    name: foundation-openai-gqg82
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: foundation-openai
+      uid: 675db8e3-c165-448d-acb3-8e0a23698798
+    resourceVersion: "1633698757"
+    uid: 96175a27-dc6d-4f28-9a76-e57719771d22
+  ports: null
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.2.94
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: csco-k8s-03
+    targetRef:
+      kind: Pod
+      name: qwen3-14b-pd-0-frontend-2bvbr
+      namespace: ai-serving
+      uid: f5cc2dff-d64e-48dd-a371-465ee91a2bd9
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-23T11:04:40Z"
+    creationTimestamp: "2025-06-02T03:37:48Z"
+    generateName: qwen-openai-
+    generation: 142
+    labels:
+      app: qwen-openai
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: qwen-openai
+    name: qwen-openai-n8glf
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: qwen-openai
+      uid: 02000616-9789-48c0-b654-52c7910433b4
+    resourceVersion: "2032507507"
+    uid: 9b9778e3-e1d7-473f-887c-af357c5ace69
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 192.168.160.112
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    hostname: qwen3-14b-pd-0-vllmdecodeworker-0
+    nodeName: csco-k8s-02
+    targetRef:
+      kind: Pod
+      name: qwen3-14b-pd-0-vllmdecodeworker-m6hvx
+      namespace: ai-serving
+      uid: 2f569fde-907a-4003-bbcb-80255cb0600d
+  - addresses:
+    - 192.168.160.111
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    hostname: qwen3-14b-pd-0-vllmprefillworker-0
+    nodeName: csco-k8s-01
+    targetRef:
+      kind: Pod
+      name: qwen3-14b-pd-0-vllmprefillworker-98f5n
+      namespace: ai-serving
+      uid: 8709957d-6cba-47ad-a2c2-e197be0518af
+  - addresses:
+    - 10.244.2.94
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    hostname: qwen3-14b-pd-0-frontend-0
+    nodeName: csco-k8s-03
+    targetRef:
+      kind: Pod
+      name: qwen3-14b-pd-0-frontend-2bvbr
+      namespace: ai-serving
+      uid: f5cc2dff-d64e-48dd-a371-465ee91a2bd9
+  kind: EndpointSlice
+  metadata:
+    creationTimestamp: "2026-07-23T03:11:09Z"
+    generateName: qwen3-14b-pd-0-
+    generation: 132
+    labels:
+      app.kubernetes.io/component: pcs-headless-service
+      app.kubernetes.io/managed-by: grove-operator
+      app.kubernetes.io/name: qwen3-14b-pd-0
+      app.kubernetes.io/part-of: qwen3-14b-pd
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      grove.io/podcliqueset-replica-index: "0"
+      kubernetes.io/service-name: qwen3-14b-pd-0
+      service.kubernetes.io/headless: ""
+    name: qwen3-14b-pd-0-w2ml5
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: qwen3-14b-pd-0
+      uid: 28c45e2c-4c8a-4b08-a30b-b84c58d9db40
+    resourceVersion: "2040407293"
+    uid: f0443d60-325a-411c-beeb-94abfa208fe1
+  ports: null
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.2.94
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: csco-k8s-03
+    targetRef:
+      kind: Pod
+      name: qwen3-14b-pd-0-frontend-2bvbr
+      namespace: ai-serving
+      uid: f5cc2dff-d64e-48dd-a371-465ee91a2bd9
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-07-23T11:04:40Z"
+    creationTimestamp: "2026-07-23T03:11:08Z"
+    generateName: qwen3-14b-pd-frontend-
+    generation: 13
+    labels:
+      app: dynamo-qwen-frontend
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: qwen3-14b-pd-frontend
+      model: qwen3-14b-fp8
+    name: qwen3-14b-pd-frontend-p5zk7
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: qwen3-14b-pd-frontend
+      uid: 4a9836d1-caf1-41e0-96ab-3fd5f380d62d
+    resourceVersion: "2032507509"
+    uid: 4ce7913f-27e6-4560-b490-39ddd5b29d72
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+kind: List
+metadata:
+  resourceVersion: ""

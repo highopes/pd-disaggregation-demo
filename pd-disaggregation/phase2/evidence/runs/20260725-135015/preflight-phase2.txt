@@ -1,0 +1,15 @@
+PASS: kubectl available
+PASS: ssh available
+PASS: rdma available
+PASS: ethtool available
+PASS: findmnt available
+PASS: nfsstat available
+PASS: DGD ai-serving/qwen3-14b-pd exists
+PASS: DGD Ready=True
+PASS: frontend=qwen3-14b-pd-0-frontend-2bvbr@csco-k8s-03
+PASS: prefill=qwen3-14b-pd-0-vllmprefillworker-r67hz@csco-k8s-01
+PASS: decode=qwen3-14b-pd-0-vllmdecodeworker-m6hvx@csco-k8s-02
+PASS: Nexus credentials are available in environment (values not displayed)
+PASS: node1 remote KV mount exists
+PASS: node3 RAM marker and CX-7 active
+PASS: Phase 2 preflight

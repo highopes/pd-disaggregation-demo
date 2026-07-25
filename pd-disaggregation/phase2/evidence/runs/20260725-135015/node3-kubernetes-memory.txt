@@ -1,0 +1,26 @@
+=== kubectl top node csco-k8s-03 ===
+error: Metrics API not available
+=== kubectl top pods on csco-k8s-03 ===
+error: Metrics API not available
+=== node3 pressure/allocatable ===
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Sun, 01 Jun 2025 20:10:22 +0800   Sun, 01 Jun 2025 20:10:22 +0800   CiliumIsUp                   Cilium is running on this node
+  MemoryPressure       False   Sat, 25 Jul 2026 14:05:14 +0800   Wed, 17 Jun 2026 11:09:47 +0800   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Sat, 25 Jul 2026 14:05:14 +0800   Wed, 17 Jun 2026 11:09:47 +0800   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Sat, 25 Jul 2026 14:05:14 +0800   Wed, 17 Jun 2026 11:09:47 +0800   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Sat, 25 Jul 2026 14:05:14 +0800   Wed, 17 Jun 2026 11:09:47 +0800   KubeletReady                 kubelet is posting ready status
+Addresses:
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests       Limits
+  --------           --------       ------
+  cpu                7500m (93%)    20460m (255%)
+  memory             20922Mi (43%)  60636Mi (126%)
+  ephemeral-storage  0 (0%)         0 (0%)
+  hugepages-1Gi      0 (0%)         0 (0%)
+  hugepages-2Mi      0 (0%)         0 (0%)
+  nvidia.com/gpu     1              1
+  rdma/ib            0              0
+Events:              <none>

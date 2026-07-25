@@ -1,0 +1,12 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  cuda-toolkit-12-9-config-common
+The following NEW packages will be installed:
+  cuda-toolkit-12-9-config-common libcufile-12-9
+0 upgraded, 2 newly installed, 0 to remove and 524 not upgraded.
+Inst cuda-toolkit-12-9-config-common (12.9.79-1 NVIDIA CUDA:developer.download.nvidia.com [all])
+Inst libcufile-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf cuda-toolkit-12-9-config-common (12.9.79-1 NVIDIA CUDA:developer.download.nvidia.com [all])
+Conf libcufile-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])

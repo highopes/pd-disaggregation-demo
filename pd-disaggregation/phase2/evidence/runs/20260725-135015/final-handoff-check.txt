@@ -1,0 +1,13 @@
+2026-07-25T18:16:59+08:00
+NAME           READY
+qwen3-14b-pd   True
+NAME                                     READY   STATUS    RESTARTS   NODE
+qwen3-14b-pd-0-frontend-2bvbr            true    Running   0          csco-k8s-03
+qwen3-14b-pd-0-vllmdecodeworker-m6hvx    true    Running   0          csco-k8s-02
+qwen3-14b-pd-0-vllmprefillworker-f9f9j   true    Running   0          csco-k8s-01
+node3_memory_pressure=False
+active
+active
+active
+active
+active

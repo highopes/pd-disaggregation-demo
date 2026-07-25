@@ -1,0 +1,120 @@
+Module nvidia-fs/2.26.6 for kernel 6.11.0-26-generic (x86_64):
+Before uninstall, this module version was ACTIVE on this kernel.
+Deleting /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+Running depmod... done.
+
+Installing /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+Running depmod... done.
+=== module ===
+nvidia_fs             274432  0
+filename:       /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+version:        2.26.6
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 
+signer:         CSCO-K8S-01 Secure Boot Module Signature key
+7eb41b4c2428efd9a9b61c4abaea09897986e12445f6825fc49ad566dd786dcb  /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+=== stats ===
+GDS Version: 1.15.0.41 
+NVFS statistics(ver: 4.0)
+NVFS Driver(version: 2.26.6)
+Mellanox PeerDirect Supported: False
+IO stats: Disabled, peer IO stats: Disabled
+Logging level: info
+
+Active Shadow-Buffer (MiB): 0
+Active Process: 0
+Reads				: err=0 io_state_err=0
+Sparse Reads		        : n=0 io=0 holes=0 pages=0 
+Writes				: err=0 io_state_err=0 pg-cache=0 pg-cache-fail=0 pg-cache-eio=0
+Mmap				: n=0 ok=0 err=0 munmap=0
+Bar1-map			: n=0 ok=0 err=0 free=0 callbacks=0 active=0 delay-frees=0
+Error				: cpu-gpu-pages=0 sg-ext=0 dma-map=0 dma-ref=0
+Ops				: Read=0 Write=0 BatchIO=0
+=== kernel log ===
+Jul 25 14:56:18 CSCO-K8S-01 kernel: nvidia_fs: driver unloaded successfully
+Jul 25 14:56:20 CSCO-K8S-01 kernel: eth0: renamed from tmp664a0
+Jul 25 14:56:26 CSCO-K8S-01 kernel: eth0: renamed from tmpaab00
+Jul 25 14:56:28 CSCO-K8S-01 kernel: nvidia_fs: Initializing nvfs driver module
+Jul 25 14:56:28 CSCO-K8S-01 kernel: nvidia_fs: registered correctly with major number 234
+Jul 25 14:56:28 CSCO-K8S-01 kernel: max_peer_devs : 64 and max_pci_depth : 16
+=== gdscheck 12.9 ===
+ GDS release version: 1.14.1.1
+ nvidia_fs version:  2.26 libcufile version: 2.12
+ Platform: x86_64
+ ============
+ ENVIRONMENT:
+ ============
+ CUFILE_ENV_PATH_JSON : /usr/local/cuda-12.9/gds/cufile.json
+ =====================
+ DRIVER CONFIGURATION:
+ =====================
+ NVMe P2PDMA        : Unsupported
+ NVMe               : Unsupported
+ NVMeOF             : Unsupported
+ SCSI               : Unsupported
+ ScaleFlux CSD      : Unsupported
+ NVMesh             : Unsupported
+ DDN EXAScaler      : Unsupported
+ IBM Spectrum Scale : Unsupported
+ NFS                : Unsupported
+ BeeGFS             : Unsupported
+ ScaTeFS            : Unsupported
+ WekaFS             : Unsupported
+ Userspace RDMA     : Unsupported
+ --Mellanox PeerDirect : Enabled
+ --rdma library        : Not Loaded (libcufile_rdma.so)
+ --rdma devices        : Not configured
+ --rdma_device_status  : Up: 0 Down: 0
+ =====================
+ CUFILE CONFIGURATION:
+ =====================
+ properties.use_pci_p2pdma : false
+ properties.use_compat_mode : true
+ properties.force_compat_mode : false
+ properties.gds_rdma_write_support : true
+ properties.use_poll_mode : false
+ properties.poll_mode_max_size_kb : 4
+ properties.max_batch_io_size : 128
+ properties.max_batch_io_timeout_msecs : 5
+ properties.max_direct_io_size_kb : 16384
+ properties.max_device_cache_size_kb : 131072
+ properties.per_buffer_cache_size_kb : 1024
+ properties.max_device_pinned_mem_size_kb : 33554432
+ properties.posix_pool_slab_size_kb : 4 1024 16384 
+ properties.posix_pool_slab_count : 128 64 64 
+ properties.rdma_peer_affinity_policy : RoundRobin
+ properties.rdma_dynamic_routing : 0
+ fs.generic.posix_unaligned_writes : false
+ fs.lustre.posix_gds_min_kb: 0
+ fs.beegfs.posix_gds_min_kb: 0
+ fs.scatefs.posix_gds_min_kb: 0
+ fs.weka.rdma_write_support: false
+ fs.gpfs.gds_write_support: false
+ fs.gpfs.gds_async_support: true
+ profile.nvtx : false
+ profile.cufile_stats : 0
+ miscellaneous.api_check_aggressive : false
+ execution.max_io_threads : 4
+ execution.max_io_queue_depth : 128
+ execution.parallel_io : true
+ execution.min_io_threshold_size_kb : 8192
+ execution.max_request_parallelism : 4
+ properties.force_odirect_mode : false
+ properties.prefer_iouring : false
+ =========
+ GPU INFO:
+ =========
+ GPU index 0 NVIDIA L4 bar:1 bar size (MiB):32768 supports GDS, IOMMU State: Disabled
+ ==============
+ PLATFORM INFO:
+ ==============
+ IOMMU: disabled
+ Nvidia Driver Info Status: Supported(Nvidia Open Driver Installed)
+ Cuda Driver Version Installed:  12090
+ Platform: VMware20,1, Arch: x86_64(Linux 6.11.0-26-generic)
+ Platform verification succeeded
+=== gpu/pd ===
+NVIDIA L4, 575.51.03, 23034 MiB
+NAME                                     READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+qwen3-14b-pd-0-frontend-2bvbr            1/1     Running   0          43h   10.244.2.94       csco-k8s-03   <none>           <none>
+qwen3-14b-pd-0-vllmdecodeworker-m6hvx    1/1     Running   0          22h   192.168.160.112   csco-k8s-02   <none>           <none>
+qwen3-14b-pd-0-vllmprefillworker-98f5n   1/1     Running   0          22h   192.168.160.111   csco-k8s-01   <none>           <none>

@@ -1,0 +1,10 @@
+2026-07-25T17:10:20+08:00
+     rx_vport_rdma_unicast_bytes: 15997776714
+     tx_vport_rdma_unicast_bytes: 35902473972
+     rx_crc_errors_phy: 0
+     rx_in_range_len_errors_phy: 0
+     rx_discards_phy: 0
+     tx_discards_phy: 0
+     tx_errors_phy: 0
+     rx_prio3_bytes: 15986984752
+     tx_prio3_bytes: 34988005256

@@ -1,0 +1,13 @@
+=== node1 persistence-before ===
+6.11.0-26-generic
+not-found
+inactive
+mlnx-nfsrdma/3.4, 6.11.0-26-generic, x86_64: installed (Original modules exist)
+nvidia-fs/2.26.6, 6.11.0-26-generic, x86_64: installed
+/etc/modules-load.d/nvidia-fs.conf:1:nvidia-fs
+/etc/modprobe.d/nvidia-fs.conf:1:options nvidia-fs max_devices=16
+src_ip=172.31.230.111,dst_ip=172.31.230.113/32,tclass=106
+=== node3 persistence-before ===
+6.11.0-26-generic
+mlnx-nfsrdma/3.4, 6.11.0-26-generic, x86_64: installed (Original modules exist)
+src_ip=172.31.230.113,dst_ip=172.31.230.111/32,tclass=106

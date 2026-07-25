@@ -1,0 +1,23 @@
+===search===
+===policy===
+mlnx-ofed-kernel-dkms:
+  Installed: 24.10.OFED.24.10.2.1.8.1-1
+  Candidate: 24.10.OFED.24.10.2.1.8.1-1
+  Version table:
+ *** 24.10.OFED.24.10.2.1.8.1-1 100
+        100 /var/lib/dpkg/status
+mlnx-ofed-kernel-utils:
+  Installed: 24.10.OFED.24.10.2.1.8.1-1
+  Candidate: 24.10.OFED.24.10.2.1.8.1-1
+  Version table:
+ *** 24.10.OFED.24.10.2.1.8.1-1 100
+        100 /var/lib/dpkg/status
+===installed-ofed===
+===available-local-debs===
+===apt-sources===
+deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /
+deb https://download.docker.com/linux/ubuntu noble stable
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /
+deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /
+deb [signed-by=/etc/apt/keyrings/nvidia-container-toolkit.gpg] https://nvidia.github.io/libnvidia-container/stable/deb/$(ARCH) /
+deb [signed-by=/etc/apt/keyrings/nvidia-container-toolkit.gpg] https://nvidia.github.io/libnvidia-container/stable/ubuntu18.04/$(ARCH) /

@@ -1,0 +1,49 @@
+=== installed build config ===
+--- /var/lib/dkms/nvidia-fs/2.26.6/*/log/make.log
+ABSENT
+--- /var/lib/dkms/nvidia-fs/2.26.6/*/module/Module.symvers
+ABSENT
+--- /usr/src/nvidia-fs-2.26.6/config-host.h
+ABSENT
+=== source feature references ===
+/usr/src/nvidia-fs-2.26.6/create_nv.symvers.sh:100:	# If we fail to generate Module.symvers, then just build the nv_peer_mem without
+/usr/src/nvidia-fs-2.26.6/nvfs-stat.c:177:        seq_printf(m, "Mellanox PeerDirect Supported: %s\n", "True");
+/usr/src/nvidia-fs-2.26.6/nvfs-stat.c:183:                        seq_printf(m, "Mellanox PeerDirect Supported: %s\n", "False");
+/usr/src/nvidia-fs-2.26.6/nvfs-stat.c:185:                        seq_printf(m, "Mellanox PeerDirect Supported: %s\n", "True");
+/usr/src/nvidia-fs-2.26.6/CHANGELOG:93:  * Enable MOFEDPeerDirect support using nvidia_peermem.ko
+=== live peer-memory symbols ===
+ADDRESS t try_peer_access_remote_gpu_memory	[nvidia_uvm]
+ADDRESS t __pfx_try_peer_access_remote_gpu_memory	[nvidia_uvm]
+ADDRESS r __kstrtab_ib_register_peer_memory_client	[ib_uverbs]
+ADDRESS r __kstrtabns_ib_register_peer_memory_client	[ib_uverbs]
+ADDRESS r __ksymtab_ib_register_peer_memory_client	[ib_uverbs]
+ADDRESS r __kstrtab_ib_unregister_peer_memory_client	[ib_uverbs]
+ADDRESS r __kstrtabns_ib_unregister_peer_memory_client	[ib_uverbs]
+ADDRESS r __ksymtab_ib_unregister_peer_memory_client	[ib_uverbs]
+ADDRESS r __crc_ib_register_peer_memory_client	[ib_uverbs]
+ADDRESS r __crc_ib_unregister_peer_memory_client	[ib_uverbs]
+ADDRESS t ib_peer_memory_client_release	[ib_uverbs]
+ADDRESS d peer_mem_type	[ib_uverbs]
+ADDRESS t ib_invalidate_peer_memory	[ib_uverbs]
+ADDRESS d peer_memory_mutex	[ib_uverbs]
+ADDRESS d peer_memory_list	[ib_uverbs]
+ADDRESS t __pfx_ib_peer_memory_client_release	[ib_uverbs]
+ADDRESS t __pfx_ib_invalidate_peer_memory	[ib_uverbs]
+ADDRESS t __pfx_ib_register_peer_memory_client	[ib_uverbs]
+ADDRESS t __pfx_ib_unregister_peer_memory_client	[ib_uverbs]
+ADDRESS T ib_register_peer_memory_client	[ib_uverbs]
+ADDRESS T ib_unregister_peer_memory_client	[ib_uverbs]
+=== installed libraries ===
+/usr/local/cuda-12.0
+/usr/local/cuda-11.8/targets/x86_64-linux/lib/libcufile.so
+/usr/local/cuda-11.8/targets/x86_64-linux/lib/libcufile.so.0
+/usr/local/cuda-11.8/targets/x86_64-linux/lib/libcufile.so.1.4.0
+/usr/local/cuda-11.8/targets/x86_64-linux/lib/libcufile_rdma.so
+/usr/local/cuda-11.8/targets/x86_64-linux/lib/libcufile_rdma.so.1
+/usr/local/cuda-11.8/targets/x86_64-linux/lib/libcufile_rdma.so.1.4.0
+/usr/local/cuda-12.0/targets/x86_64-linux/lib/libcufile.so
+/usr/local/cuda-12.0/targets/x86_64-linux/lib/libcufile.so.0
+/usr/local/cuda-12.0/targets/x86_64-linux/lib/libcufile.so.1.5.1
+/usr/local/cuda-12.0/targets/x86_64-linux/lib/libcufile_rdma.so
+/usr/local/cuda-12.0/targets/x86_64-linux/lib/libcufile_rdma.so.1
+/usr/local/cuda-12.0/targets/x86_64-linux/lib/libcufile_rdma.so.1.5.1

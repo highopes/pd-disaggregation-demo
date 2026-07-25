@@ -1,0 +1,27 @@
+=== node1 ===
+enabled
+enabled
+active
+active
+src_ip=172.31.230.111,dst_ip=172.31.230.113/32,tclass=106
+TARGET         SOURCE                        FSTYPE OPTIONS
+/mnt/dynamo-g4 172.31.230.113:/srv/dynamo-g4 nfs    rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+=== node3 ===
+enabled
+enabled
+enabled
+active
+active
+active
+src_ip=172.31.230.113,dst_ip=172.31.230.111/32,tclass=106
+TARGET         SOURCE    FSTYPE OPTIONS
+/srv/dynamo-g4 /dev/ram0 ext4   rw,nosuid,nodev,relatime,data=ordered
+rdma 20049
+rdma 20049
+tcp 2049
+tcp 2049
+               total        used        free      shared  buff/cache   available
+Mem:        49331120    28298708      615128      272948    21206580    21032412
+Swap:              0           0           0
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/ram0       7.8G  6.0G  1.5G  81% /srv/dynamo-g4

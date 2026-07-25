@@ -1,0 +1,5 @@
+Frontend=ai-serving/qwen3-14b-pd-0-frontend-2bvbr node=csco-k8s-03 CiliumAgent=kube-system/cilium-p8mwz
+hubble v1.18.7-cee.1-cee@prepare/v1.18.7-ce-6968030d1 compiled with go1.24.12 on linux/amd64
+Healthcheck (via unix:///var/run/cilium/hubble.sock): Ok
+Current/Max Flows: 4,095/4,095 (100.00%)
+Flows/s: 2461.23

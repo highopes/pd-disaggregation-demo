@@ -1,0 +1,10 @@
+Sign command: /usr/bin/kmodsign
+Signing key: /var/lib/shim-signed/mok/MOK.priv
+Public certificate (MOK): /var/lib/shim-signed/mok/MOK.der
+
+Building module(s)....................... done.
+Signing module /var/lib/dkms/nvidia-fs/2.26.6/build/nvidia-fs.ko
+NVIDIA_SYMVERS=/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers
+Building module(s)
+# exit code: 0
+# elapsed time: 00:01:02

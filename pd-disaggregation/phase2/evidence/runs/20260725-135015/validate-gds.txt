@@ -1,0 +1,1 @@
+FAIL: KVBM direct Device-to-Disk log absent

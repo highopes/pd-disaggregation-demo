@@ -1,0 +1,19 @@
+=== Phase 2 final status ===
+NAME           READY   BACKEND   AGE
+qwen3-14b-pd   True    vllm      2d6h
+NAME                                     READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+qwen3-14b-pd-0-frontend-2bvbr            1/1     Running   0          46h   10.244.2.94       csco-k8s-03   <none>           <none>
+qwen3-14b-pd-0-vllmdecodeworker-m6hvx    1/1     Running   0          25h   192.168.160.112   csco-k8s-02   <none>           <none>
+qwen3-14b-pd-0-vllmprefillworker-r67hz   1/1     Running   0          48m   192.168.160.111   csco-k8s-01   <none>           <none>
+TARGET         SOURCE                        FSTYPE OPTIONS
+/mnt/dynamo-g4 172.31.230.113:/srv/dynamo-g4 nfs    rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+/mnt/dynamo-g4 from 172.31.230.113:/srv/dynamo-g4
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+
+/var/lib/kubelet/pods/8f9b4692-6a51-48ed-b2ae-3389f0063e87/volumes/kubernetes.io~nfs/hf-cache-pv from 192.168.160.109:/mnt/pool0/NFS/huggingface
+ Flags:	rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.160.111,local_lock=none,addr=192.168.160.109
+
+172.31.230.113 dev ens65np0 src 172.31.230.111 uid 0 
+    cache 
+PASS: NFSv3 source=172.31.230.113 proto=rdma port=20049 over the CX-7 path; mountproto=tcp is mountd control only
+FAIL: KVBM direct Device-to-Disk log absent

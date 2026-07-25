@@ -1,0 +1,3 @@
+Cluster-internal test (no API key expected):
+internal_http=200
+Set EXTERNAL_CLIENT_SSH to the SSH target for 192.168.160.183 to run the direct external no-token test.

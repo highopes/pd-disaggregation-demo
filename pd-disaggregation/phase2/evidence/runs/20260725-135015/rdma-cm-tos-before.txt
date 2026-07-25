@@ -1,0 +1,16 @@
+===node1===
+configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
+rdma_cm               147456  1 rdma_ucm
+IB/RoCE v1
+RoCE v2
+IB/RoCE v1
+RoCE v2
+===node3===
+configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
+rdma_cm               147456  1 rdma_ucm
+node1
+node3
+node1
+-rw-r--r-- 1 root root 4096 Jul 25 14:18 /sys/class/infiniband/mlx5_0/tc/1/traffic_class
+node3
+-rw-r--r-- 1 root root 4096 Jul 25 14:16 /sys/class/infiniband/mlx5_0/tc/1/traffic_class

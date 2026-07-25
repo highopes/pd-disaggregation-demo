@@ -1,0 +1,82 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"qwen-openai"},"name":"qwen-openai","namespace":"ai-serving"},"spec":{"externalTrafficPolicy":"Local","ports":[{"name":"http","nodePort":30080,"port":8000,"protocol":"TCP","targetPort":8000}],"selector":{"app":"dynamo-qwen-frontend","model":"qwen3-14b-fp8"},"type":"NodePort"}}
+    creationTimestamp: "2025-06-02T03:37:48Z"
+    labels:
+      app: qwen-openai
+    name: qwen-openai
+    namespace: ai-serving
+    resourceVersion: "2031371403"
+    uid: 02000616-9789-48c0-b654-52c7910433b4
+  spec:
+    clusterIP: 10.101.55.103
+    clusterIPs:
+    - 10.101.55.103
+    externalTrafficPolicy: Local
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 30080
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: dynamo-qwen-frontend
+      model: qwen3-14b-fp8
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      nvidia.com/last-applied-generation: "1"
+      nvidia.com/last-applied-hash: cabe99a651cdfd51995e6ac8a4b6fa88fa9e67357ef61776532cf377083c5a83
+    creationTimestamp: "2026-07-23T03:11:08Z"
+    labels:
+      app: dynamo-qwen-frontend
+      model: qwen3-14b-fp8
+    name: qwen3-14b-pd-frontend
+    namespace: ai-serving
+    ownerReferences:
+    - apiVersion: nvidia.com/v1beta1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DynamoGraphDeployment
+      name: qwen3-14b-pd
+      uid: c875d4a7-4df1-44ee-a0e0-0c372b8d02f2
+    resourceVersion: "2030697042"
+    uid: 4a9836d1-caf1-41e0-96ab-3fd5f380d62d
+  spec:
+    clusterIP: 10.111.42.43
+    clusterIPs:
+    - 10.111.42.43
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+      targetPort: http
+    selector:
+      nvidia.com/dynamo-component: Frontend
+      nvidia.com/dynamo-component-type: frontend
+      nvidia.com/dynamo-namespace: ai-serving-qwen3-14b-pd
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""

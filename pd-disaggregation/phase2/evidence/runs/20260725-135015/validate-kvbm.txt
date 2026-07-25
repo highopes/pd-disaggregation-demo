@@ -1,0 +1,6 @@
+kvbm_offload_blocks_d2d=332
+kvbm_onboard_blocks_d2d=332
+kvbm_matched_tokens=82432
+kvbm_disk_cache_hit_rate=0.5
+[2m2026-07-25T08:40:25.808846Z[0m [32m INFO[0m [2mdynamo_llm::block_manager::offload[0m[2m:[0m G1->G3 direct offload enabled: Device will offload directly to Disk, bypassing Host memory (CPU cache disabled)
+PASS: Prefill PdConnector(KVBM+NIXL), Device-to-Disk offload, Disk-to-Device onboard and matched tokens

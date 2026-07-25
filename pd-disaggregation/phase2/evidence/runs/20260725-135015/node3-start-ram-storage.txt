@@ -1,0 +1,20 @@
+Warning: Permanently added '192.168.160.113' (ED25519) to the list of known hosts.
+mke2fs 1.47.0 (5-Feb-2023)
+Discarding device blocks:       0/2097152               done                            
+Creating filesystem with 2097152 4k blocks and 524288 inodes
+Filesystem UUID: 29e6fb99-6b28-40c2-82ea-d21143ad9b37
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+Allocating group tables:  0/64     done                            
+Writing inode tables:  0/64     done                            
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information:  0/64     done
+
+TARGET         SOURCE    FSTYPE OPTIONS
+/srv/dynamo-g4 /dev/ram0 ext4   rw,nosuid,nodev,relatime,data=ordered
+8589934592
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/ram0       7.8G   24K  7.4G   1% /srv/dynamo-g4
+MemTotal:       49331120 kB
+MemAvailable:   28868960 kB

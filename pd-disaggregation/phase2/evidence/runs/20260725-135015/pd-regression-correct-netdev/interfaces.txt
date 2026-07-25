@@ -1,0 +1,1 @@
+node1_iface=ens65np0 node2_iface=ens65np1

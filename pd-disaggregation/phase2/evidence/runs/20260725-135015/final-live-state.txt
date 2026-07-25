@@ -1,0 +1,13 @@
+2026-07-25T18:03:46+08:00
+NAME           READY   BACKEND   AGE
+qwen3-14b-pd   True    vllm      2d6h
+NAME                                     READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+qwen3-14b-pd-0-frontend-2bvbr            1/1     Running   0          46h   10.244.2.94       csco-k8s-03   <none>           <none>
+qwen3-14b-pd-0-vllmdecodeworker-m6hvx    1/1     Running   0          25h   192.168.160.112   csco-k8s-02   <none>           <none>
+qwen3-14b-pd-0-vllmprefillworker-f9f9j   1/1     Running   0          31m   192.168.160.111   csco-k8s-01   <none>           <none>
+=== nvidia-fs ===
+IO stats: Enabled, peer IO stats: Enabled
+Reads				: n=51840 ok=51840 err=0 readMiB=3540 io_state_err=0
+Sparse Reads		        : n=0 io=0 holes=0 pages=0 
+Writes				: n=52096 ok=52096 err=0 writeMiB=3796 io_state_err=0 pg-cache=0 pg-cache-fail=0 pg-cache-eio=0
+Error				: cpu-gpu-pages=0 sg-ext=0 dma-map=0 dma-ref=0

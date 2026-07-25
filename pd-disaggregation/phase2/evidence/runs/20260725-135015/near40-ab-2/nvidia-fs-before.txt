@@ -1,0 +1,20 @@
+GDS Version: 1.15.0.41 
+NVFS statistics(ver: 4.0)
+NVFS Driver(version: 2.26.6)
+Mellanox PeerDirect Supported: False
+IO stats: Enabled, peer IO stats: Enabled
+Logging level: info
+
+Active Shadow-Buffer (MiB): 2564
+Active Process: 1
+Batches				: n=0 ok=0 err=0 Avg-Submit-Latency(usec)=0
+Reads				: n=1120 ok=1120 err=0 readMiB=370 io_state_err=0
+Reads				: Bandwidth(MiB/s)=0 Avg-Latency(usec)=0
+Sparse Reads		        : n=0 io=0 holes=0 pages=0 
+Writes				: n=1376 ok=1376 err=0 writeMiB=626 io_state_err=0 pg-cache=0 pg-cache-fail=0 pg-cache-eio=0
+Writes				: Bandwidth(MiB/s)=0 Avg-Latency(usec)=2529
+Mmap				: n=169 ok=169 err=0 munmap=5
+Bar1-map			: n=169 ok=169 err=0 free=5 callbacks=0 active=164 delay-frees=0
+Error				: cpu-gpu-pages=0 sg-ext=0 dma-map=0 dma-ref=0
+Ops				: Read=0 Write=0 BatchIO=0
+GPU 0000:03:00.0  uuid:bdd9ccea-0904-6e8f-3b32-f861ab4ee059 : Registered_MiB=16880 Cache_MiB=4 max_pinned_MiB=16880 cross_root_port(%)=100

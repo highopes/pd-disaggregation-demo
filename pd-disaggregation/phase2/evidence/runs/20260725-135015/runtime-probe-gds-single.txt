@@ -1,0 +1,5 @@
+2026-07-25 07:55:41 NIXL INFO    _api.py:363 Backend UCX was instantiated
+2026-07-25 07:55:41 NIXL INFO    _api.py:253 Initialized NIXL agent: phase2_gds_single_probe
+2026-07-25 07:55:45 NIXL INFO    _api.py:363 Backend GDS was instantiated
+GDS=INSTANTIATED
+path=/mnt/dynamo-g4/runtime-probe-rw.txt size=12

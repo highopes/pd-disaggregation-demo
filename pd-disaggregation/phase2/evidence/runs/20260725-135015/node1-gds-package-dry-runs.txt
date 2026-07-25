@@ -1,0 +1,75 @@
+=== metadata ===
+Package: nvidia-gds-12-9
+Version: 12.9.2-1
+Depends: libcufile-12-9 (>= 1.14.1.1), libcufile-dev-12-9 (>= 1.14.1.1), gds-tools-12-9 (>= 1.14.1.1), nvidia-fs (>= 2.25.7)
+Description: GPU Direct Storage 12.9 meta-package
+Package: nvidia-fs-dkms
+Version: 2.26.6-1
+Depends: dkms (>= 3.1.8), nvidia-prebuilt-kernel | nvidia-dkms-kernel | nvidia-kernel-dkms | nvidia-kernel-open-dkms
+Conflicts: nvidia-fs-prebuilt
+Description: NVIDIA GPUDirect Storage driver
+Package: nvidia-fs
+Version: 2.26.6-1
+Depends: nvidia-fs-prebuilt (>= 2.26.6) | nvidia-fs-dkms (>= 2.26.6)
+Description: NVIDIA filesystem for GPUDirect Storage
+Package: gds-tools-12-9
+Version: 1.14.1.1-1
+Depends: libstdc++6, libnuma1, openssl
+Description: Tools for GPU Direct Storage
+Package: libcufile-12-9
+Version: 1.14.1.1-1
+Depends: libmount1, libstdc++6, libudev1, libgcc1, cuda-toolkit-config-common | cuda-cudart-11-2, cuda-toolkit-12-config-common | cuda-cudart-11-2, cuda-toolkit-12-9-config-common
+Breaks: gds (<< 0.8.0)
+Replaces: gds (<< 0.8.0)
+Description: Library for GPU Direct Storage with CUDA 12.9
+=== plan A: official CUDA 12.9 GDS meta ===
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  cuda-toolkit-12-9-config-common gds-tools-12-9 libcufile-12-9
+  libcufile-dev-12-9 nvidia-fs nvidia-fs-dkms
+Suggested packages:
+  mlnx-ofed-all linux-headers-generic
+The following NEW packages will be installed:
+  cuda-toolkit-12-9-config-common gds-tools-12-9 libcufile-12-9
+  libcufile-dev-12-9 nvidia-fs nvidia-fs-dkms nvidia-gds-12-9
+0 upgraded, 7 newly installed, 0 to remove and 523 not upgraded.
+Inst cuda-toolkit-12-9-config-common (12.9.79-1 NVIDIA CUDA:developer.download.nvidia.com [all])
+Inst gds-tools-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Inst libcufile-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Inst libcufile-dev-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Inst nvidia-fs-dkms (2.28.4-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Inst nvidia-fs (2.28.4-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Inst nvidia-gds-12-9 (12.9.2-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf cuda-toolkit-12-9-config-common (12.9.79-1 NVIDIA CUDA:developer.download.nvidia.com [all])
+Conf gds-tools-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf libcufile-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf libcufile-dev-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf nvidia-fs-dkms (2.28.4-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf nvidia-fs (2.28.4-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf nvidia-gds-12-9 (12.9.2-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+=== plan B: exact kernel module and matching tools ===
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Suggested packages:
+  linux-headers-generic
+The following NEW packages will be installed:
+  gds-tools-12-9 nvidia-fs-dkms
+0 upgraded, 2 newly installed, 0 to remove and 523 not upgraded.
+Inst gds-tools-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Inst nvidia-fs-dkms (2.26.6-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf gds-tools-12-9 (1.14.1.1-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf nvidia-fs-dkms (2.26.6-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+=== plan C: exact kernel module only ===
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Suggested packages:
+  linux-headers-generic
+The following NEW packages will be installed:
+  nvidia-fs-dkms
+0 upgraded, 1 newly installed, 0 to remove and 523 not upgraded.
+Inst nvidia-fs-dkms (2.26.6-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])
+Conf nvidia-fs-dkms (2.26.6-1 NVIDIA CUDA:developer.download.nvidia.com [amd64])

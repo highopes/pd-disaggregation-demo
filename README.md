@@ -1,6 +1,6 @@
-# Dynamo P/D + NIXL/UCX/RoCEv2 Demo
+# Dynamo P/D + Remote KV Direct GDS Demo
 
-本目录保存 Phase 1 的实际配置、备份、验证脚本和非敏感证据。目标是让 Qwen3-14B-FP8 的 Prefill 固定运行在 `csco-k8s-01`，Decode 固定运行在 `csco-k8s-02`，两者通过 ConnectX-7 backend 上的 NIXL/UCX/RoCEv2 传输 KV Cache。
+本目录保存 Phase 1/2 的实际配置、备份、验证脚本和非敏感证据。最终链路让 Qwen3-14B-FP8 的 Prefill 固定运行在 `csco-k8s-01`，Decode 固定运行在 `csco-k8s-02`，两者通过 ConnectX-7 backend 上的 NIXL/UCX/RoCEv2 传输 KV Cache；同时 node3 提供 RAM-backed remote storage emulator，Prefill 通过 NFSoRDMA + NVIDIA Direct GDS 做 KVBM offload/reload。
 
 ## 最终架构
 
@@ -16,6 +16,9 @@ Prefill, node1, L4, hostNetwork                    Decode, node2, L4, hostNetwor
 Qwen/Qwen3-14B-FP8                                 Qwen/Qwen3-14B-FP8
                          └── NIXL → UCX → RoCEv2 ──┘
                              172.31.230.0/24, CX-7
+
+node3 /dev/ram0 → ext4 → NFSv3/RDMA:20049
+        └── cuFile/nvidia-fs Direct GDS ──> Prefill KVBM GPU
 ```
 
 Kubernetes Primary Network 仍是 Cilium/ISOVALENT；仅 worker 的 KV 数据面绑定 CX-7。Frontend 不使用 `hostNetwork`，因此 Service、CNP、Hubble UI Enterprise 和 Prometheus/Grafana 仍可观察 API 流量。Timescape 组件保持部署，但本指南不使用 Timescape UI。
@@ -26,7 +29,7 @@ Kubernetes Primary Network 仍是 Cilium/ISOVALENT；仅 worker 的 KV 数据面
 |---|---|---|---|---|
 | csco-k8s-01 | 192.168.160.111 | Dynamo Prefill，1 × L4 | ens65np0 / mlx5_0:1 / 172.31.230.111 | Eth1/1/1 |
 | csco-k8s-02 | 192.168.160.112 | Dynamo Decode，1 × L4 | ens65np1 / mlx5_0:1 / 172.31.230.112 | Eth1/1/2 |
-| csco-k8s-03 | 192.168.160.113 | ComfyUI；Dynamo Frontend CPU Pod（显式固定） | ens65np0 / mlx5_0:1 / 172.31.230.113 | Eth1/2/1 |
+| csco-k8s-03 | 192.168.160.113 | ComfyUI（未修改）；Dynamo Frontend CPU Pod；Phase 2 RAM/NFS-RDMA Storage Emulator | ens65np0 / mlx5_0:1 / 172.31.230.113 | Eth1/2/1 |
 | csco-k8s-04 | 192.168.160.114 | foundation-instruct-vllm，1 × L4（显式固定） | ens65np1 / mlx5_0:1 / 172.31.230.114 | Eth1/2/2，物理链路原本 down |
 
 node4 的 CX-7 no-carrier 是任务前既有物理状态；Phase 1 P/D 不依赖该链路。
@@ -42,6 +45,7 @@ node4 的 CX-7 no-carrier 是任务前既有物理状态；Phase 1 P/D 不依赖
 - ConnectX-7 MT2910，firmware `28.43.2566`，200G；node1/node2 GPU 与 NIC 同 NUMA、拓扑为 PHB。
 - ISOVALENT Cilium `1.18.7-cee.1`；Hubble Enterprise `1.13.4`、Timescape `1.8.4`、Hubble UI `1.3.12`、Tetragon `1.18.0`。
 - Nexus `N9K-C9332D-GX2B`，NX-OS `10.4(3)`。
+- Phase 2 node1：GDS 1.14.1.1 / `nvidia-fs` 2.26.6 / CUDA 12.9 cuFile；node1/node3：MLNX_OFED `mlnx-nfsrdma` 3.4 DKMS，NFSv3/RDMA port 20049。
 
 运行时中的 vLLM、NIXL、UCX 精确版本以 worker 内实际命令输出和 `pd-disaggregation/evidence/` 为准。
 
@@ -753,10 +757,43 @@ CDI 将 GPU 设备写入标准 OCI/CDI 配置，由 containerd 正式处理设�
 |---|---|---|
 | Phase 0 | 已完成 | 当前环境只读发现、CX-7/Nexus 映射、既有 workload/共享资源识别、配置和非敏感备份。 |
 | Phase 1 | **PASS** | Dynamo Qwen3-14B-FP8 Prefill/Decode、NIXL/UCX/RoCEv2、GPUDirect RDMA、CX-7/Nexus lossless fabric、来源型 Cilium API 策略、Hubble UI Enterprise/Prometheus/Grafana 证据、Pod 重建与保留服务回归。Timescape 保持现状但不是演示 UI。 |
-| Phase 1 运维加固 | 计划中，建议先于 Phase 2 | CDI 迁移、Prometheus Operator 所有权治理、systemd/GPU 维护规范和 NVML canary；按未来数据面需求修复 node4 CX-7。它们不改变 Phase 1 已通过的功能结论。 |
-| Phase 2 | 尚未实施 | VAST G4 KV Cache Storage (先用NFS over RDMA模拟)、KV offload/reload 与 GPUDirect Storage。开始前必须重新执行 discovery/backup，确认 VAST、GDS、GPU/driver/container runtime、RDMA 与多节点拓扑支持矩阵。 |
+| 运维加固 | 计划中 | CDI 迁移、Prometheus Operator 所有权治理和 node4 CX-7 修复。systemd/GPU 维护规范与 NVML canary 已在 Phase 2 实际执行；这些计划不改变已通过的功能结论。 |
+| Phase 2 | **PASS – DIRECT GDS** | node3 8 GiB RAM-backed ext4 + NFSv3/RDMA，node1 cuFile/nvidia-fs Direct GDS，Prefill KVBM Device↔Disk，保留 P→D NIXL/UCX/GPUDirect RDMA。post-persistence near-40K A/B：32.575 s→6.657 s TTFT，39,936 cached tokens，冷/热答案均正确。 |
 
+## Phase 2 一体化验证与 CxO 演示
+
+同一证据链同时服务工程验收和现场演示：
+
+```text
+Remote KV Storage ->(NFS/RDMA + GDS)-> Prefill GPU ->(NIXL/UCX/RoCE)-> Decode GPU
+
+Cold GPU Prefill TTFT : 32.575 s
+Warm GDS Reload TTFT  :  6.657 s
+TTFT Saved            : 25.918 s
+TTFT Speedup          :  4.893 x
+```
+
+恢复/持久化后的正式 run 使用真实 tokenizer 得到 39,994 input tokens；冷/热 payload SHA-256 均为 `a4e86577fe41acc9f421ff312cb945aa1753090a78c767edc830659f5ba68904`，答案均为 `PHASE2_0725173741-6d792a_5693`。Cold `offload +312 blocks`、Direct GDS write `+1,560 MiB`；Warm 命中 39,936 tokens、`onboard +312 blocks`、Direct GDS read `+1,560 MiB`。两次 P→D NIXL 均传 3,130 MiB，host/Nexus priority 3 counters 按 storage 与 P/D 方向增长，error/discard 为 0。
+
+工程验证：
+
+```bash
+pd-disaggregation/phase2/scripts/preflight-phase2.sh
+pd-disaggregation/phase2/scripts/validate-nfs-rdma.sh
+pd-disaggregation/phase2/scripts/validate-gds.sh
+pd-disaggregation/phase2/scripts/validate-kvbm.sh
+```
+
+CxO 演示默认实时检查链路并复放已归档 run；显式 `--run-ab` 才产生新的 near-40K A/B：
+
+```bash
+pd-disaggregation/phase2/scripts/demo-phase2.sh
+```
+
+详细架构、原始计数和 28 项最终报告见 [Phase 2 README](pd-disaggregation/phase2/README.md)、[architecture.md](pd-disaggregation/phase2/architecture.md) 和 [phase2-final-validation.md](pd-disaggregation/phase2/evidence/phase2-final-validation.md)。新的一体化 regression 不包含 ComfyUI readiness/API/auth gateway，也不读取其安全凭据。Grafana Phase 2 dashboard 为 optional skipped；CEE Hubble health 与实时 Qwen L7 FORWARDED flow 已验证。
+
+本环境使用 RAM-backed Linux NFS/RDMA server 模拟第三方 G4-like remote storage，以验证 Dynamo KVBM、NIXL、NFSoRDMA 和 GPUDirect Storage 数据路径。该实现不代表 VAST DASE、VAST G4 产品功能、持久性、HA、scale-out 或真实性能。单次 TTFT speedup 不得外推为 VAST benchmark。
 
 ## 回滚
 
-完整顺序和命令见 [ROLLBACK.md](pd-disaggregation/ROLLBACK.md)。备份位于 `pd-disaggregation/backup/`，包括旧 Qwen、旧 Dare、共享资源记录和改造前 CNP；Secret 值未导出。
+Phase 1 完整顺序见 [ROLLBACK.md](pd-disaggregation/ROLLBACK.md)；Phase 2 使用 [phase2/ROLLBACK.md](pd-disaggregation/phase2/ROLLBACK.md) 和 `rollback-phase2.sh --dry-run|--execute`。Phase 2 rollback 恢复 latest 40K/FP8 DGD、释放 NFS/RDMA/RAM/专用 ToS unit，不触碰共享 Phase 1 Nexus/QoS。备份未导出 Secret 值。

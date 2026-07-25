@@ -1,0 +1,12 @@
+ GDS release version: 1.14.1.1
+ NFS                : Supported
+ --Mellanox PeerDirect : Enabled
+ GPU index 0 NVIDIA L4 bar:1 bar size (MiB):32768 supports GDS, IOMMU State: Disabled
+ IOMMU: disabled
+ Nvidia Driver Info Status: Supported(Nvidia Open Driver Installed)
+Reads				: n=51840 ok=51840 err=0 readMiB=3540 io_state_err=0
+Reads				: Bandwidth(MiB/s)=296 Avg-Latency(usec)=750
+Sparse Reads		        : n=0 io=0 holes=0 pages=0 
+Writes				: n=52096 ok=52096 err=0 writeMiB=3796 io_state_err=0 pg-cache=0 pg-cache-fail=0 pg-cache-eio=0
+Writes				: Bandwidth(MiB/s)=40 Avg-Latency(usec)=793
+PASS: Direct GDS (cuFile/nvidia-fs), not compatibility mode

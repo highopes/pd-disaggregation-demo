@@ -1,0 +1,22 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Suggested packages:
+  linux-headers-generic
+The following NEW packages will be installed:
+  gds-tools-12-9 nvidia-fs-dkms
+0 upgraded, 2 newly installed, 0 to remove and 523 not upgraded.
+Need to get 39.1 MB of archives.
+After this operation, 63.2 MB of additional disk space will be used.
+Get:1 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  gds-tools-12-9 1.14.1.1-1 [39.0 MB]
+Get:2 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  nvidia-fs-dkms 2.26.6-1 [63.5 kB]
+Fetched 39.1 MB in 8s (5176 kB/s)
+Selecting previously unselected package gds-tools-12-9.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 216676 files and directories currently installed.)
+Preparing to unpack .../gds-tools-12-9_1.14.1.1-1_amd64.deb ...
+Unpacking gds-tools-12-9 (1.14.1.1-1) ...
+Selecting previously unselected package nvidia-fs-dkms.
+Preparing to unpack .../nvidia-fs-dkms_2.26.6-1_amd64.deb ...
+Unpacking nvidia-fs-dkms (2.26.6-1) ...
+Setting up gds-tools-12-9 (1.14.1.1-1) ...
+Setting up nvidia-fs-dkms (2.26.6-1) ...

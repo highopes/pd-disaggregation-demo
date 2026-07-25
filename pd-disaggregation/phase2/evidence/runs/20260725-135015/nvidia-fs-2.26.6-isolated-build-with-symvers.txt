@@ -1,0 +1,188 @@
+KERNEL=6.11.0-26-generic
+NVIDIA_SYMVERS=/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers
+make: Entering directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+rm -rf *.o *.ko* *.mod.* .*.cmd nv.symvers Module.symvers modules.order .tmp_versions/ *~ core .depend TAGS .cache.mk *.o.ur-safe
+rm -f config-host.h
+rm -f nvidia-fs.mod
+make: Leaving directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+make: Entering directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+Picking NVIDIA driver sources from NVIDIA_SRC_DIR=/usr/src/nvidia-575.51.03/nvidia-peermem. If that does not meet your expectation, you might have a stale driver still around and that might cause problems.
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-drm.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-modeset.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-peermem.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-uvm.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia.ko.zst: file format not recognized
+-W- Could not get list of nvidia symbols.
+checking if struct fd has file parameter... yes
+checking if uaccess.h access_ok has 3 parameters... no
+checking if uaccess.h access_ok has 2 parameters... yes
+Checking if blkdev.h has blk_rq_payload_bytes... yes
+Checking if fs.h has call_read_iter and call_write_iter... no
+Checking if fs.h has filemap_range_has_page... yes
+Checking if kiocb structue has ki_complete field... yes
+Checking if vm_fault_t exist in mm_types.h... yes
+Checking if enum PCIE_SPEED_32_0GT exists in pci.h... yes
+Checking if enum PCIE_SPEED_64_0GT exists in pci.h... yes
+Checking if atomic64_t counter is of type long... no
+Checking if RQF_COPY_USER is present or not... no
+Checking if dma_drain_size and dma_drain_needed are present in struct request_queue... no
+Checking if struct proc_ops is present or not ... yes
+Checking if split is present in vm_operations_struct or not ... no
+Checking if mremap in vm_operations_struct has one parameter... yes
+Checking if mremap in vm_operations_struct has two parameters... no
+Checking if symbol module_mutex is present... no
+Checking if blk-integrity.h is present... yes
+Checking if KI_COMPLETE has 3 parameters ... no
+Checking if pin_user_pages_fast symbol is present in kernel or not ... yes
+Checking if prandom_u32 symbol is present in kernel or not ... no
+Checking if devnode in class has doesn't have const device or not ... no
+Checking if class_create has two parameters or not ... no
+Checking if vma_flags are modifiable directly ... no
+Checking if blk-mq-pci.h is present... yes
+make[1]: Entering directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+make[1]: warning: -j4 forced in submake: resetting jobserver mode.
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  You are using:           gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-core.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-dma.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-mmap.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-pci.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-proc.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-mod.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-kernel-interface.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-stat.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-rdma.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-batch.o
+  LD [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.o
+  MODPOST /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/Module.symvers
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.mod.o
+  LD [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko
+  BTF [M] /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko
+Skipping BTF generation for /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko due to unavailability of vmlinux
+make[1]: Leaving directory '/usr/src/linux-headers-6.11.0-26-generic'
+make: Leaving directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+=== built module ===
+filename:       /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko
+description:    NVIDIA GPUDirect Storage
+license:        GPL v2
+version:        2.26.6
+srcversion:     32577DB706994A2BCFDBC23
+depends:        nvidia
+retpoline:      Y
+name:           nvidia_fs
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 
+parm:           max_devices:uint
+parm:           nvfs_max_devices:number of character devices to expose
+parm:           dbg_enabled:uint
+parm:           nvfs_dbg_enabled:enable debug tracing
+parm:           info_enabled:uint
+parm:           nvfs_info_enabled:enable info tracing
+parm:           peer_stats_enabled:uint
+parm:           nvfs_peer_stats_enabled:enable peer stats
+parm:           rw_stats_enabled:uint
+parm:           nvfs_rw_stats_enabled:enable read-write stats
+parm:           use_legacy_p2p_allocation:uint
+parm:           nvfs_use_legacy_p2p_allocation:Use legacy p2p allocation
+=== versioned NVIDIA P2P symbols embedded ===
+
+Hex dump of section '__versions':
+  0x00000000 1c000000 498697f6 70696e5f 75736572 ....I...pin_user
+  0x00000010 5f706167 65735f66 61737400 1c000000 _pages_fast.....
+  0x00000020 d7227f58 6465766d 61705f6d 616e6167 .".Xdevmap_manag
+  0x00000030 65645f6b 65790000 14000000 1c644a95 ed_key.......dJ.
+  0x00000040 66696c70 5f6f7065 6e000000 24000000 filp_open...$...
+  0x00000050 28200011 70636965 5f636170 6162696c ( ..pcie_capabil
+  0x00000060 6974795f 72656164 5f776f72 64000000 ity_read_word...
+  0x00000070 20000000 5ca499bf 7063695f 66696e64  ...\...pci_find
+  0x00000080 5f657874 5f636170 6162696c 69747900 _ext_capability.
+  0x00000090 18000000 53b49650 70617261 6d5f6f70 ....S..Pparam_op
+  0x000000a0 735f7569 6e740000 20000000 ccce2476 s_uint.. .....$v
+  0x000000b0 66696c65 6d61705f 72616e67 655f6861 filemap_range_ha
+  0x000000c0 735f7061 67650000 18000000 c29cc413 s_page..........
+  0x000000d0 5f636f70 795f6672 6f6d5f75 73657200 _copy_from_user.
+  0x000000e0 18000000 1427528d 5f5f7263 755f7265 .....'R.__rcu_re
+  0x000000f0 61645f6c 6f636b00 1c000000 91c9c552 ad_lock........R
+  0x00000100 5f5f6b6d 616c6c6f 635f6e6f 70726f66 __kmalloc_noprof
+  0x00000110 00000000 14000000 85f8b322 70726f63 ..........."proc
+  0x00000120 5f637265 61746500 18000000 06d69d6e _create........n
+  0x00000130 5f5f7379 6d626f6c 5f707574 00000000 __symbol_put....
+  0x00000140 14000000 8e4111f9 7063695f 6465765f .....A..pci_dev_
+  0x00000150 70757400 20000000 2c8ad848 5f5f5343 put. ...,..H__SC
+  0x00000160 545f5f70 7265656d 70745f73 63686564 T__preempt_sched
+  0x00000170 756c6500 14000000 bf0f5492 66696e69 ule.......T.fini
+  0x00000180 73685f77 61697400 18000000 8fc93e5a sh_wait.......>Z
+  0x00000190 636c6173 735f6465 7374726f 79000000 class_destroy...
+  0x000001a0 10000000 ba0c7a03 6b667265 65000000 ......z.kfree...
+  0x000001b0 28000000 32822b79 696e7661 6c696461 (...2.+yinvalida
+  0x000001c0 74655f69 6e6f6465 5f706167 6573325f te_inode_pages2_
+  0x000001d0 72616e67 65000000 14000000 5d9700e3 range.......]...
+  0x000001e0 70637075 5f686f74 00000000 14000000 pcpu_hot........
+  0x000001f0 a2e68214 7365715f 6c736565 6b000000 ....seq_lseek...
+  0x00000200 20000000 95d4268c 70726570 6172655f  .....&.prepare_
+  0x00000210 746f5f77 6169745f 6576656e 74000000 to_wait_event...
+  0x00000220 1c000000 9041b329 72656d6f 76655f70 .....A.)remove_p
+  0x00000230 726f635f 73756274 72656500 18000000 roc_subtree.....
+  0x00000240 3ce4c9a7 696f765f 69746572 5f696e69 <...iov_iter_ini
+  0x00000250 74000000 14000000 444396e2 5f5f7761 t.......DC..__wa
+  0x00000260 6b655f75 70000000 24000000 455f4d6f ke_up...$...E_Mo
+  0x00000270 6e766964 69615f70 32705f64 6d615f75 nvidia_p2p_dma_u
+  0x00000280 6e6d6170 5f706167 65730000 1c000000 nmap_pages......
+  0x00000290 53549ab1 5f5f7065 725f6370 755f6f66 ST..__per_cpu_of
+  0x000002a0 66736574 00000000 18000000 64bd8fba fset........d...
+  0x000002b0 5f726177 5f737069 6e5f6c6f 636b0000 _raw_spin_lock..
+  0x000002c0 14000000 bb6dfbbd 5f5f6665 6e747279 .....m..__fentry
+  0x000002d0 5f5f0000 24000000 97704865 5f5f7838 __..$....pHe__x8
+  0x000002e0 365f696e 64697265 63745f74 68756e6b 6_indirect_thunk
+  0x000002f0 5f726178 00000000 10000000 7e3a2c12 _rax........~:,.
+  0x00000300 5f707269 6e746b00 14000000 510e0001 _printk.....Q...
+  0x00000310 73636865 64756c65 00000000 1c000000 schedule........
+  0x00000320 ad8add8d 73636865 64756c65 5f74696d ....schedule_tim
+  0x00000330 656f7574 00000000 1c000000 cbf6fdf0 eout............
+  0x00000340 5f5f7374 61636b5f 63686b5f 6661696c __stack_chk_fail
+  0x00000350 00000000 18000000 39298fad 636f6e73 ........9)..cons
+  0x00000360 745f7063 70755f68 6f740000 28000000 t_pcpu_hot..(...
+  0x00000370 b31ca287 5f5f7562 73616e5f 68616e64 ....__ubsan_hand
+  0x00000380 6c655f6f 75745f6f 665f626f 756e6473 le_out_of_bounds
+  0x00000390 00000000 1c000000 5ed7d87c 70616765 ........^..|page
+  0x000003a0 5f6f6666 7365745f 62617365 00000000 _offset_base....
+  0x000003b0 18000000 b67fc446 5f5f6e6f 64655f64 .......F__node_d
+  0x000003c0 69737461 6e636500 28000000 e46fb3bc istance.(....o..
+  0x000003d0 68756765 746c625f 6f707469 6d697a65 hugetlb_optimize
+  0x000003e0 5f766d65 6d6d6170 5f6b6579 00000000 _vmemmap_key....
+  0x000003f0 28000000 1439dfac 6e766964 69615f70 (....9..nvidia_p
+  0x00000400 32705f70 75745f70 61676573 5f706572 2p_put_pages_per
+  0x00000410 73697374 656e7400 18000000 cb848786 sistent.........
+  0x00000420 5f5f7379 6d626f6c 5f676574 00000000 __symbol_get....
+  0x00000430 18000000 389e7851 766d5f69 6e736572 ....8.xQvm_inser
+  0x00000440 745f7061 67650000 18000000 757948fe t_page......uyH.
+  0x00000450 696e6974 5f776169 745f656e 74727900 init_wait_entry.
+  0x00000460 10000000 2ebe650a 66707574 00000000 ......e.fput....
+  0x00000470 14000000 d219bc57 646f776e 5f777269 .......Wdown_wri
+  0x00000480 74650000 14000000 257a80ce 75705f77 te......%z..up_w
+  0x00000490 72697465 00000000 18000000 7f799160 rite.........y.`
+  0x000004a0 73796e63 68726f6e 697a655f 72637500 synchronize_rcu.
+  0x000004b0 14000000 cb69858c 6b737472 746f696e .....i..kstrtoin
+  0x000004c0 74000000 1c000000 0f816924 5f5f7263 t.........i$__rc
+  0x000004d0 755f7265 61645f75 6e6c6f63 6b000000 u_read_unlock...
+  0x000004e0 18000000 65fe0f5b 64657669 63655f63 ....e..[device_c
+  0x000004f0 72656174 65000000 18000000 28b03280 reate.......(.2.
+  0x00000500 636c6173 735f6372 65617465 00000000 class_create....
+  0x00000510 1c000000 63a5034c 72616e64 6f6d5f6b ....c..Lrandom_k
+  0x00000520 6d616c6c 6f635f73 65656400 24000000 malloc_seed.$...
+  0x00000530 100501f0 7063695f 6765745f 646f6d61 ....pci_get_doma
+  0x00000540 696e5f62 75735f61 6e645f73 6c6f7400 in_bus_and_slot.
+  0x00000550 14000000 4b8dfa4d 6d757465 785f6c6f ....K..Mmutex_lo
+  0x00000560 636b0000 20000000 793e3f5b 6e766964 ck.. ...y>?[nvid
+  0x00000570 69615f70 32705f67 65745f70 61676573 ia_p2p_get_pages
+  0x00000580 00000000 20000000 8c6e318e 7063695f .... ....n1.pci_
+  0x00000590 72656164 5f636f6e 6669675f 776f7264 read_config_word
+  0x000005a0 00000000 18000000 d9e8a153 5f66696e ...........S_fin
+  0x000005b0 645f6e65 78745f62 69740000 28000000 d_next_bit..(...
+  0x000005c0 4f23ff37 5f5f7075 745f6465 766d6170 O#.7__put_devmap
+  0x000005d0 5f6d616e 61676564 5f666f6c 696f5f72 _managed_folio_r
+  0x000005e0 65667300 14000000 187e61df 70726f63 efs......~a.proc
+  0x000005f0 5f6d6b64 69720000 1c000000 753f689e _mkdir......u?h.
+  0x00000600 5f5f6370 755f706f 73736962 6c655f6d __cpu_possible_m
+  0x00000610 61736b00 10000000 c58f57fb 6d656d73 ask.......W.mems

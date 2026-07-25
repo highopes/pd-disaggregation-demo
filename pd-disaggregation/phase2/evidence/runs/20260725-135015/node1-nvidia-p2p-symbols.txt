@@ -1,0 +1,24 @@
+=== live exported NVIDIA P2P symbols ===
+=== NVIDIA Module.symvers candidates ===
+/usr/src/linux-headers-6.11.0-25-generic/Module.symvers
+/usr/src/linux-headers-6.11.0-26-generic/Module.symvers
+/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/Module.symvers
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers
+=== NVIDIA DKMS symvers matches ===
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_get_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_get_pages_persistent	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_free_page_table	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_put_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_put_pages_persistent	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_dma_map_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_dma_unmap_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-26-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_free_dma_mapping	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_get_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_get_pages_persistent	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_free_page_table	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_put_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_put_pages_persistent	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_dma_map_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_dma_unmap_pages	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	
+/var/lib/dkms/nvidia/575.51.03/6.11.0-25-generic/x86_64/module/Module.symvers:CRC	nvidia_p2p_free_dma_mapping	/var/lib/dkms/nvidia/575.51.03/build/nvidia	EXPORT_SYMBOL_GPL	

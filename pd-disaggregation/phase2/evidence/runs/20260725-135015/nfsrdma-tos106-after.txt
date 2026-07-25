@@ -1,0 +1,8 @@
+2026-07-25T15:40:33+08:00
+node1_after:
+src_ip=172.31.230.111,dst_ip=172.31.230.113/32,tclass=106
+node3_after:
+src_ip=172.31.230.113,dst_ip=172.31.230.111/32,tclass=106
+TARGET         SOURCE                        FSTYPE OPTIONS
+/mnt/dynamo-g4 172.31.230.113:/srv/dynamo-g4 nfs    rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+dgd_after:

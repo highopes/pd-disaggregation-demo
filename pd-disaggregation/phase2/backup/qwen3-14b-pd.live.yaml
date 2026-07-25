@@ -1,0 +1,271 @@
+apiVersion: nvidia.com/v1beta1
+kind: DynamoGraphDeployment
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"nvidia.com/v1alpha1","kind":"DynamoGraphDeployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"qwen3-14b-pd","app.kubernetes.io/version":"1.2.1"},"name":"qwen3-14b-pd","namespace":"ai-serving"},"spec":{"backendFramework":"vllm","pvcs":[{"create":false,"name":"hf-cache-pvc","size":"0"}],"services":{"Frontend":{"componentType":"frontend","extraPodMetadata":{"labels":{"app":"dynamo-qwen-frontend","model":"qwen3-14b-fp8"}},"extraPodSpec":{"mainContainer":{"args":["exec python3 -m dynamo.frontend --http-port 8000 --kv-cache-block-size 128"],"command":["/bin/sh","-c"],"image":"nvcr.io/nvidia/ai-dynamo/dynamo-frontend:1.2.1","imagePullPolicy":"IfNotPresent","ports":[{"containerPort":8000,"name":"http","protocol":"TCP"}],"workingDir":"/workspace/examples/backends/vllm"},"nodeSelector":{"kubernetes.io/hostname":"csco-k8s-03"}},"labels":{"app":"dynamo-qwen-frontend","model":"qwen3-14b-fp8"},"replicas":1},"VllmDecodeWorker":{"componentType":"worker","envs":[{"name":"HF_HOME","value":"/root/.cache/huggingface"},{"name":"UCX_TLS","value":"rc_x,rc,cuda_copy,cuda_ipc"},{"name":"UCX_NET_DEVICES","value":"mlx5_0:1"},{"name":"UCX_IB_ADDR_TYPE","value":"eth"},{"name":"UCX_IB_GID_INDEX","value":"3"},{"name":"UCX_IB_TRAFFIC_CLASS","value":"106"},{"name":"UCX_RNDV_SCHEME","value":"get_zcopy"},{"name":"UCX_RNDV_THRESH","value":"0"},{"name":"UCX_IB_REG_METHODS","value":"rcache"},{"name":"UCX_RCACHE_MAX_UNRELEASED","value":"1024"},{"name":"UCX_LOG_LEVEL","value":"info"},{"name":"NIXL_LOG_LEVEL","value":"INFO"},{"name":"DYN_SYSTEM_PORT","value":"19191"}],"extraPodMetadata":{"labels":{"app":"dynamo-qwen-decode","dynamo-role":"decode","model":"qwen3-14b-fp8"}},"extraPodSpec":{"dnsPolicy":"ClusterFirstWithHostNet","hostNetwork":true,"mainContainer":{"args":["ulimit -l unlimited \u0026\u0026 exec python3 -m dynamo.vllm --model Qwen/Qwen3-14B-FP8 --served-model-name Qwen/Qwen3-14B-FP8 --dtype auto --tensor-parallel-size 1 --gpu-memory-utilization 0.90 --max-model-len 40960 --max-num-seqs 1 --kv-cache-dtype fp8 --calculate-kv-scales --trust-remote-code --enforce-eager --no-enable-prefix-caching --block-size 128 --disaggregation-mode decode --kv-transfer-config '{\"kv_connector\":\"NixlConnector\",\"kv_role\":\"kv_both\"}'"],"command":["/bin/sh","-c"],"image":"nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":1,"httpGet":{"path":"/live","port":19191},"periodSeconds":5,"timeoutSeconds":4},"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":19191},"periodSeconds":10,"timeoutSeconds":4},"securityContext":{"capabilities":{"add":["IPC_LOCK","SYS_RESOURCE"]},"runAsUser":0},"startupProbe":{"failureThreshold":720,"httpGet":{"path":"/live","port":19191},"periodSeconds":10,"timeoutSeconds":5},"workingDir":"/workspace/examples/backends/vllm"},"nodeSelector":{"kubernetes.io/hostname":"csco-k8s-02"},"terminationGracePeriodSeconds":60},"labels":{"app":"dynamo-qwen-decode","model":"qwen3-14b-fp8"},"replicas":1,"resources":{"limits":{"custom":{"rdma/ib":"1"},"gpu":"1"},"requests":{"custom":{"rdma/ib":"1"},"gpu":"1"}},"sharedMemory":{"size":"8Gi"},"subComponentType":"decode","volumeMounts":[{"mountPoint":"/root/.cache/huggingface","name":"hf-cache-pvc"}]},"VllmPrefillWorker":{"componentType":"worker","envs":[{"name":"HF_HOME","value":"/root/.cache/huggingface"},{"name":"UCX_TLS","value":"rc_x,rc,cuda_copy,cuda_ipc"},{"name":"UCX_NET_DEVICES","value":"mlx5_0:1"},{"name":"UCX_IB_ADDR_TYPE","value":"eth"},{"name":"UCX_IB_GID_INDEX","value":"3"},{"name":"UCX_IB_TRAFFIC_CLASS","value":"106"},{"name":"UCX_RNDV_SCHEME","value":"get_zcopy"},{"name":"UCX_RNDV_THRESH","value":"0"},{"name":"UCX_IB_REG_METHODS","value":"rcache"},{"name":"UCX_RCACHE_MAX_UNRELEASED","value":"1024"},{"name":"UCX_LOG_LEVEL","value":"info"},{"name":"NIXL_LOG_LEVEL","value":"INFO"},{"name":"DYN_SYSTEM_PORT","value":"19191"}],"extraPodMetadata":{"labels":{"app":"dynamo-qwen-prefill","dynamo-role":"prefill","model":"qwen3-14b-fp8"}},"extraPodSpec":{"dnsPolicy":"ClusterFirstWithHostNet","hostNetwork":true,"mainContainer":{"args":["ulimit -l unlimited \u0026\u0026 exec python3 -m dynamo.vllm --model Qwen/Qwen3-14B-FP8 --served-model-name Qwen/Qwen3-14B-FP8 --dtype auto --tensor-parallel-size 1 --gpu-memory-utilization 0.90 --max-model-len 40960 --max-num-seqs 1 --kv-cache-dtype fp8 --calculate-kv-scales --trust-remote-code --enforce-eager --no-enable-prefix-caching --block-size 128 --disaggregation-mode prefill --kv-transfer-config '{\"kv_connector\":\"NixlConnector\",\"kv_role\":\"kv_both\"}'"],"command":["/bin/sh","-c"],"image":"nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":1,"httpGet":{"path":"/live","port":19191},"periodSeconds":5,"timeoutSeconds":4},"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":19191},"periodSeconds":10,"timeoutSeconds":4},"securityContext":{"capabilities":{"add":["IPC_LOCK","SYS_RESOURCE"]},"runAsUser":0},"startupProbe":{"failureThreshold":720,"httpGet":{"path":"/live","port":19191},"periodSeconds":10,"timeoutSeconds":5},"workingDir":"/workspace/examples/backends/vllm"},"nodeSelector":{"kubernetes.io/hostname":"csco-k8s-01"},"terminationGracePeriodSeconds":60},"labels":{"app":"dynamo-qwen-prefill","model":"qwen3-14b-fp8"},"replicas":1,"resources":{"limits":{"custom":{"rdma/ib":"1"},"gpu":"1"},"requests":{"custom":{"rdma/ib":"1"},"gpu":"1"}},"sharedMemory":{"size":"8Gi"},"subComponentType":"prefill","volumeMounts":[{"mountPoint":"/root/.cache/huggingface","name":"hf-cache-pvc"}]}}}}
+    nvidia.com/current-worker-hash: 39363dbf
+    nvidia.com/current-worker-hash-v2: 3786c24b
+    nvidia.com/dgd-spec: '{"version":1,"spec":{"pvcs":[{"create":false,"name":"hf-cache-pvc","size":"0"}],"services":{"Frontend":{"labels":{"app":"dynamo-qwen-frontend","model":"qwen3-14b-fp8"}},"VllmDecodeWorker":{"labels":{"app":"dynamo-qwen-decode","model":"qwen3-14b-fp8"},"resources":{"requests":{"gpu":"1","custom":{"rdma/ib":"1"}},"limits":{"gpu":"1","custom":{"rdma/ib":"1"}}},"envs":[{"name":"HF_HOME","value":"/root/.cache/huggingface"},{"name":"UCX_TLS","value":"rc_x,rc,cuda_copy,cuda_ipc"},{"name":"UCX_NET_DEVICES","value":"mlx5_0:1"},{"name":"UCX_IB_ADDR_TYPE","value":"eth"},{"name":"UCX_IB_GID_INDEX","value":"3"},{"name":"UCX_IB_TRAFFIC_CLASS","value":"106"},{"name":"UCX_RNDV_SCHEME","value":"get_zcopy"},{"name":"UCX_RNDV_THRESH","value":"0"},{"name":"UCX_IB_REG_METHODS","value":"rcache"},{"name":"UCX_RCACHE_MAX_UNRELEASED","value":"1024"},{"name":"UCX_LOG_LEVEL","value":"info"},{"name":"NIXL_LOG_LEVEL","value":"INFO"},{"name":"DYN_SYSTEM_PORT","value":"19191"}],"volumeMounts":[{"name":"hf-cache-pvc","mountPoint":"/root/.cache/huggingface"}],"extraPodSpec":{"mainContainer":{"name":"","resources":{},"livenessProbe":{"httpGet":{"path":"/live","port":19191},"timeoutSeconds":4,"periodSeconds":5,"failureThreshold":1},"readinessProbe":{"httpGet":{"path":"/health","port":19191},"timeoutSeconds":4,"periodSeconds":10,"failureThreshold":3}}}},"VllmPrefillWorker":{"labels":{"app":"dynamo-qwen-prefill","model":"qwen3-14b-fp8"},"resources":{"requests":{"gpu":"1","custom":{"rdma/ib":"1"}},"limits":{"gpu":"1","custom":{"rdma/ib":"1"}}},"envs":[{"name":"HF_HOME","value":"/root/.cache/huggingface"},{"name":"UCX_TLS","value":"rc_x,rc,cuda_copy,cuda_ipc"},{"name":"UCX_NET_DEVICES","value":"mlx5_0:1"},{"name":"UCX_IB_ADDR_TYPE","value":"eth"},{"name":"UCX_IB_GID_INDEX","value":"3"},{"name":"UCX_IB_TRAFFIC_CLASS","value":"106"},{"name":"UCX_RNDV_SCHEME","value":"get_zcopy"},{"name":"UCX_RNDV_THRESH","value":"0"},{"name":"UCX_IB_REG_METHODS","value":"rcache"},{"name":"UCX_RCACHE_MAX_UNRELEASED","value":"1024"},{"name":"UCX_LOG_LEVEL","value":"info"},{"name":"NIXL_LOG_LEVEL","value":"INFO"},{"name":"DYN_SYSTEM_PORT","value":"19191"}],"volumeMounts":[{"name":"hf-cache-pvc","mountPoint":"/root/.cache/huggingface"}],"extraPodSpec":{"mainContainer":{"name":"","resources":{},"livenessProbe":{"httpGet":{"path":"/live","port":19191},"timeoutSeconds":4,"periodSeconds":5,"failureThreshold":1},"readinessProbe":{"httpGet":{"path":"/health","port":19191},"timeoutSeconds":4,"periodSeconds":10,"failureThreshold":3}}}}}}}'
+    nvidia.com/dynamo-operator-origin-version: 1.2.1
+  creationTimestamp: "2026-07-23T03:11:08Z"
+  finalizers:
+  - nvidia.com/finalizer
+  generation: 11
+  labels:
+    app.kubernetes.io/name: qwen3-14b-pd
+    app.kubernetes.io/version: 1.2.1
+  name: qwen3-14b-pd
+  namespace: ai-serving
+  resourceVersion: "2037342145"
+  uid: c875d4a7-4df1-44ee-a0e0-0c372b8d02f2
+spec:
+  backendFramework: vllm
+  components:
+  - name: Frontend
+    podTemplate:
+      metadata:
+        labels:
+          app: dynamo-qwen-frontend
+          model: qwen3-14b-fp8
+      spec:
+        containers:
+        - args:
+          - exec python3 -m dynamo.frontend --http-port 8000 --kv-cache-block-size
+            128
+          command:
+          - /bin/sh
+          - -c
+          image: nvcr.io/nvidia/ai-dynamo/dynamo-frontend:1.2.1
+          imagePullPolicy: IfNotPresent
+          name: main
+          ports:
+          - containerPort: 8000
+            name: http
+            protocol: TCP
+          workingDir: /workspace/examples/backends/vllm
+        nodeSelector:
+          kubernetes.io/hostname: csco-k8s-03
+    replicas: 1
+    type: frontend
+  - name: VllmDecodeWorker
+    podTemplate:
+      metadata:
+        labels:
+          app: dynamo-qwen-decode
+          dynamo-role: decode
+          model: qwen3-14b-fp8
+      spec:
+        containers:
+        - args:
+          - ulimit -l unlimited && exec python3 -m dynamo.vllm --model Qwen/Qwen3-14B-FP8
+            --served-model-name Qwen/Qwen3-14B-FP8 --dtype auto --tensor-parallel-size
+            1 --gpu-memory-utilization 0.90 --max-model-len 40960 --max-num-seqs 1
+            --kv-cache-dtype fp8 --calculate-kv-scales --trust-remote-code --enforce-eager
+            --no-enable-prefix-caching --block-size 128 --disaggregation-mode decode
+            --kv-transfer-config '{"kv_connector":"NixlConnector","kv_role":"kv_both"}'
+          command:
+          - /bin/sh
+          - -c
+          env:
+          - name: HF_HOME
+            value: /root/.cache/huggingface
+          - name: UCX_TLS
+            value: rc_x,rc,cuda_copy,cuda_ipc
+          - name: UCX_NET_DEVICES
+            value: mlx5_0:1
+          - name: UCX_IB_ADDR_TYPE
+            value: eth
+          - name: UCX_IB_GID_INDEX
+            value: "3"
+          - name: UCX_IB_TRAFFIC_CLASS
+            value: "106"
+          - name: UCX_RNDV_SCHEME
+            value: get_zcopy
+          - name: UCX_RNDV_THRESH
+            value: "0"
+          - name: UCX_IB_REG_METHODS
+            value: rcache
+          - name: UCX_RCACHE_MAX_UNRELEASED
+            value: "1024"
+          - name: UCX_LOG_LEVEL
+            value: info
+          - name: NIXL_LOG_LEVEL
+            value: INFO
+          - name: DYN_SYSTEM_PORT
+            value: "19191"
+          image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /live
+              port: 19191
+            periodSeconds: 5
+            timeoutSeconds: 4
+          name: main
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 19191
+            periodSeconds: 10
+            timeoutSeconds: 4
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+              rdma/ib: "1"
+            requests:
+              nvidia.com/gpu: "1"
+              rdma/ib: "1"
+          securityContext:
+            capabilities:
+              add:
+              - IPC_LOCK
+              - SYS_RESOURCE
+            runAsUser: 0
+          startupProbe:
+            failureThreshold: 720
+            httpGet:
+              path: /live
+              port: 19191
+            periodSeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+          - mountPath: /root/.cache/huggingface
+            name: hf-cache-pvc
+          workingDir: /workspace/examples/backends/vllm
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true
+        nodeSelector:
+          kubernetes.io/hostname: csco-k8s-02
+        terminationGracePeriodSeconds: 60
+    replicas: 1
+    sharedMemorySize: 8Gi
+    type: decode
+  - name: VllmPrefillWorker
+    podTemplate:
+      metadata:
+        labels:
+          app: dynamo-qwen-prefill
+          dynamo-role: prefill
+          model: qwen3-14b-fp8
+      spec:
+        containers:
+        - args:
+          - ulimit -l unlimited && exec python3 -m dynamo.vllm --model Qwen/Qwen3-14B-FP8
+            --served-model-name Qwen/Qwen3-14B-FP8 --dtype auto --tensor-parallel-size
+            1 --gpu-memory-utilization 0.90 --max-model-len 40960 --max-num-seqs 1
+            --kv-cache-dtype fp8 --calculate-kv-scales --trust-remote-code --enforce-eager
+            --no-enable-prefix-caching --block-size 128 --disaggregation-mode prefill
+            --kv-transfer-config '{"kv_connector":"NixlConnector","kv_role":"kv_both"}'
+          command:
+          - /bin/sh
+          - -c
+          env:
+          - name: HF_HOME
+            value: /root/.cache/huggingface
+          - name: UCX_TLS
+            value: rc_x,rc,cuda_copy,cuda_ipc
+          - name: UCX_NET_DEVICES
+            value: mlx5_0:1
+          - name: UCX_IB_ADDR_TYPE
+            value: eth
+          - name: UCX_IB_GID_INDEX
+            value: "3"
+          - name: UCX_IB_TRAFFIC_CLASS
+            value: "106"
+          - name: UCX_RNDV_SCHEME
+            value: get_zcopy
+          - name: UCX_RNDV_THRESH
+            value: "0"
+          - name: UCX_IB_REG_METHODS
+            value: rcache
+          - name: UCX_RCACHE_MAX_UNRELEASED
+            value: "1024"
+          - name: UCX_LOG_LEVEL
+            value: info
+          - name: NIXL_LOG_LEVEL
+            value: INFO
+          - name: DYN_SYSTEM_PORT
+            value: "19191"
+          image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /live
+              port: 19191
+            periodSeconds: 5
+            timeoutSeconds: 4
+          name: main
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 19191
+            periodSeconds: 10
+            timeoutSeconds: 4
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+              rdma/ib: "1"
+            requests:
+              nvidia.com/gpu: "1"
+              rdma/ib: "1"
+          securityContext:
+            capabilities:
+              add:
+              - IPC_LOCK
+              - SYS_RESOURCE
+            runAsUser: 0
+          startupProbe:
+            failureThreshold: 720
+            httpGet:
+              path: /live
+              port: 19191
+            periodSeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+          - mountPath: /root/.cache/huggingface
+            name: hf-cache-pvc
+          workingDir: /workspace/examples/backends/vllm
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true
+        nodeSelector:
+          kubernetes.io/hostname: csco-k8s-01
+        terminationGracePeriodSeconds: 60
+    replicas: 1
+    sharedMemorySize: 8Gi
+    type: prefill
+status:
+  components:
+    Frontend:
+      componentKind: PodClique
+      componentNames:
+      - qwen3-14b-pd-0-frontend
+      readyReplicas: 1
+      replicas: 1
+      updatedReplicas: 1
+    VllmDecodeWorker:
+      componentKind: PodClique
+      componentNames:
+      - qwen3-14b-pd-0-vllmdecodeworker
+      readyReplicas: 1
+      replicas: 1
+      updatedReplicas: 1
+    VllmPrefillWorker:
+      componentKind: PodClique
+      componentNames:
+      - qwen3-14b-pd-0-vllmprefillworker
+      readyReplicas: 1
+      replicas: 1
+      updatedReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-07-24T08:18:16Z"
+    message: All resources are ready
+    reason: all_resources_are_ready
+    status: "True"
+    type: Ready
+  observedGeneration: 11
+  state: successful

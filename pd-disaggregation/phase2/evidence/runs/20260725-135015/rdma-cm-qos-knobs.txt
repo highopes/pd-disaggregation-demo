@@ -1,0 +1,11 @@
+===node1 rdma cm writable knobs===
+/sys/devices/pci0000:03/0000:03:01.0/infiniband/mlx5_0/tc/1/traffic_class
+===node1 module params===
+/sys/module/mlx5_core/parameters/debug_mask
+/sys/module/mlx5_core/parameters/num_of_groups
+/sys/module/mlx5_core/parameters/prof_sel
+===node3 rdma cm writable knobs===
+/sys/devices/pci0000:03/0000:03:01.0/infiniband/mlx5_0/tc/1/traffic_class
+/sys/module/mlx5_core/parameters/debug_mask
+/sys/module/mlx5_core/parameters/num_of_groups
+/sys/module/mlx5_core/parameters/prof_sel

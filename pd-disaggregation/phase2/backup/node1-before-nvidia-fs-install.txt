@@ -1,0 +1,74 @@
+=== timestamp ===
+2026-07-25T14:41:11+08:00
+=== packages ===
+libcufile-11-8 1.4.0.31-1 install ok installed
+libcufile-12-0 1.5.1.14-1 install ok installed
+libcufile-dev-11-8 1.4.0.31-1 install ok installed
+libcufile-dev-12-0 1.5.1.14-1 install ok installed
+libcufile.so.0-dev  unknown ok not-installed
+libcufile0  unknown ok not-installed
+nvidia-384  unknown ok not-installed
+nvidia-390  unknown ok not-installed
+nvidia-common  unknown ok not-installed
+nvidia-compute-utils  unknown ok not-installed
+nvidia-compute-utils-575 575.51.03-0ubuntu1 install ok installed
+nvidia-container-runtime  unknown ok not-installed
+nvidia-container-runtime-hook  unknown ok not-installed
+nvidia-container-toolkit 1.17.7-1 install ok installed
+nvidia-container-toolkit-base 1.17.7-1 install ok installed
+nvidia-dkms-575  unknown ok not-installed
+nvidia-dkms-575-open 575.51.03-0ubuntu1 install ok installed
+nvidia-dkms-kernel  unknown ok not-installed
+nvidia-driver-575  unknown ok not-installed
+nvidia-driver-575-open 575.51.03-0ubuntu1 install ok installed
+nvidia-driver-575-server  unknown ok not-installed
+nvidia-driver-575-server-open  unknown ok not-installed
+nvidia-driver-binary  unknown ok not-installed
+nvidia-egl-gbm1  unknown ok not-installed
+nvidia-firmware-575-575.51.03 575.51.03-0ubuntu1 install ok installed
+nvidia-firmware-575-server-575.51.03  unknown ok not-installed
+nvidia-kernel-common  unknown ok not-installed
+nvidia-kernel-common-575 575.51.03-0ubuntu1 install ok installed
+nvidia-kernel-source  unknown ok not-installed
+nvidia-kernel-source-575  unknown ok not-installed
+nvidia-kernel-source-575-open 575.51.03-0ubuntu1 install ok installed
+nvidia-kernel-source-open  unknown ok not-installed
+nvidia-libopencl1-dev  unknown ok not-installed
+nvidia-modprobe 575.51.03-0ubuntu1 install ok installed
+nvidia-open 575.51.03-0ubuntu1 install ok installed
+nvidia-opencl-icd  unknown ok not-installed
+nvidia-persistenced  unknown ok not-installed
+nvidia-prime  unknown ok not-installed
+nvidia-settings 575.51.03-0ubuntu1 install ok installed
+nvidia-settings-binary  unknown ok not-installed
+nvidia-smi  unknown ok not-installed
+nvidia-utils  unknown ok not-installed
+nvidia-utils-575 575.51.03-0ubuntu1 install ok installed
+=== dkms ===
+iser/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+isert/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+kernel-mft-dkms/4.30.1.113, 6.11.0-26-generic, x86_64: installed
+knem/1.1.4.90mlnx3, 6.11.0-26-generic, x86_64: installed
+mlnx-ofed-kernel/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+nvidia/575.51.03, 6.11.0-25-generic, x86_64: installed
+nvidia/575.51.03, 6.11.0-26-generic, x86_64: installed
+srp/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+xpmem/2.7.4, 6.11.0-26-generic, x86_64: installed
+=== modules ===
+nvidia_peermem         16384  0
+nvidia_uvm           2154496  20
+nvidia_drm            139264  3
+nvidia_modeset       1732608  2 nvidia_drm
+nvidia              11550720  128 nvidia_uvm,nvidia_peermem,nvidia_modeset
+ib_uverbs             200704  26 nvidia_peermem,rdma_ucm,mlx5_ib
+=== module files ===
+=== gpu ===
+NVIDIA L4, 575.51.03, 23034 MiB
+=== p/d pods ===
+NAME                                     READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+qwen3-14b-pd-0-frontend-2bvbr            1/1     Running   0          43h   10.244.2.94       csco-k8s-03   <none>           <none>
+qwen3-14b-pd-0-vllmdecodeworker-m6hvx    1/1     Running   0          22h   192.168.160.112   csco-k8s-02   <none>           <none>
+qwen3-14b-pd-0-vllmprefillworker-98f5n   1/1     Running   0          22h   192.168.160.111   csco-k8s-01   <none>           <none>
+=== dgd ===
+NAME           STATE
+qwen3-14b-pd   successful

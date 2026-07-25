@@ -1,0 +1,15 @@
+[Unit]
+Description=Dynamo Phase 2 NFS/RDMA storage client mount
+Wants=network-online.target
+After=network-online.target systemd-modules-load.service dynamo-phase2-rdma-tos.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/libexec/dynamo-phase2/node1-nfs-rdma-mount.sh
+ExecStop=/usr/local/libexec/dynamo-phase2/node1-nfs-rdma-unmount.sh
+TimeoutStartSec=120
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target

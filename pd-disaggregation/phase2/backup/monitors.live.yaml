@@ -1,0 +1,1493 @@
+apiVersion: v1
+items:
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"release":"fsomonitor"},"name":"vllm-foundation-instruct-openai","namespace":"ai-serving"},"spec":{"endpoints":[{"interval":"30s","path":"/metrics","port":"http","scrapeTimeout":"10s"}],"namespaceSelector":{"matchNames":["ai-serving"]},"selector":{"matchLabels":{"app":"foundation-instruct-openai"}}}}
+    creationTimestamp: "2025-12-15T10:33:29Z"
+    generation: 1
+    labels:
+      release: fsomonitor
+    name: vllm-foundation-instruct-openai
+    namespace: ai-serving
+    resourceVersion: "976411044"
+    uid: 3c87e91d-fe5c-4e2e-b137-047b5da29304
+  spec:
+    endpoints:
+    - interval: 30s
+      path: /metrics
+      port: http
+      scrapeTimeout: 10s
+    namespaceSelector:
+      matchNames:
+      - ai-serving
+    selector:
+      matchLabels:
+        app: foundation-instruct-openai
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"release":"fsomonitor"},"name":"vllm-qwen-openai","namespace":"ai-serving"},"spec":{"endpoints":[{"interval":"30s","path":"/metrics","port":"http","scrapeTimeout":"10s"}],"namespaceSelector":{"matchNames":["ai-serving"]},"selector":{"matchLabels":{"app":"qwen-openai"}}}}
+    creationTimestamp: "2025-12-15T10:01:47Z"
+    generation: 1
+    labels:
+      release: fsomonitor
+    name: vllm-qwen-openai
+    namespace: ai-serving
+    resourceVersion: "976287857"
+    uid: be822d4b-f5d3-4277-9de1-a46b467caea6
+  spec:
+    endpoints:
+    - interval: 30s
+      path: /metrics
+      port: http
+      scrapeTimeout: 10s
+    namespaceSelector:
+      matchNames:
+      - ai-serving
+    selector:
+      matchLabels:
+        app: qwen-openai
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: dynamo-platform
+      meta.helm.sh/release-namespace: dynamo-system
+    creationTimestamp: "2026-07-23T03:04:08Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: dynamo-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: dynamo-operator
+      app.kubernetes.io/version: 1.2.1
+      helm.sh/chart: dynamo-operator-1.2.1
+      release: prometheus
+    name: dynamo-platform-dynamo-operator-operator
+    namespace: dynamo-system
+    resourceVersion: "2030669942"
+    uid: 668fa959-f8e2-49df-82e4-2798d299f77f
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 15s
+      path: /metrics
+      port: metrics
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: dynamo-platform
+        app.kubernetes.io/name: dynamo-operator
+        control-plane: controller-manager
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: cilium
+      meta.helm.sh/release-namespace: kube-system
+    creationTimestamp: "2025-05-31T10:47:21Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: cilium-agent
+      app.kubernetes.io/part-of: cilium
+      release: fsomonitor
+    name: cilium-agent
+    namespace: fsomonitor
+    resourceVersion: "1304204751"
+    uid: 255ac37d-745d-4fb9-bbb7-2a9cb0e16189
+  spec:
+    endpoints:
+    - honorLabels: true
+      interval: 10s
+      path: /metrics
+      port: metrics
+      relabelings:
+      - action: replace
+        replacement: ${1}
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: node
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: cilium-agent
+    targetLabels:
+    - k8s-app
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: cilium
+      meta.helm.sh/release-namespace: kube-system
+    creationTimestamp: "2026-02-26T06:35:42Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: cilium-envoy
+      app.kubernetes.io/part-of: cilium
+      release: fsomonitor
+    name: cilium-envoy
+    namespace: fsomonitor
+    resourceVersion: "1304204769"
+    uid: 1c75edd5-512d-4951-bc83-573168af409f
+  spec:
+    endpoints:
+    - honorLabels: true
+      interval: 10s
+      path: /metrics
+      port: envoy-metrics
+      relabelings:
+      - action: replace
+        replacement: ${1}
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: node
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        k8s-app: cilium-envoy
+    targetLabels:
+    - k8s-app
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"observability","app.kubernetes.io/name":"comfyui","release":"fsomonitor"},"name":"comfyui","namespace":"fsomonitor"},"spec":{"endpoints":[{"honorLabels":false,"interval":"15s","path":"/metrics","port":"metrics","relabelings":[{"sourceLabels":["__meta_kubernetes_pod_node_name"],"targetLabel":"node"}],"scrapeTimeout":"10s"}],"namespaceSelector":{"matchNames":["comfyui"]},"selector":{"matchLabels":{"app.kubernetes.io/component":"metrics","app.kubernetes.io/name":"comfyui"}}}}
+    creationTimestamp: "2026-05-20T03:50:45Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: observability
+      app.kubernetes.io/name: comfyui
+      release: fsomonitor
+    name: comfyui
+    namespace: fsomonitor
+    resourceVersion: "1721704886"
+    uid: e5ea8003-2662-4854-96cd-a86496f5d8e0
+  spec:
+    endpoints:
+    - honorLabels: false
+      interval: 15s
+      path: /metrics
+      port: metrics
+      relabelings:
+      - sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: node
+      scrapeTimeout: 10s
+    namespaceSelector:
+      matchNames:
+      - comfyui
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: metrics
+        app.kubernetes.io/name: comfyui
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: dcgm-exporter
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2026-01-12T10:29:14Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/component: dcgm-exporter
+      app.kubernetes.io/instance: dcgm-exporter
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: dcgm-exporter
+      app.kubernetes.io/version: 4.7.1
+      helm.sh/chart: dcgm-exporter-4.7.1
+      release: fsomonitor
+    name: dcgm-exporter
+    namespace: fsomonitor
+    resourceVersion: "1131285905"
+    uid: 6358e914-810c-4817-bb42-61d1b4fb4289
+  spec:
+    endpoints:
+    - honorLabels: false
+      interval: 15s
+      metricRelabelings: []
+      path: /metrics
+      port: metrics
+      relabelings:
+      - sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: instance
+    namespaceSelector:
+      matchNames:
+      - fsomonitor
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: dcgm-exporter
+        app.kubernetes.io/instance: dcgm-exporter
+        app.kubernetes.io/name: dcgm-exporter
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/version: 12.0.0-security-01
+      helm.sh/chart: grafana-9.2.1
+    name: fsomonitor-grafana
+    namespace: fsomonitor
+    resourceVersion: "153475"
+    uid: 09e21058-45b1-4841-9c33-b37362b7600e
+  spec:
+    endpoints:
+    - honorLabels: true
+      path: /metrics
+      port: http-web
+      scheme: http
+      scrapeTimeout: 30s
+    jobLabel: fsomonitor
+    namespaceSelector:
+      matchNames:
+      - fsomonitor
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: fsomonitor
+        app.kubernetes.io/name: grafana
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-alertmanager
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-alertmanager
+    namespace: fsomonitor
+    resourceVersion: "153488"
+    uid: 60e68d68-1d51-4f52-8556-9672601f5b93
+  spec:
+    endpoints:
+    - path: /metrics
+      port: http-web
+    - path: /metrics
+      port: reloader-web
+    namespaceSelector:
+      matchNames:
+      - fsomonitor
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-alertmanager
+        release: fsomonitor
+        self-monitor: "true"
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-apiserver
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-apiserver
+    namespace: fsomonitor
+    resourceVersion: "153490"
+    uid: e5722b95-49d1-4e89-b865-daa8b4eb29a4
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      metricRelabelings:
+      - action: drop
+        regex: (etcd_request|apiserver_request_slo|apiserver_request_sli|apiserver_request)_duration_seconds_bucket;(0\.15|0\.2|0\.3|0\.35|0\.4|0\.45|0\.6|0\.7|0\.8|0\.9|1\.25|1\.5|1\.75|2|3|3\.5|4|4\.5|6|7|8|9|15|20|40|45|50)(\.0)?
+        sourceLabels:
+        - __name__
+        - le
+      port: https
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecureSkipVerify: false
+        serverName: kubernetes
+    jobLabel: component
+    namespaceSelector:
+      matchNames:
+      - default
+    selector:
+      matchLabels:
+        component: apiserver
+        provider: kubernetes
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-coredns
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-coredns
+    namespace: fsomonitor
+    resourceVersion: "153486"
+    uid: aff2a758-1ad6-4d8a-b151-2f422757d256
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      port: http-metrics
+    jobLabel: jobLabel
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-coredns
+        release: fsomonitor
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-kube-controller-manager
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-kube-controller-manager
+    namespace: fsomonitor
+    resourceVersion: "153481"
+    uid: 91fb8c2a-9c85-4d77-92fd-4987634a9ec3
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      port: http-metrics
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecureSkipVerify: true
+    jobLabel: jobLabel
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-kube-controller-manager
+        release: fsomonitor
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-kube-etcd
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-kube-etcd
+    namespace: fsomonitor
+    resourceVersion: "153484"
+    uid: 0cdf2ef9-ff49-4e75-9b84-d7bbee383795
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      port: http-metrics
+    jobLabel: jobLabel
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-kube-etcd
+        release: fsomonitor
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-kube-proxy
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-kube-proxy
+    namespace: fsomonitor
+    resourceVersion: "153483"
+    uid: 727c6903-9f74-4b4e-b8db-3bdc4703c257
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      port: http-metrics
+    jobLabel: jobLabel
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-kube-proxy
+        release: fsomonitor
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-kube-scheduler
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-kube-scheduler
+    namespace: fsomonitor
+    resourceVersion: "153482"
+    uid: af0fb5db-8400-4a2b-810f-c61a645d7648
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      port: http-metrics
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecureSkipVerify: true
+    jobLabel: jobLabel
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-kube-scheduler
+        release: fsomonitor
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-kubelet
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-kubelet
+    namespace: fsomonitor
+    resourceVersion: "153487"
+    uid: 0b1aa41c-8974-4ad9-8958-82f1ed95faee
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      honorTimestamps: true
+      metricRelabelings:
+      - action: drop
+        regex: (csi_operations|storage_operation_duration)_seconds_bucket;(0.25|2.5|15|25|120|600)(\.0)?
+        sourceLabels:
+        - __name__
+        - le
+      port: https-metrics
+      relabelings:
+      - action: replace
+        sourceLabels:
+        - __metrics_path__
+        targetLabel: metrics_path
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecureSkipVerify: true
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      honorTimestamps: true
+      interval: 10s
+      metricRelabelings:
+      - action: drop
+        regex: container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: container_memory_(mapped_file|swap)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: container_(file_descriptors|tasks_state|threads_max)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: container_memory_failures_total;hierarchy
+        sourceLabels:
+        - __name__
+        - scope
+      - action: drop
+        regex: container_network_.*;(cali|cilium|cni|lxc|nodelocaldns|tunl).*
+        sourceLabels:
+        - __name__
+        - interface
+      - action: drop
+        regex: container_spec.*
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: .+;
+        sourceLabels:
+        - id
+        - pod
+      path: /metrics/cadvisor
+      port: https-metrics
+      relabelings:
+      - action: replace
+        sourceLabels:
+        - __metrics_path__
+        targetLabel: metrics_path
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecureSkipVerify: true
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      honorTimestamps: true
+      path: /metrics/probes
+      port: https-metrics
+      relabelings:
+      - action: replace
+        sourceLabels:
+        - __metrics_path__
+        targetLabel: metrics_path
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecureSkipVerify: true
+    jobLabel: k8s-app
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: kubelet
+        k8s-app: kubelet
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-operator
+      app.kubernetes.io/component: prometheus-operator
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: kube-prometheus-stack-prometheus-operator
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-operator
+    namespace: fsomonitor
+    resourceVersion: "153479"
+    uid: 990e066e-abdc-462b-839e-865b373e372a
+  spec:
+    endpoints:
+    - honorLabels: true
+      port: https
+      scheme: https
+      tlsConfig:
+        ca:
+          secret:
+            key: ca
+            name: fsomonitor-kube-prometheus-admission
+            optional: false
+        serverName: fsomonitor-kube-prometheus-operator
+    namespaceSelector:
+      matchNames:
+      - fsomonitor
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-operator
+        release: fsomonitor
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app: kube-prometheus-stack-prometheus
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/part-of: kube-prometheus-stack
+      app.kubernetes.io/version: 72.8.0
+      chart: kube-prometheus-stack-72.8.0
+      heritage: Helm
+      release: fsomonitor
+    name: fsomonitor-kube-prometheus-prometheus
+    namespace: fsomonitor
+    resourceVersion: "153474"
+    uid: 9525bc5f-8637-4a20-bb60-7e615e22cf18
+  spec:
+    endpoints:
+    - path: /metrics
+      port: http-web
+    - path: /metrics
+      port: reloader-web
+    namespaceSelector:
+      matchNames:
+      - fsomonitor
+    selector:
+      matchLabels:
+        app: kube-prometheus-stack-prometheus
+        release: fsomonitor
+        self-monitor: "true"
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: metrics
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: kube-state-metrics
+      app.kubernetes.io/part-of: kube-state-metrics
+      app.kubernetes.io/version: 2.15.0
+      helm.sh/chart: kube-state-metrics-5.33.2
+      release: fsomonitor
+    name: fsomonitor-kube-state-metrics
+    namespace: fsomonitor
+    resourceVersion: "153477"
+    uid: bd847d36-49d9-4cb9-8800-c35de9ce30de
+  spec:
+    endpoints:
+    - honorLabels: true
+      port: http
+    jobLabel: app.kubernetes.io/name
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: fsomonitor
+        app.kubernetes.io/name: kube-state-metrics
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fsomonitor
+      meta.helm.sh/release-namespace: fsomonitor
+    creationTimestamp: "2025-05-31T10:20:55Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: metrics
+      app.kubernetes.io/instance: fsomonitor
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: prometheus-node-exporter
+      app.kubernetes.io/part-of: prometheus-node-exporter
+      app.kubernetes.io/version: 1.9.1
+      helm.sh/chart: prometheus-node-exporter-4.46.1
+      release: fsomonitor
+    name: fsomonitor-prometheus-node-exporter
+    namespace: fsomonitor
+    resourceVersion: "153480"
+    uid: 6a8e5101-4863-4acc-978a-65bdb271f5aa
+  spec:
+    endpoints:
+    - port: http-metrics
+      scheme: http
+    jobLabel: jobLabel
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: fsomonitor
+        app.kubernetes.io/name: prometheus-node-exporter
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: cilium
+      meta.helm.sh/release-namespace: kube-system
+    creationTimestamp: "2025-05-31T10:47:21Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: hubble
+      app.kubernetes.io/part-of: cilium
+      release: fsomonitor
+    name: hubble
+    namespace: fsomonitor
+    resourceVersion: "1304204790"
+    uid: b75d6364-264c-40cf-946a-ed445c5f115b
+  spec:
+    endpoints:
+    - honorLabels: true
+      interval: 10s
+      path: /metrics
+      port: hubble-metrics
+      relabelings:
+      - action: replace
+        replacement: ${1}
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: node
+      scheme: http
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        k8s-app: hubble
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: cilium
+      meta.helm.sh/release-namespace: kube-system
+    creationTimestamp: "2025-05-31T10:47:21Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: hubble-relay
+      app.kubernetes.io/part-of: cilium
+      release: fsomonitor
+    name: hubble-relay
+    namespace: fsomonitor
+    resourceVersion: "1304204787"
+    uid: dad88e23-80d4-4821-b213-2ff886916b03
+  spec:
+    endpoints:
+    - interval: 10s
+      path: /metrics
+      port: metrics
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        k8s-app: hubble-relay
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: cilium
+      meta.helm.sh/release-namespace: kube-system
+    creationTimestamp: "2026-02-26T06:35:42Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: cilium-operator
+      app.kubernetes.io/part-of: cilium
+      release: fsomonitor
+    name: cilium-operator
+    namespace: kube-system
+    resourceVersion: "1304204773"
+    uid: 11cbca6f-d096-4966-9f56-44a2db7fa4ab
+  spec:
+    endpoints:
+    - honorLabels: true
+      interval: 10s
+      path: /metrics
+      port: metrics
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        io.cilium/app: operator
+        name: cilium-operator
+    targetLabels:
+    - io.cilium/app
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"alert-router","app.kubernetes.io/instance":"main","app.kubernetes.io/name":"alertmanager","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere","app.kubernetes.io/version":"0.23.0"},"name":"alertmanager-main","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"interval":"1m","port":"web"},{"interval":"1m","port":"reloader-web"}],"selector":{"matchLabels":{"app.kubernetes.io/component":"alert-router","app.kubernetes.io/instance":"main","app.kubernetes.io/name":"alertmanager","app.kubernetes.io/part-of":"kube-prometheus"}}}}
+    creationTimestamp: "2025-06-10T03:10:56Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: alert-router
+      app.kubernetes.io/instance: main
+      app.kubernetes.io/name: alertmanager
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+      app.kubernetes.io/version: 0.23.0
+    name: alertmanager-main
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1922040"
+    uid: 2c5864f3-2436-49e8-b97d-0908e7ca2eda
+  spec:
+    endpoints:
+    - interval: 1m
+      port: web
+    - interval: 1m
+      port: reloader-web
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: alert-router
+        app.kubernetes.io/instance: main
+        app.kubernetes.io/name: alertmanager
+        app.kubernetes.io/part-of: kube-prometheus
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"coredns","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"coredns","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","interval":"1m","metricRelabelings":[{"action":"drop","regex":"coredns_cache_misses_total","sourceLabels":["__name__"]}],"port":"metrics"}],"jobLabel":"app.kubernetes.io/name","namespaceSelector":{"matchNames":["kube-system"]},"selector":{"matchLabels":{"k8s-app":"kube-dns"}}}}
+    creationTimestamp: "2025-06-10T03:10:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: coredns
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: coredns
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921914"
+    uid: f67ddf7d-acad-4f59-857f-3c15bac95e86
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 1m
+      metricRelabelings:
+      - action: drop
+        regex: coredns_cache_misses_total
+        sourceLabels:
+        - __name__
+      port: metrics
+    jobLabel: app.kubernetes.io/name
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        k8s-app: kube-dns
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"ks-apiserver","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"ks-apiserver","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"interval":"1m","path":"/kapis/metrics","relabelings":[{"action":"labeldrop","regex":"(endpoint)"}],"targetPort":9090}],"namespaceSelector":{"matchNames":["kubesphere-system"]},"selector":{"matchLabels":{"app":"ks-apiserver"}}}}
+    creationTimestamp: "2025-06-10T03:10:55Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: ks-apiserver
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: ks-apiserver
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921985"
+    uid: 2661f17b-0e91-4f66-81d3-d79ebaea64c9
+  spec:
+    endpoints:
+    - interval: 1m
+      path: /kapis/metrics
+      relabelings:
+      - action: labeldrop
+        regex: (endpoint)
+      targetPort: 9090
+    namespaceSelector:
+      matchNames:
+      - kubesphere-system
+    selector:
+      matchLabels:
+        app: ks-apiserver
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"ks-controller-manager","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"ks-controller-manager","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"interval":"1m","path":"/kapis/metrics","relabelings":[{"action":"labeldrop","regex":"(endpoint)"}],"targetPort":8080}],"namespaceSelector":{"matchNames":["kubesphere-system"]},"selector":{"matchLabels":{"app":"ks-controller-manager"}}}}
+    creationTimestamp: "2025-06-10T03:10:55Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: ks-controller-manager
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: ks-controller-manager
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921987"
+    uid: 2a326dcf-f8df-471f-8e59-46b64ed296aa
+  spec:
+    endpoints:
+    - interval: 1m
+      path: /kapis/metrics
+      relabelings:
+      - action: labeldrop
+        regex: (endpoint)
+      targetPort: 8080
+    namespaceSelector:
+      matchNames:
+      - kubesphere-system
+    selector:
+      matchLabels:
+        app: ks-controller-manager
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"apiserver","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"kube-apiserver","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","interval":"1m","metricRelabelings":[{"action":"drop","regex":"kubelet_(pod_worker_latency_microseconds|pod_start_latency_microseconds|cgroup_manager_latency_microseconds|pod_worker_start_latency_microseconds|pleg_relist_latency_microseconds|pleg_relist_interval_microseconds|runtime_operations|runtime_operations_latency_microseconds|runtime_operations_errors|eviction_stats_age_microseconds|device_plugin_registration_count|device_plugin_alloc_latency_microseconds|network_plugin_operations_latency_microseconds)","sourceLabels":["__name__"]},{"action":"drop","regex":"scheduler_(e2e_scheduling_latency_microseconds|scheduling_algorithm_predicate_evaluation|scheduling_algorithm_priority_evaluation|scheduling_algorithm_preemption_evaluation|scheduling_algorithm_latency_microseconds|binding_latency_microseconds|scheduling_latency_seconds)","sourceLabels":["__name__"]},{"action":"drop","regex":"apiserver_(request_count|request_latencies|request_latencies_summary|dropped_requests|storage_data_key_generation_latencies_microseconds|storage_transformation_failures_total|storage_transformation_latencies_microseconds|proxy_tunnel_sync_latency_secs|longrunning_gauge|registered_watchers)","sourceLabels":["__name__"]},{"action":"drop","regex":"kubelet_docker_(operations|operations_latency_microseconds|operations_errors|operations_timeout)","sourceLabels":["__name__"]},{"action":"drop","regex":"reflector_(items_per_list|items_per_watch|list_duration_seconds|lists_total|short_watches_total|watch_duration_seconds|watches_total)","sourceLabels":["__name__"]},{"action":"drop","regex":"etcd_(helper_cache_hit_count|helper_cache_miss_count|helper_cache_entry_count|object_counts|request_cache_get_latencies_summary|request_cache_add_latencies_summary|request_latencies_summary)","sourceLabels":["__name__"]},{"action":"drop","regex":"transformation_(transformation_latencies_microseconds|failures_total)","sourceLabels":["__name__"]},{"action":"drop","regex":"(admission_quota_controller_adds|admission_quota_controller_depth|admission_quota_controller_longest_running_processor_microseconds|admission_quota_controller_queue_latency|admission_quota_controller_unfinished_work_seconds|admission_quota_controller_work_duration|APIServiceOpenAPIAggregationControllerQueue1_adds|APIServiceOpenAPIAggregationControllerQueue1_depth|APIServiceOpenAPIAggregationControllerQueue1_longest_running_processor_microseconds|APIServiceOpenAPIAggregationControllerQueue1_queue_latency|APIServiceOpenAPIAggregationControllerQueue1_retries|APIServiceOpenAPIAggregationControllerQueue1_unfinished_work_seconds|APIServiceOpenAPIAggregationControllerQueue1_work_duration|APIServiceRegistrationController_adds|APIServiceRegistrationController_depth|APIServiceRegistrationController_longest_running_processor_microseconds|APIServiceRegistrationController_queue_latency|APIServiceRegistrationController_retries|APIServiceRegistrationController_unfinished_work_seconds|APIServiceRegistrationController_work_duration|autoregister_adds|autoregister_depth|autoregister_longest_running_processor_microseconds|autoregister_queue_latency|autoregister_retries|autoregister_unfinished_work_seconds|autoregister_work_duration|AvailableConditionController_adds|AvailableConditionController_depth|AvailableConditionController_longest_running_processor_microseconds|AvailableConditionController_queue_latency|AvailableConditionController_retries|AvailableConditionController_unfinished_work_seconds|AvailableConditionController_work_duration|crd_autoregistration_controller_adds|crd_autoregistration_controller_depth|crd_autoregistration_controller_longest_running_processor_microseconds|crd_autoregistration_controller_queue_latency|crd_autoregistration_controller_retries|crd_autoregistration_controller_unfinished_work_seconds|crd_autoregistration_controller_work_duration|crdEstablishing_adds|crdEstablishing_depth|crdEstablishing_longest_running_processor_microseconds|crdEstablishing_queue_latency|crdEstablishing_retries|crdEstablishing_unfinished_work_seconds|crdEstablishing_work_duration|crd_finalizer_adds|crd_finalizer_depth|crd_finalizer_longest_running_processor_microseconds|crd_finalizer_queue_latency|crd_finalizer_retries|crd_finalizer_unfinished_work_seconds|crd_finalizer_work_duration|crd_naming_condition_controller_adds|crd_naming_condition_controller_depth|crd_naming_condition_controller_longest_running_processor_microseconds|crd_naming_condition_controller_queue_latency|crd_naming_condition_controller_retries|crd_naming_condition_controller_unfinished_work_seconds|crd_naming_condition_controller_work_duration|crd_openapi_controller_adds|crd_openapi_controller_depth|crd_openapi_controller_longest_running_processor_microseconds|crd_openapi_controller_queue_latency|crd_openapi_controller_retries|crd_openapi_controller_unfinished_work_seconds|crd_openapi_controller_work_duration|DiscoveryController_adds|DiscoveryController_depth|DiscoveryController_longest_running_processor_microseconds|DiscoveryController_queue_latency|DiscoveryController_retries|DiscoveryController_unfinished_work_seconds|DiscoveryController_work_duration|kubeproxy_sync_proxy_rules_latency_microseconds|non_structural_schema_condition_controller_adds|non_structural_schema_condition_controller_depth|non_structural_schema_condition_controller_longest_running_processor_microseconds|non_structural_schema_condition_controller_queue_latency|non_structural_schema_condition_controller_retries|non_structural_schema_condition_controller_unfinished_work_seconds|non_structural_schema_condition_controller_work_duration|rest_client_request_latency_seconds|storage_operation_errors_total|storage_operation_status_count)","sourceLabels":["__name__"]},{"action":"drop","regex":"etcd_(debugging|disk|server).*","sourceLabels":["__name__"]},{"action":"drop","regex":"apiserver_admission_controller_admission_latencies_seconds_.*","sourceLabels":["__name__"]},{"action":"drop","regex":"apiserver_admission_step_admission_latencies_seconds_.*","sourceLabels":["__name__"]},{"action":"drop","regex":"apiserver_request_duration_seconds_bucket;(0.15|0.25|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2.5|3|3.5|4.5|6|7|8|9|15|25|30|50)","sourceLabels":["__name__","le"]}],"port":"https","scheme":"https","tlsConfig":{"caFile":"/var/run/secrets/kubernetes.io/serviceaccount/ca.crt","serverName":"kubernetes"}}],"jobLabel":"component","namespaceSelector":{"matchNames":["default"]},"selector":{"matchLabels":{"component":"apiserver","provider":"kubernetes"}}}}
+    creationTimestamp: "2025-06-10T03:10:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: apiserver
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: kube-apiserver
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921913"
+    uid: 13a22487-d544-4377-94f7-e5d798621acd
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 1m
+      metricRelabelings:
+      - action: drop
+        regex: kubelet_(pod_worker_latency_microseconds|pod_start_latency_microseconds|cgroup_manager_latency_microseconds|pod_worker_start_latency_microseconds|pleg_relist_latency_microseconds|pleg_relist_interval_microseconds|runtime_operations|runtime_operations_latency_microseconds|runtime_operations_errors|eviction_stats_age_microseconds|device_plugin_registration_count|device_plugin_alloc_latency_microseconds|network_plugin_operations_latency_microseconds)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: scheduler_(e2e_scheduling_latency_microseconds|scheduling_algorithm_predicate_evaluation|scheduling_algorithm_priority_evaluation|scheduling_algorithm_preemption_evaluation|scheduling_algorithm_latency_microseconds|binding_latency_microseconds|scheduling_latency_seconds)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: apiserver_(request_count|request_latencies|request_latencies_summary|dropped_requests|storage_data_key_generation_latencies_microseconds|storage_transformation_failures_total|storage_transformation_latencies_microseconds|proxy_tunnel_sync_latency_secs|longrunning_gauge|registered_watchers)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: kubelet_docker_(operations|operations_latency_microseconds|operations_errors|operations_timeout)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: reflector_(items_per_list|items_per_watch|list_duration_seconds|lists_total|short_watches_total|watch_duration_seconds|watches_total)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: etcd_(helper_cache_hit_count|helper_cache_miss_count|helper_cache_entry_count|object_counts|request_cache_get_latencies_summary|request_cache_add_latencies_summary|request_latencies_summary)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: transformation_(transformation_latencies_microseconds|failures_total)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: (admission_quota_controller_adds|admission_quota_controller_depth|admission_quota_controller_longest_running_processor_microseconds|admission_quota_controller_queue_latency|admission_quota_controller_unfinished_work_seconds|admission_quota_controller_work_duration|APIServiceOpenAPIAggregationControllerQueue1_adds|APIServiceOpenAPIAggregationControllerQueue1_depth|APIServiceOpenAPIAggregationControllerQueue1_longest_running_processor_microseconds|APIServiceOpenAPIAggregationControllerQueue1_queue_latency|APIServiceOpenAPIAggregationControllerQueue1_retries|APIServiceOpenAPIAggregationControllerQueue1_unfinished_work_seconds|APIServiceOpenAPIAggregationControllerQueue1_work_duration|APIServiceRegistrationController_adds|APIServiceRegistrationController_depth|APIServiceRegistrationController_longest_running_processor_microseconds|APIServiceRegistrationController_queue_latency|APIServiceRegistrationController_retries|APIServiceRegistrationController_unfinished_work_seconds|APIServiceRegistrationController_work_duration|autoregister_adds|autoregister_depth|autoregister_longest_running_processor_microseconds|autoregister_queue_latency|autoregister_retries|autoregister_unfinished_work_seconds|autoregister_work_duration|AvailableConditionController_adds|AvailableConditionController_depth|AvailableConditionController_longest_running_processor_microseconds|AvailableConditionController_queue_latency|AvailableConditionController_retries|AvailableConditionController_unfinished_work_seconds|AvailableConditionController_work_duration|crd_autoregistration_controller_adds|crd_autoregistration_controller_depth|crd_autoregistration_controller_longest_running_processor_microseconds|crd_autoregistration_controller_queue_latency|crd_autoregistration_controller_retries|crd_autoregistration_controller_unfinished_work_seconds|crd_autoregistration_controller_work_duration|crdEstablishing_adds|crdEstablishing_depth|crdEstablishing_longest_running_processor_microseconds|crdEstablishing_queue_latency|crdEstablishing_retries|crdEstablishing_unfinished_work_seconds|crdEstablishing_work_duration|crd_finalizer_adds|crd_finalizer_depth|crd_finalizer_longest_running_processor_microseconds|crd_finalizer_queue_latency|crd_finalizer_retries|crd_finalizer_unfinished_work_seconds|crd_finalizer_work_duration|crd_naming_condition_controller_adds|crd_naming_condition_controller_depth|crd_naming_condition_controller_longest_running_processor_microseconds|crd_naming_condition_controller_queue_latency|crd_naming_condition_controller_retries|crd_naming_condition_controller_unfinished_work_seconds|crd_naming_condition_controller_work_duration|crd_openapi_controller_adds|crd_openapi_controller_depth|crd_openapi_controller_longest_running_processor_microseconds|crd_openapi_controller_queue_latency|crd_openapi_controller_retries|crd_openapi_controller_unfinished_work_seconds|crd_openapi_controller_work_duration|DiscoveryController_adds|DiscoveryController_depth|DiscoveryController_longest_running_processor_microseconds|DiscoveryController_queue_latency|DiscoveryController_retries|DiscoveryController_unfinished_work_seconds|DiscoveryController_work_duration|kubeproxy_sync_proxy_rules_latency_microseconds|non_structural_schema_condition_controller_adds|non_structural_schema_condition_controller_depth|non_structural_schema_condition_controller_longest_running_processor_microseconds|non_structural_schema_condition_controller_queue_latency|non_structural_schema_condition_controller_retries|non_structural_schema_condition_controller_unfinished_work_seconds|non_structural_schema_condition_controller_work_duration|rest_client_request_latency_seconds|storage_operation_errors_total|storage_operation_status_count)
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: etcd_(debugging|disk|server).*
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: apiserver_admission_controller_admission_latencies_seconds_.*
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: apiserver_admission_step_admission_latencies_seconds_.*
+        sourceLabels:
+        - __name__
+      - action: drop
+        regex: apiserver_request_duration_seconds_bucket;(0.15|0.25|0.3|0.35|0.4|0.45|0.6|0.7|0.8|0.9|1.25|1.5|1.75|2.5|3|3.5|4.5|6|7|8|9|15|25|30|50)
+        sourceLabels:
+        - __name__
+        - le
+      port: https
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        serverName: kubernetes
+    jobLabel: component
+    namespaceSelector:
+      matchNames:
+      - default
+    selector:
+      matchLabels:
+        component: apiserver
+        provider: kubernetes
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"kube-controller-manager","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"kube-controller-manager","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","interval":"1m","metricRelabelings":[{"action":"keep","regex":"up","sourceLabels":["__name__"]}],"port":"https-metrics","scheme":"https","tlsConfig":{"insecureSkipVerify":true}}],"jobLabel":"app.kubernetes.io/name","namespaceSelector":{"matchNames":["kube-system"]},"selector":{"matchLabels":{"app.kubernetes.io/name":"kube-controller-manager"}}}}
+    creationTimestamp: "2025-06-10T03:10:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: kube-controller-manager
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: kube-controller-manager
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921916"
+    uid: 98052883-fab0-4d06-ba06-b26331773d2a
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 1m
+      metricRelabelings:
+      - action: keep
+        regex: up
+        sourceLabels:
+        - __name__
+      port: https-metrics
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    jobLabel: app.kubernetes.io/name
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: kube-controller-manager
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"kube-scheduler","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"kube-scheduler","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","interval":"1m","metricRelabelings":[{"action":"drop","regex":"scheduler_(e2e_scheduling_latency_microseconds|scheduling_algorithm_predicate_evaluation|scheduling_algorithm_priority_evaluation|scheduling_algorithm_preemption_evaluation|scheduling_algorithm_latency_microseconds|binding_latency_microseconds|scheduling_latency_seconds)","sourceLabels":["__name__"]}],"port":"https-metrics","scheme":"https","tlsConfig":{"insecureSkipVerify":true}}],"jobLabel":"app.kubernetes.io/name","namespaceSelector":{"matchNames":["kube-system"]},"selector":{"matchLabels":{"app.kubernetes.io/name":"kube-scheduler"}}}}
+    creationTimestamp: "2025-06-10T03:10:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: kube-scheduler
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: kube-scheduler
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921918"
+    uid: 7a79d274-2a01-4348-b856-b641f7fe9eb4
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 1m
+      metricRelabelings:
+      - action: drop
+        regex: scheduler_(e2e_scheduling_latency_microseconds|scheduling_algorithm_predicate_evaluation|scheduling_algorithm_priority_evaluation|scheduling_algorithm_preemption_evaluation|scheduling_algorithm_latency_microseconds|binding_latency_microseconds|scheduling_latency_seconds)
+        sourceLabels:
+        - __name__
+      port: https-metrics
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    jobLabel: app.kubernetes.io/name
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: kube-scheduler
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"exporter","app.kubernetes.io/name":"kube-state-metrics","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere","app.kubernetes.io/version":"2.6.0"},"name":"kube-state-metrics","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","honorLabels":true,"interval":"1m","metricRelabelings":[{"action":"replace","regex":"(.*)","replacement":"$1","sourceLabels":["label_kubesphere_io_workspace"],"targetLabel":"workspace"}],"port":"https-main","relabelings":[{"action":"labeldrop","regex":"(pod|service|endpoint|namespace)"},{"action":"labeldrop","regex":"(container)"}],"scheme":"https","scrapeTimeout":"30s","tlsConfig":{"insecureSkipVerify":true}},{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","interval":"1m","port":"https-self","scheme":"https","tlsConfig":{"insecureSkipVerify":true}}],"jobLabel":"app.kubernetes.io/name","selector":{"matchLabels":{"app.kubernetes.io/component":"exporter","app.kubernetes.io/name":"kube-state-metrics","app.kubernetes.io/part-of":"kube-prometheus"}}}}
+    creationTimestamp: "2025-06-10T03:10:49Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: kube-state-metrics
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+      app.kubernetes.io/version: 2.6.0
+    name: kube-state-metrics
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921568"
+    uid: fd7109a7-d17f-435d-bcf2-c04178e0cd80
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      interval: 1m
+      metricRelabelings:
+      - action: replace
+        regex: (.*)
+        replacement: $1
+        sourceLabels:
+        - label_kubesphere_io_workspace
+        targetLabel: workspace
+      port: https-main
+      relabelings:
+      - action: labeldrop
+        regex: (pod|service|endpoint|namespace)
+      - action: labeldrop
+        regex: (container)
+      scheme: https
+      scrapeTimeout: 30s
+      tlsConfig:
+        insecureSkipVerify: true
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 1m
+      port: https-self
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    jobLabel: app.kubernetes.io/name
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: kube-state-metrics
+        app.kubernetes.io/part-of: kube-prometheus
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"kubelet","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere"},"name":"kubelet","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","honorLabels":true,"interval":"1m","metricRelabelings":[{"action":"keep","regex":"kubelet_node_name|kubelet_running_container_count|kubelet_running_pod_count|kubelet_volume_stats.*|kubelet_pleg_relist_duration_seconds_.+|kubelet_certificate_manager_.+|kubelet_server_expiration_.+|kubelet_pod_worker_.+","sourceLabels":["__name__"]}],"port":"https-metrics","relabelings":[{"sourceLabels":["__metrics_path__"],"targetLabel":"metrics_path"},{"action":"labeldrop","regex":"(service|endpoint)"}],"scheme":"https","tlsConfig":{"insecureSkipVerify":true}},{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","honorLabels":true,"interval":"1m","metricRelabelings":[{"action":"keep","regex":"container_cpu_usage_seconds_total|container_memory_usage_bytes|container_memory_cache|container_network_.+_bytes_total|container_memory_working_set_bytes|container_cpu_cfs_.*periods_total|container_processes.*|container_threads.*","sourceLabels":["__name__"]}],"path":"/metrics/cadvisor","port":"https-metrics","relabelings":[{"sourceLabels":["__metrics_path__"],"targetLabel":"metrics_path"},{"action":"labeldrop","regex":"(service|endpoint)"}],"scheme":"https","tlsConfig":{"insecureSkipVerify":true}}],"jobLabel":"app.kubernetes.io/name","namespaceSelector":{"matchNames":["kube-system"]},"selector":{"matchLabels":{"app.kubernetes.io/name":"kubelet"}}}}
+    creationTimestamp: "2025-06-10T03:10:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/name: kubelet
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+    name: kubelet
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921919"
+    uid: eb220acc-9d9c-4204-8155-bbce2427587f
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      interval: 1m
+      metricRelabelings:
+      - action: keep
+        regex: kubelet_node_name|kubelet_running_container_count|kubelet_running_pod_count|kubelet_volume_stats.*|kubelet_pleg_relist_duration_seconds_.+|kubelet_certificate_manager_.+|kubelet_server_expiration_.+|kubelet_pod_worker_.+
+        sourceLabels:
+        - __name__
+      port: https-metrics
+      relabelings:
+      - sourceLabels:
+        - __metrics_path__
+        targetLabel: metrics_path
+      - action: labeldrop
+        regex: (service|endpoint)
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      interval: 1m
+      metricRelabelings:
+      - action: keep
+        regex: container_cpu_usage_seconds_total|container_memory_usage_bytes|container_memory_cache|container_network_.+_bytes_total|container_memory_working_set_bytes|container_cpu_cfs_.*periods_total|container_processes.*|container_threads.*
+        sourceLabels:
+        - __name__
+      path: /metrics/cadvisor
+      port: https-metrics
+      relabelings:
+      - sourceLabels:
+        - __metrics_path__
+        targetLabel: metrics_path
+      - action: labeldrop
+        regex: (service|endpoint)
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    jobLabel: app.kubernetes.io/name
+    namespaceSelector:
+      matchNames:
+      - kube-system
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: kubelet
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"exporter","app.kubernetes.io/name":"node-exporter","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere","app.kubernetes.io/version":"1.3.1"},"name":"node-exporter","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","interval":"1m","metricRelabelings":[{"action":"keep","regex":"node_(uname|network)_info|node_cpu_.+|node_memory_Mem.+_bytes|node_memory_SReclaimable_bytes|node_memory_Cached_bytes|node_memory_Buffers_bytes|node_network_(.+_bytes_total|up)|node_network_.+_errs_total|node_network_.+_packets_total|node_nf_conntrack_entries.*|node_disk_.+_completed_total|node_disk_.+_bytes_total|node_filesystem_files|node_filesystem_files_free|node_filesystem_avail_bytes|node_filesystem_size_bytes|node_filesystem_free_bytes|node_filesystem_readonly|node_load.+|node_timex_offset_seconds|node_timex_maxerror_seconds|node_timex_sync_status|node_filefd_allocated|node_filefd_maximum|node_md_disks|node_md_disks_required|node_textfile_scrape_error","sourceLabels":["__name__"]}],"port":"https","relabelings":[{"action":"replace","regex":"(.*)","replacement":"$1","sourceLabels":["__meta_kubernetes_pod_node_name"],"targetLabel":"instance"},{"action":"labeldrop","regex":"(service|endpoint|container)"}],"scheme":"https","tlsConfig":{"insecureSkipVerify":true}}],"jobLabel":"app.kubernetes.io/name","selector":{"matchLabels":{"app.kubernetes.io/component":"exporter","app.kubernetes.io/name":"node-exporter","app.kubernetes.io/part-of":"kube-prometheus"}}}}
+    creationTimestamp: "2025-06-10T03:10:47Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: node-exporter
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+      app.kubernetes.io/version: 1.3.1
+    name: node-exporter
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921478"
+    uid: 1bb56250-79c0-4f54-81be-4c6808c11082
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 1m
+      metricRelabelings:
+      - action: keep
+        regex: node_(uname|network)_info|node_cpu_.+|node_memory_Mem.+_bytes|node_memory_SReclaimable_bytes|node_memory_Cached_bytes|node_memory_Buffers_bytes|node_network_(.+_bytes_total|up)|node_network_.+_errs_total|node_network_.+_packets_total|node_nf_conntrack_entries.*|node_disk_.+_completed_total|node_disk_.+_bytes_total|node_filesystem_files|node_filesystem_files_free|node_filesystem_avail_bytes|node_filesystem_size_bytes|node_filesystem_free_bytes|node_filesystem_readonly|node_load.+|node_timex_offset_seconds|node_timex_maxerror_seconds|node_timex_sync_status|node_filefd_allocated|node_filefd_maximum|node_md_disks|node_md_disks_required|node_textfile_scrape_error
+        sourceLabels:
+        - __name__
+      port: https
+      relabelings:
+      - action: replace
+        regex: (.*)
+        replacement: $1
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: instance
+      - action: labeldrop
+        regex: (service|endpoint|container)
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    jobLabel: app.kubernetes.io/name
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: node-exporter
+        app.kubernetes.io/part-of: kube-prometheus
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"prometheus","app.kubernetes.io/instance":"k8s","app.kubernetes.io/name":"prometheus","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere","app.kubernetes.io/version":"2.39.1"},"name":"prometheus-k8s","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"interval":"1m","port":"web"},{"interval":"1m","port":"reloader-web"}],"selector":{"matchLabels":{"app.kubernetes.io/component":"prometheus","app.kubernetes.io/instance":"k8s","app.kubernetes.io/name":"prometheus","app.kubernetes.io/part-of":"kube-prometheus"}}}}
+    creationTimestamp: "2025-06-10T03:10:50Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: prometheus
+      app.kubernetes.io/instance: k8s
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+      app.kubernetes.io/version: 2.39.1
+    name: prometheus-k8s
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921675"
+    uid: 33eb2af9-f36d-4750-8e22-135b8f228cc0
+  spec:
+    endpoints:
+    - interval: 1m
+      port: web
+    - interval: 1m
+      port: reloader-web
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"prometheus-operator","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/vendor":"kubesphere","app.kubernetes.io/version":"0.55.1"},"name":"prometheus-operator","namespace":"kubesphere-monitoring-system"},"spec":{"endpoints":[{"bearerTokenFile":"/var/run/secrets/kubernetes.io/serviceaccount/token","honorLabels":true,"interval":"1m","port":"https","scheme":"https","tlsConfig":{"insecureSkipVerify":true}}],"selector":{"matchLabels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"prometheus-operator","app.kubernetes.io/part-of":"kube-prometheus","app.kubernetes.io/version":"0.55.1"}}}}
+    creationTimestamp: "2025-06-10T03:10:46Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: prometheus-operator
+      app.kubernetes.io/part-of: kube-prometheus
+      app.kubernetes.io/vendor: kubesphere
+      app.kubernetes.io/version: 0.55.1
+    name: prometheus-operator
+    namespace: kubesphere-monitoring-system
+    resourceVersion: "1921368"
+    uid: 568cc07d-72d1-4080-8610-48e55990b8dd
+  spec:
+    endpoints:
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+      interval: 1m
+      port: https
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/name: prometheus-operator
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 0.55.1
+- apiVersion: monitoring.coreos.com/v1
+  kind: PodMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: dynamo-platform
+      meta.helm.sh/release-namespace: dynamo-system
+    creationTimestamp: "2026-07-23T03:04:08Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: dynamo-frontend
+    namespace: dynamo-system
+    resourceVersion: "2030669908"
+    uid: bbc1a67e-48d5-4e26-9887-96e92aba8f68
+  spec:
+    namespaceSelector:
+      any: true
+    podMetricsEndpoints:
+    - honorLabels: true
+      interval: 5s
+      path: /metrics
+      port: http
+      relabelings:
+      - action: replace
+        sourceLabels:
+        - __meta_kubernetes_pod_label_nvidia_com_dynamo_namespace
+        targetLabel: dynamo_namespace
+    selector:
+      matchLabels:
+        nvidia.com/dynamo-component-type: frontend
+        nvidia.com/metrics-enabled: "true"
+- apiVersion: monitoring.coreos.com/v1
+  kind: PodMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: dynamo-platform
+      meta.helm.sh/release-namespace: dynamo-system
+    creationTimestamp: "2026-07-23T03:04:08Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: dynamo-planner
+    namespace: dynamo-system
+    resourceVersion: "2030669912"
+    uid: 75b03729-1218-48f6-8798-1e6cc75d735f
+  spec:
+    namespaceSelector:
+      any: true
+    podMetricsEndpoints:
+    - interval: 5s
+      path: /metrics
+      port: metrics
+    selector:
+      matchLabels:
+        nvidia.com/dynamo-component-type: planner
+        nvidia.com/metrics-enabled: "true"
+- apiVersion: monitoring.coreos.com/v1
+  kind: PodMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: dynamo-platform
+      meta.helm.sh/release-namespace: dynamo-system
+    creationTimestamp: "2026-07-23T03:04:08Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: dynamo-router
+    namespace: dynamo-system
+    resourceVersion: "2030669910"
+    uid: 9b12b778-b757-40ad-a23c-f42144133060
+  spec:
+    namespaceSelector:
+      any: true
+    podMetricsEndpoints:
+    - honorLabels: true
+      interval: 5s
+      path: /metrics
+      relabelings:
+      - action: replace
+        regex: ([^:]+)(?::\d+)?
+        replacement: ${1}:9090
+        sourceLabels:
+        - __address__
+        targetLabel: __address__
+      - action: replace
+        sourceLabels:
+        - __meta_kubernetes_pod_label_nvidia_com_dynamo_namespace
+        targetLabel: dynamo_namespace
+    selector:
+      matchLabels:
+        nvidia.com/dynamo-component-type: default
+        nvidia.com/metrics-enabled: "true"
+- apiVersion: monitoring.coreos.com/v1
+  kind: PodMonitor
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: dynamo-platform
+      meta.helm.sh/release-namespace: dynamo-system
+    creationTimestamp: "2026-07-23T03:04:08Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: dynamo-worker
+    namespace: dynamo-system
+    resourceVersion: "2030669909"
+    uid: 73ef794e-a45e-4546-ab20-6d933ce40240
+  spec:
+    namespaceSelector:
+      any: true
+    podMetricsEndpoints:
+    - interval: 5s
+      path: /metrics
+      port: system
+    - interval: 5s
+      path: /metrics
+      port: nixl
+    selector:
+      matchLabels:
+        nvidia.com/dynamo-component-type: worker
+        nvidia.com/metrics-enabled: "true"
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,81 @@
+=== node1 install ===
+Created symlink /etc/systemd/system/multi-user.target.wants/dynamo-phase2-rdma-tos.service → /etc/systemd/system/dynamo-phase2-rdma-tos.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/dynamo-phase2-nfs-rdma-client.service → /etc/systemd/system/dynamo-phase2-nfs-rdma-client.service.
+PASS: persisted units: dynamo-phase2-rdma-tos.service dynamo-phase2-nfs-rdma-client.service
+=== node1 status ===
+enabled
+enabled
+active
+active
+● dynamo-phase2-rdma-tos.service - Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule
+     Loaded: loaded (/etc/systemd/system/dynamo-phase2-rdma-tos.service; enabled; preset: enabled)
+     Active: active (exited) since Sat 2026-07-25 17:27:28 CST; 174ms ago
+    Process: 1697616 ExecStart=/usr/local/libexec/dynamo-phase2/rdma-cm-tos106.sh apply (code=exited, status=0/SUCCESS)
+   Main PID: 1697616 (code=exited, status=0/SUCCESS)
+        CPU: 16ms
+
+Jul 25 17:27:28 CSCO-K8S-01 systemd[1]: Starting dynamo-phase2-rdma-tos.service - Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule...
+Jul 25 17:27:28 CSCO-K8S-01 rdma-cm-tos106.sh[1697616]: PASS: src_ip=172.31.230.111,dst_ip=172.31.230.113/32,tclass=106
+Jul 25 17:27:28 CSCO-K8S-01 systemd[1]: Finished dynamo-phase2-rdma-tos.service - Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule.
+
+● dynamo-phase2-nfs-rdma-client.service - Dynamo Phase 2 NFS/RDMA storage client mount
+     Loaded: loaded (/etc/systemd/system/dynamo-phase2-nfs-rdma-client.service; enabled; preset: enabled)
+     Active: active (exited) since Sat 2026-07-25 17:27:28 CST; 334ms ago
+    Process: 1697638 ExecStart=/usr/local/libexec/dynamo-phase2/node1-nfs-rdma-mount.sh (code=exited, status=0/SUCCESS)
+   Main PID: 1697638 (code=exited, status=0/SUCCESS)
+        CPU: 30ms
+
+Jul 25 17:27:28 CSCO-K8S-01 systemd[1]: Starting dynamo-phase2-nfs-rdma-client.service - Dynamo Phase 2 NFS/RDMA storage client mount...
+Jul 25 17:27:28 CSCO-K8S-01 node1-nfs-rdma-mount.sh[1697638]: NFS/RDMA mount already active
+Jul 25 17:27:28 CSCO-K8S-01 systemd[1]: Finished dynamo-phase2-nfs-rdma-client.service - Dynamo Phase 2 NFS/RDMA storage client mount.
+=== node3 install ===
+Created symlink /etc/systemd/system/multi-user.target.wants/dynamo-phase2-rdma-tos.service → /etc/systemd/system/dynamo-phase2-rdma-tos.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/dynamo-phase2-ram-storage.service → /etc/systemd/system/dynamo-phase2-ram-storage.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/dynamo-phase2-nfs-rdma-server.service → /etc/systemd/system/dynamo-phase2-nfs-rdma-server.service.
+Job for dynamo-phase2-ram-storage.service failed because the control process exited with error code.
+See "systemctl status dynamo-phase2-ram-storage.service" and "journalctl -xeu dynamo-phase2-ram-storage.service" for details.
+=== node3 retry after idempotency fix ===
+enabled
+enabled
+enabled
+active
+active
+active
+● dynamo-phase2-rdma-tos.service - Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule
+     Loaded: loaded (/etc/systemd/system/dynamo-phase2-rdma-tos.service; enabled; preset: enabled)
+     Active: active (exited) since Sat 2026-07-25 17:25:30 CST; 52s ago
+    Process: 880975 ExecStart=/usr/local/libexec/dynamo-phase2/rdma-cm-tos106.sh apply (code=exited, status=0/SUCCESS)
+   Main PID: 880975 (code=exited, status=0/SUCCESS)
+        CPU: 25ms
+
+Jul 25 17:25:30 CSCO-K8S-03 systemd[1]: Starting dynamo-phase2-rdma-tos.service - Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule...
+Jul 25 17:25:30 CSCO-K8S-03 rdma-cm-tos106.sh[880975]: PASS: src_ip=172.31.230.113,dst_ip=172.31.230.111/32,tclass=106
+Jul 25 17:25:30 CSCO-K8S-03 systemd[1]: Finished dynamo-phase2-rdma-tos.service - Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule.
+
+● dynamo-phase2-ram-storage.service - Dynamo Phase 2 volatile RAM-backed storage
+     Loaded: loaded (/etc/systemd/system/dynamo-phase2-ram-storage.service; enabled; preset: enabled)
+     Active: active (exited) since Sat 2026-07-25 17:26:22 CST; 688ms ago
+    Process: 882010 ExecStart=/usr/local/libexec/dynamo-phase2/start-ram-storage.sh (code=exited, status=0/SUCCESS)
+   Main PID: 882010 (code=exited, status=0/SUCCESS)
+        CPU: 25ms
+
+Jul 25 17:26:22 CSCO-K8S-03 systemd[1]: Starting dynamo-phase2-ram-storage.service - Dynamo Phase 2 volatile RAM-backed storage...
+Jul 25 17:26:22 CSCO-K8S-03 start-ram-storage.sh[882010]: RAM storage already active: /dev/ram0 -> /srv/dynamo-g4
+Jul 25 17:26:22 CSCO-K8S-03 systemd[1]: Finished dynamo-phase2-ram-storage.service - Dynamo Phase 2 volatile RAM-backed storage.
+
+● dynamo-phase2-nfs-rdma-server.service - Dynamo Phase 2 NFS/RDMA storage server
+     Loaded: loaded (/etc/systemd/system/dynamo-phase2-nfs-rdma-server.service; enabled; preset: enabled)
+     Active: active (exited) since Sat 2026-07-25 17:26:23 CST; 385ms ago
+    Process: 882016 ExecStart=/usr/local/libexec/dynamo-phase2/node3-nfs-rdma-setup.sh (code=exited, status=0/SUCCESS)
+   Main PID: 882016 (code=exited, status=0/SUCCESS)
+        CPU: 297ms
+
+Jul 25 17:26:22 CSCO-K8S-03 systemd[1]: Starting dynamo-phase2-nfs-rdma-server.service - Dynamo Phase 2 NFS/RDMA storage server...
+Jul 25 17:26:22 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882028]: /srv/dynamo-g4        172.31.230.111(async,wdelay,hide,no_subtree_check,sec=sys,rw,insecure,no_root_squash,no_all_squash)
+Jul 25 17:26:22 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882029]: rdma 20049
+Jul 25 17:26:22 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882029]: rdma 20049
+Jul 25 17:26:22 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882029]: tcp 2049
+Jul 25 17:26:22 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882029]: tcp 2049
+Jul 25 17:26:23 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882031]: tcp   LISTEN 0      64             0.0.0.0:2049       0.0.0.0:*
+Jul 25 17:26:23 CSCO-K8S-03 node3-nfs-rdma-setup.sh[882031]: tcp   LISTEN 0      64                [::]:2049          [::]:*
+Jul 25 17:26:23 CSCO-K8S-03 systemd[1]: Finished dynamo-phase2-nfs-rdma-server.service - Dynamo Phase 2 NFS/RDMA storage server.

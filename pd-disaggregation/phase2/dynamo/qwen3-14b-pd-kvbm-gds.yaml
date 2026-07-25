@@ -1,0 +1,270 @@
+apiVersion: nvidia.com/v1beta1
+kind: DynamoGraphDeployment
+metadata:
+  name: qwen3-14b-pd
+  namespace: ai-serving
+  labels:
+    app.kubernetes.io/name: qwen3-14b-pd
+    app.kubernetes.io/version: "1.2.1"
+    app.kubernetes.io/part-of: dynamo-phase2
+spec:
+  backendFramework: vllm
+  components:
+    - name: Frontend
+      type: frontend
+      replicas: 1
+      podTemplate:
+        metadata:
+          labels:
+            app: dynamo-qwen-frontend
+            model: qwen3-14b-fp8
+        spec:
+          nodeSelector:
+            kubernetes.io/hostname: csco-k8s-03
+          containers:
+            - name: main
+              image: nvcr.io/nvidia/ai-dynamo/dynamo-frontend:1.2.1
+              imagePullPolicy: IfNotPresent
+              workingDir: /workspace/examples/backends/vllm
+              command: ["/bin/sh", "-c"]
+              args:
+                - exec python3 -m dynamo.frontend --http-port 8000 --kv-cache-block-size 128
+              ports:
+                - name: http
+                  containerPort: 8000
+                  protocol: TCP
+
+    - name: VllmDecodeWorker
+      type: decode
+      replicas: 1
+      sharedMemorySize: 8Gi
+      podTemplate:
+        metadata:
+          labels:
+            app: dynamo-qwen-decode
+            model: qwen3-14b-fp8
+            dynamo-role: decode
+        spec:
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
+          nodeSelector:
+            kubernetes.io/hostname: csco-k8s-02
+          terminationGracePeriodSeconds: 60
+          containers:
+            - name: main
+              image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+              imagePullPolicy: IfNotPresent
+              workingDir: /workspace/examples/backends/vllm
+              command: ["/bin/sh", "-c"]
+              args:
+                - >-
+                  ulimit -l unlimited && exec python3 -m dynamo.vllm
+                  --model Qwen/Qwen3-14B-FP8
+                  --served-model-name Qwen/Qwen3-14B-FP8
+                  --dtype auto
+                  --tensor-parallel-size 1
+                  --gpu-memory-utilization 0.90
+                  --max-model-len 40960
+                  --max-num-seqs 1
+                  --kv-cache-dtype fp8
+                  --calculate-kv-scales
+                  --trust-remote-code
+                  --enforce-eager
+                  --no-enable-prefix-caching
+                  --block-size 128
+                  --disaggregation-mode decode
+                  --kv-transfer-config '{"kv_connector":"NixlConnector","kv_role":"kv_both"}'
+              env:
+                - name: HF_HOME
+                  value: /root/.cache/huggingface
+                - name: UCX_TLS
+                  value: rc_x,rc,cuda_copy,cuda_ipc
+                - name: UCX_NET_DEVICES
+                  value: mlx5_0:1
+                - name: UCX_IB_ADDR_TYPE
+                  value: eth
+                - name: UCX_IB_GID_INDEX
+                  value: "3"
+                - name: UCX_IB_TRAFFIC_CLASS
+                  value: "106"
+                - name: UCX_RNDV_SCHEME
+                  value: get_zcopy
+                - name: UCX_RNDV_THRESH
+                  value: "0"
+                - name: UCX_IB_REG_METHODS
+                  value: rcache
+                - name: UCX_RCACHE_MAX_UNRELEASED
+                  value: "1024"
+                - name: UCX_LOG_LEVEL
+                  value: info
+                - name: NIXL_LOG_LEVEL
+                  value: INFO
+                - name: DYN_SYSTEM_PORT
+                  value: "19191"
+              resources:
+                requests:
+                  nvidia.com/gpu: "1"
+                  rdma/ib: "1"
+                limits:
+                  nvidia.com/gpu: "1"
+                  rdma/ib: "1"
+              securityContext:
+                runAsUser: 0
+                capabilities:
+                  add: ["IPC_LOCK", "SYS_RESOURCE"]
+              volumeMounts:
+                - name: hf-cache-pvc
+                  mountPath: /root/.cache/huggingface
+              startupProbe:
+                httpGet: {path: /live, port: 19191}
+                timeoutSeconds: 5
+                periodSeconds: 10
+                failureThreshold: 720
+              livenessProbe:
+                httpGet: {path: /live, port: 19191}
+                timeoutSeconds: 4
+                periodSeconds: 5
+                failureThreshold: 1
+              readinessProbe:
+                httpGet: {path: /health, port: 19191}
+                timeoutSeconds: 4
+                periodSeconds: 10
+                failureThreshold: 3
+
+    - name: VllmPrefillWorker
+      type: prefill
+      replicas: 1
+      sharedMemorySize: 8Gi
+      podTemplate:
+        metadata:
+          labels:
+            app: dynamo-qwen-prefill
+            model: qwen3-14b-fp8
+            dynamo-role: prefill
+            storage-path: gds-nfs-rdma
+        spec:
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
+          nodeSelector:
+            kubernetes.io/hostname: csco-k8s-01
+          terminationGracePeriodSeconds: 60
+          volumes:
+            - name: hf-cache-pvc
+              persistentVolumeClaim:
+                claimName: hf-cache-pvc
+            - name: remote-kv
+              hostPath:
+                path: /mnt/dynamo-g4
+                type: Directory
+            - name: udev
+              hostPath:
+                path: /run/udev
+                type: Directory
+          containers:
+            - name: main
+              image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+              imagePullPolicy: IfNotPresent
+              workingDir: /workspace/examples/backends/vllm
+              command: ["/bin/sh", "-c"]
+              args:
+                - >-
+                  ulimit -l unlimited && exec python3 -m dynamo.vllm
+                  --model Qwen/Qwen3-14B-FP8
+                  --served-model-name Qwen/Qwen3-14B-FP8
+                  --dtype auto
+                  --tensor-parallel-size 1
+                  --gpu-memory-utilization 0.90
+                  --max-model-len 40960
+                  --max-num-seqs 1
+                  --kv-cache-dtype fp8
+                  --calculate-kv-scales
+                  --trust-remote-code
+                  --enforce-eager
+                  --no-enable-prefix-caching
+                  --block-size 128
+                  --disaggregation-mode prefill
+                  --kv-transfer-config '{"kv_connector":"PdConnector","kv_role":"kv_both","kv_connector_extra_config":{"connectors":[{"kv_connector":"DynamoConnector","kv_connector_module_path":"kvbm.vllm_integration.connector","kv_role":"kv_both"},{"kv_connector":"NixlConnector","kv_role":"kv_both"}]},"kv_connector_module_path":"kvbm.vllm_integration.connector"}'
+              env:
+                - name: HF_HOME
+                  value: /root/.cache/huggingface
+                - name: UCX_TLS
+                  value: rc_x,rc,cuda_copy,cuda_ipc
+                - name: UCX_NET_DEVICES
+                  value: mlx5_0:1
+                - name: UCX_IB_ADDR_TYPE
+                  value: eth
+                - name: UCX_IB_GID_INDEX
+                  value: "3"
+                - name: UCX_IB_TRAFFIC_CLASS
+                  value: "106"
+                - name: UCX_RNDV_SCHEME
+                  value: get_zcopy
+                - name: UCX_RNDV_THRESH
+                  value: "0"
+                - name: UCX_IB_REG_METHODS
+                  value: rcache
+                - name: UCX_RCACHE_MAX_UNRELEASED
+                  value: "1024"
+                - name: UCX_LOG_LEVEL
+                  value: info
+                - name: NIXL_LOG_LEVEL
+                  value: INFO
+                - name: DYN_SYSTEM_PORT
+                  value: "19191"
+                - name: NVIDIA_DRIVER_CAPABILITIES
+                  value: all
+                - name: NVIDIA_GDS
+                  value: enabled
+                - name: DYN_KVBM_DISK_CACHE_DIR
+                  value: /mnt/dynamo-g4/kvbm
+                - name: DYN_KVBM_DISK_CACHE_GB
+                  value: "6"
+                - name: DYN_KVBM_DISK_ZEROFILL_FALLBACK
+                  value: "true"
+                - name: DYN_KVBM_DISABLE_DISK_OFFLOAD_FILTER
+                  value: "true"
+                - name: DYN_KVBM_LEADER_WORKER_INIT_TIMEOUT_SECS
+                  value: "300"
+                - name: DYN_KVBM_METRICS
+                  value: "true"
+                - name: DYN_KVBM_METRICS_PORT
+                  value: "6880"
+              ports:
+                - name: kvbm-metrics
+                  containerPort: 6880
+                  protocol: TCP
+              resources:
+                requests:
+                  nvidia.com/gpu: "1"
+                  rdma/ib: "1"
+                limits:
+                  nvidia.com/gpu: "1"
+                  rdma/ib: "1"
+              securityContext:
+                runAsUser: 0
+                capabilities:
+                  add: ["IPC_LOCK", "SYS_RESOURCE"]
+              volumeMounts:
+                - name: hf-cache-pvc
+                  mountPath: /root/.cache/huggingface
+                - name: remote-kv
+                  mountPath: /mnt/dynamo-g4
+                  mountPropagation: HostToContainer
+                - name: udev
+                  mountPath: /run/udev
+                  readOnly: true
+              startupProbe:
+                httpGet: {path: /live, port: 19191}
+                timeoutSeconds: 5
+                periodSeconds: 10
+                failureThreshold: 720
+              livenessProbe:
+                httpGet: {path: /live, port: 19191}
+                timeoutSeconds: 4
+                periodSeconds: 5
+                failureThreshold: 1
+              readinessProbe:
+                httpGet: {path: /health, port: 19191}
+                timeoutSeconds: 4
+                periodSeconds: 10
+                failureThreshold: 3

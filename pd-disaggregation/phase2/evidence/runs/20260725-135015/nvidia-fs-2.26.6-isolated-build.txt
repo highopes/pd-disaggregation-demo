@@ -1,0 +1,106 @@
+KERNEL=6.11.0-26-generic
+OFED=MLNX_OFED_LINUX-24.10-2.1.8.0:
+NVIDIA=575.51.03
+=== configure/build ===
+make: Entering directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+rm -rf *.o *.ko* *.mod.* .*.cmd nv.symvers Module.symvers modules.order .tmp_versions/ *~ core .depend TAGS .cache.mk *.o.ur-safe
+rm -f config-host.h
+rm -f nvidia-fs.mod
+make: Leaving directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+make: Entering directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+Picking NVIDIA driver sources from NVIDIA_SRC_DIR=/usr/src/nvidia-575.51.03/nvidia-peermem. If that does not meet your expectation, you might have a stale driver still around and that might cause problems.
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-drm.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-modeset.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-peermem.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-uvm.ko.zst: file format not recognized
+nm: /lib/modules/6.11.0-26-generic/updates/dkms/nvidia.ko.zst: file format not recognized
+-W- Could not get list of nvidia symbols.
+checking if struct fd has file parameter... yes
+checking if uaccess.h access_ok has 3 parameters... no
+checking if uaccess.h access_ok has 2 parameters... yes
+Checking if blkdev.h has blk_rq_payload_bytes... yes
+Checking if fs.h has call_read_iter and call_write_iter... no
+Checking if fs.h has filemap_range_has_page... yes
+Checking if kiocb structue has ki_complete field... yes
+Checking if vm_fault_t exist in mm_types.h... yes
+Checking if enum PCIE_SPEED_32_0GT exists in pci.h... yes
+Checking if enum PCIE_SPEED_64_0GT exists in pci.h... yes
+Checking if atomic64_t counter is of type long... no
+Checking if RQF_COPY_USER is present or not... no
+Checking if dma_drain_size and dma_drain_needed are present in struct request_queue... no
+Checking if struct proc_ops is present or not ... yes
+Checking if split is present in vm_operations_struct or not ... no
+Checking if mremap in vm_operations_struct has one parameter... yes
+Checking if mremap in vm_operations_struct has two parameters... no
+Checking if symbol module_mutex is present... no
+Checking if blk-integrity.h is present... yes
+Checking if KI_COMPLETE has 3 parameters ... no
+Checking if pin_user_pages_fast symbol is present in kernel or not ... yes
+Checking if prandom_u32 symbol is present in kernel or not ... no
+Checking if devnode in class has doesn't have const device or not ... no
+Checking if class_create has two parameters or not ... no
+Checking if vma_flags are modifiable directly ... no
+Checking if blk-mq-pci.h is present... yes
+make[1]: Entering directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+make[1]: warning: -j4 forced in submake: resetting jobserver mode.
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  You are using:           gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-core.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-dma.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-mmap.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-pci.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-proc.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-mod.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-kernel-interface.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-stat.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-rdma.o
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvfs-batch.o
+  LD [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.o
+  MODPOST /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/Module.symvers
+WARNING: modpost: "nvidia_p2p_dma_unmap_pages" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_put_pages_persistent" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_get_pages" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_put_pages" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_dma_map_pages" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_free_dma_mapping" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_free_page_table" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+WARNING: modpost: "nvidia_p2p_get_pages_persistent" [/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko] undefined!
+  CC [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.mod.o
+  LD [M]  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko
+  BTF [M] /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko
+Skipping BTF generation for /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko due to unavailability of vmlinux
+make[1]: Leaving directory '/usr/src/linux-headers-6.11.0-26-generic'
+make: Leaving directory '/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6'
+=== built module ===
+filename:       /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/root/usr/src/nvidia-fs-2.26.6/nvidia-fs.ko
+description:    NVIDIA GPUDirect Storage
+license:        GPL v2
+version:        2.26.6
+srcversion:     32577DB706994A2BCFDBC23
+depends:        
+retpoline:      Y
+name:           nvidia_fs
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 
+parm:           max_devices:uint
+parm:           nvfs_max_devices:number of character devices to expose
+parm:           dbg_enabled:uint
+parm:           nvfs_dbg_enabled:enable debug tracing
+parm:           info_enabled:uint
+parm:           nvfs_info_enabled:enable info tracing
+parm:           peer_stats_enabled:uint
+parm:           nvfs_peer_stats_enabled:enable peer stats
+parm:           rw_stats_enabled:uint
+parm:           nvfs_rw_stats_enabled:enable read-write stats
+parm:           use_legacy_p2p_allocation:uint
+parm:           nvfs_use_legacy_p2p_allocation:Use legacy p2p allocation
+=== symbol dependencies ===
+                 U nvidia_p2p_dma_map_pages
+                 U nvidia_p2p_dma_unmap_pages
+                 U nvidia_p2p_free_dma_mapping
+                 U nvidia_p2p_free_page_table
+                 U nvidia_p2p_get_pages
+                 U nvidia_p2p_get_pages_persistent
+                 U nvidia_p2p_put_pages
+                 U nvidia_p2p_put_pages_persistent

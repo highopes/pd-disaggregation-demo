@@ -1,0 +1,10 @@
+node2_iface=ens65np1
+     rx_vport_rdma_unicast_bytes: 27230181272
+     tx_vport_rdma_unicast_bytes: 13795810860
+     rx_crc_errors_phy: 0
+     rx_in_range_len_errors_phy: 0
+     rx_discards_phy: 0
+     tx_discards_phy: 0
+     tx_errors_phy: 0
+     rx_prio3_bytes: 26570973964
+     tx_prio3_bytes: 13785177506

@@ -1,0 +1,6 @@
+git_diff_check=PASS
+secret_assignment_scan=PASS
+shell_syntax=PASS
+python_compile=PASS
+systemd_verify=PASS
+kubernetes_server_dry_run=PASS

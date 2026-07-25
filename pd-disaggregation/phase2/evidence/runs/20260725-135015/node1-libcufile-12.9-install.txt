@@ -1,0 +1,28 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  cuda-toolkit-12-9-config-common
+The following NEW packages will be installed:
+  cuda-toolkit-12-9-config-common libcufile-12-9
+0 upgraded, 2 newly installed, 0 to remove and 524 not upgraded.
+Need to get 910 kB of archives.
+After this operation, 3428 kB of additional disk space will be used.
+Get:1 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  cuda-toolkit-12-9-config-common 12.9.79-1 [16.6 kB]
+Get:2 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  libcufile-12-9 1.14.1.1-1 [894 kB]
+Fetched 910 kB in 3s (318 kB/s)
+Selecting previously unselected package cuda-toolkit-12-9-config-common.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 216731 files and directories currently installed.)
+Preparing to unpack .../cuda-toolkit-12-9-config-common_12.9.79-1_all.deb ...
+Unpacking cuda-toolkit-12-9-config-common (12.9.79-1) ...
+Selecting previously unselected package libcufile-12-9.
+Preparing to unpack .../libcufile-12-9_1.14.1.1-1_amd64.deb ...
+Unpacking libcufile-12-9 (1.14.1.1-1) ...
+Setting up cuda-toolkit-12-9-config-common (12.9.79-1) ...
+Setting alternatives
+update-alternatives: using /usr/local/cuda-12.9 to provide /usr/local/cuda (cuda) in auto mode
+update-alternatives: using /usr/local/cuda-12.9 to provide /usr/local/cuda-12 (cuda-12) in auto mode
+Setting up libcufile-12-9 (1.14.1.1-1) ...
+Setting alternatives
+update-alternatives: using /usr/local/cuda-12.9/gds/cufile.json to provide /etc/cufile.json (cufile.json) in auto mode
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...

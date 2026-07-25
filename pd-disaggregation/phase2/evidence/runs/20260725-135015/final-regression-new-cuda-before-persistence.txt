@@ -1,0 +1,6 @@
+=== prefill qwen3-14b-pd-0-vllmprefillworker-r67hz ===
+NVIDIA L4, 575.51.03, 00000000:03:00.0
+cuda_available= True device_count= 1 name= NVIDIA L4
+=== decode qwen3-14b-pd-0-vllmdecodeworker-m6hvx ===
+NVIDIA L4, 575.51.03, 00000000:03:00.0
+cuda_available= True device_count= 1 name= NVIDIA L4

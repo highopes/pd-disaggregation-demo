@@ -1,0 +1,16 @@
+[Unit]
+Description=Dynamo Phase 2 NFS/RDMA storage server
+Wants=network-online.target
+After=network-online.target dynamo-phase2-ram-storage.service dynamo-phase2-rdma-tos.service
+Requires=dynamo-phase2-ram-storage.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/libexec/dynamo-phase2/node3-nfs-rdma-setup.sh
+ExecStop=/usr/local/libexec/dynamo-phase2/node3-nfs-rdma-rollback.sh
+TimeoutStartSec=120
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target

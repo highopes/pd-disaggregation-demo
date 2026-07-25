@@ -1,0 +1,24 @@
+===kernel===
+NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  575.51.03  Release Build  (dvs-builder@U22-I3-G01-1-4)  Wed Apr 16 14:03:30 UTC 2025
+GCC version:  gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+filename:       /lib/modules/6.11.0-26-generic/updates/dkms/nvidia.ko.zst
+version:        575.51.03
+license:        Dual MIT/GPL
+nvidia_peermem         16384  0
+nvidia_uvm           2154496  20
+nvidia_drm            139264  3
+nvidia_modeset       1732608  2 nvidia_drm
+nvidia              11550720  128 nvidia_uvm,nvidia_peermem,nvidia_modeset
+ib_uverbs             200704  26 nvidia_peermem,rdma_ucm,mlx5_ib
+nvidia_fs_stats_absent
+===packages===
+===libraries===
+	libcufile_rdma.so.1 (libc6,x86-64) => /usr/local/cuda/targets/x86_64-linux/lib/libcufile_rdma.so.1
+	libcufile_rdma.so.1 (libc6,x86-64) => /usr/local/cuda-11/targets/x86_64-linux/lib/libcufile_rdma.so.1
+	libcufile_rdma.so (libc6,x86-64) => /usr/local/cuda/targets/x86_64-linux/lib/libcufile_rdma.so
+	libcufile_rdma.so (libc6,x86-64) => /usr/local/cuda-11/targets/x86_64-linux/lib/libcufile_rdma.so
+	libcufile.so.0 (libc6,x86-64) => /usr/local/cuda/targets/x86_64-linux/lib/libcufile.so.0
+	libcufile.so.0 (libc6,x86-64) => /usr/local/cuda-11/targets/x86_64-linux/lib/libcufile.so.0
+	libcufile.so (libc6,x86-64) => /usr/local/cuda/targets/x86_64-linux/lib/libcufile.so
+	libcufile.so (libc6,x86-64) => /usr/local/cuda-11/targets/x86_64-linux/lib/libcufile.so
+===tools===

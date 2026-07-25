@@ -1,0 +1,12 @@
+mount.nfs: timeout set for Sat Jul 25 15:22:13 2026
+mount.nfs: trying text-based options 'vers=3,proto=rdma,port=20049,hard,timeo=600,retrans=2,addr=172.31.230.113'
+TARGET         SOURCE                        FSTYPE OPTIONS
+/mnt/dynamo-g4 172.31.230.113:/srv/dynamo-g4 nfs    rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+/var/lib/kubelet/pods/8709957d-6cba-47ad-a2c2-e197be0518af/volumes/kubernetes.io~nfs/hf-cache-pv from 192.168.160.109:/mnt/pool0/NFS/huggingface
+ Flags:	rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.160.111,local_lock=none,addr=192.168.160.109
+
+/mnt/dynamo-g4 from 172.31.230.113:/srv/dynamo-g4
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+
+172.31.230.113 dev ens65np0 src 172.31.230.111 uid 0 
+    cache 

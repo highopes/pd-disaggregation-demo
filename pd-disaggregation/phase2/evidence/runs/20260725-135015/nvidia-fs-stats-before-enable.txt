@@ -1,0 +1,19 @@
+2026-07-25T15:31:52+08:00
+rw_stats_enabled_before=0
+peer_stats_enabled_before=0
+GDS Version: 1.15.0.41 
+NVFS statistics(ver: 4.0)
+NVFS Driver(version: 2.26.6)
+Mellanox PeerDirect Supported: False
+IO stats: Disabled, peer IO stats: Disabled
+Logging level: info
+
+Active Shadow-Buffer (MiB): 0
+Active Process: 0
+Reads				: err=0 io_state_err=0
+Sparse Reads		        : n=0 io=0 holes=0 pages=0 
+Writes				: err=0 io_state_err=0 pg-cache=0 pg-cache-fail=0 pg-cache-eio=0
+Mmap				: n=0 ok=0 err=0 munmap=0
+Bar1-map			: n=0 ok=0 err=0 free=0 callbacks=0 active=0 delay-frees=0
+Error				: cpu-gpu-pages=0 sg-ext=0 dma-map=0 dma-ref=0
+Ops				: Read=0 Write=0 BatchIO=0

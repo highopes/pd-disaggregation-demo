@@ -1,0 +1,129 @@
+AUDIT_DIR=/tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy
+=== package sha256 ===
+8567bb5360cc5d54dbe720cfbd6ca9e5bfa016bc12660cc23fefd7a79c490370  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/nvidia-fs-dkms_2.26.6-1_amd64.deb
+6da199f8d57c197279755c70f302447af0fe7342eb2241d317b6c0e1762f4769  /tmp/dynamo-phase2-nvidia-fs-audit.s0Nyqy/gds-tools-12-9_1.14.1.1-1_amd64.deb
+=== package contents ===
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./etc/
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./etc/modprobe.d/
+-rw-r--r-- root/root        33 2025-07-17 17:15 ./etc/modprobe.d/nvidia-fs.conf
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./etc/modules-load.d/
+-rw-r--r-- root/root        10 2025-07-17 17:15 ./etc/modules-load.d/nvidia-fs.conf
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/share/
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/share/doc/
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/share/doc/nvidia-fs-dkms/
+-rw-r--r-- root/root       149 2025-07-17 17:15 ./usr/share/doc/nvidia-fs-dkms/changelog.Debian.gz
+-rw-r--r-- root/root      1277 2025-07-17 17:15 ./usr/share/doc/nvidia-fs-dkms/copyright
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/src/
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/
+-rw-r--r-- root/root      4834 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/CHANGELOG
+-rw-r--r-- root/root        10 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/GDS_VERSION
+-rw-r--r-- root/root      5057 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/Makefile
+-rwxr-xr-x root/root     11284 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/configure
+-rwxr-xr-x root/root      4203 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/create_nv.symvers.sh
+-rw-r--r-- root/root       390 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/dkms.conf
+-rw-r--r-- root/root      6413 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-batch.c
+-rw-r--r-- root/root      1600 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-batch.h
+-rw-r--r-- root/root     81349 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-core.c
+-rw-r--r-- root/root     10110 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-core.h
+-rw-r--r-- root/root     28644 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-dma.c
+-rw-r--r-- root/root      5808 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-dma.h
+-rw-r--r-- root/root      3018 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-fault.c
+-rw-r--r-- root/root      1894 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-fault.h
+-rw-r--r-- root/root      2366 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-kernel-interface.c
+-rw-r--r-- root/root      1850 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-kernel-interface.h
+-rw-r--r-- root/root     48475 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-mmap.c
+-rw-r--r-- root/root      9491 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-mmap.h
+-rw-r--r-- root/root      4122 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-mod.c
+-rw-r--r-- root/root      1748 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-p2p.h
+-rw-r--r-- root/root     27170 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-pci.c
+-rw-r--r-- root/root      8230 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-pci.h
+-rw-r--r-- root/root      7690 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-proc.c
+-rw-r--r-- root/root      7987 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-rdma.c
+-rw-r--r-- root/root      1622 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-rdma.h
+-rw-r--r-- root/root     21780 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-stat.c
+-rw-r--r-- root/root      7284 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-stat.h
+-rw-r--r-- root/root      1810 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/nvfs-vers.h
+drwxr-xr-x root/root         0 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/tests/
+-rw-r--r-- root/root      5272 2025-07-17 17:15 ./usr/src/nvidia-fs-2.26.6/tests/nvfs-blk-simulation.c
+=== control ===
+Package: nvidia-fs-dkms
+Source: nvidia-fs
+Version: 2.26.6-1
+Architecture: amd64
+Maintainer: NVIDIA <cudatools@nvidia.com>
+Installed-Size: 349
+Depends: dkms (>= 3.1.8), nvidia-prebuilt-kernel | nvidia-dkms-kernel | nvidia-kernel-dkms | nvidia-kernel-open-dkms
+Suggests: linux-headers-generic
+Conflicts: nvidia-fs-prebuilt
+Section: NVIDIA
+Priority: optional
+Multi-Arch: foreign
+Homepage: http://www.nvidia.com
+Description: NVIDIA GPUDirect Storage driver
+ This package provides the NVIDIA GPUDirect Storage kernel driver modules.
+ The modules are rebuilt through the DKMS system when a new kernel or modules
+ become available.
+=== preinst ===
+ABSENT
+=== postinst ===
+#!/usr/bin/bash
+
+# Run the nvidia-fs configure
+dkms add -m nvidia-fs -v 2.26.6 -q || :
+dkms build -m nvidia-fs -v 2.26.6 -q || :
+dkms install -m nvidia-fs -v 2.26.6 -q --force || :
+=== prerm ===
+#!/usr/bin/bash
+
+modprobe -r nvidia-fs
+
+# Remove all versions from DKMS registry:
+dkms remove -m %{dkms_name} -v %{version} -q --all || :
+=== postrm ===
+ABSENT
+=== dkms.conf ===
+PACKAGE_NAME="nvidia-fs"
+PACKAGE_VERSION="2.26.6"
+AUTOINSTALL="yes"
+
+BUILT_MODULE_NAME[0]="nvidia-fs"
+DEST_MODULE_LOCATION[0]="/updates/dkms/"
+
+BUILD_DEPENDS[0]="nvidia"
+
+NVFS_MAX_PEER_DEVS=${NVFS_MAX_PEER_DEVS:-64}
+NVFS_MAX_PCI_DEPTH=${NVFS_MAX_PCI_DEPTH:-16}
+
+MAKE[0]="NVFS_MAX_PEER_DEVS=${NVFS_MAX_PEER_DEVS} NVFS_MAX_PCI_DEPTH=${NVFS_MAX_PCI_DEPTH} 'make' -j$(nproc) KVER=${kernelver}"
+=== source tree ===
+nvidia-fs-2.26.6/CHANGELOG
+nvidia-fs-2.26.6/GDS_VERSION
+nvidia-fs-2.26.6/Makefile
+nvidia-fs-2.26.6/configure
+nvidia-fs-2.26.6/create_nv.symvers.sh
+nvidia-fs-2.26.6/dkms.conf
+nvidia-fs-2.26.6/nvfs-batch.c
+nvidia-fs-2.26.6/nvfs-batch.h
+nvidia-fs-2.26.6/nvfs-core.c
+nvidia-fs-2.26.6/nvfs-core.h
+nvidia-fs-2.26.6/nvfs-dma.c
+nvidia-fs-2.26.6/nvfs-dma.h
+nvidia-fs-2.26.6/nvfs-fault.c
+nvidia-fs-2.26.6/nvfs-fault.h
+nvidia-fs-2.26.6/nvfs-kernel-interface.c
+nvidia-fs-2.26.6/nvfs-kernel-interface.h
+nvidia-fs-2.26.6/nvfs-mmap.c
+nvidia-fs-2.26.6/nvfs-mmap.h
+nvidia-fs-2.26.6/nvfs-mod.c
+nvidia-fs-2.26.6/nvfs-p2p.h
+nvidia-fs-2.26.6/nvfs-pci.c
+nvidia-fs-2.26.6/nvfs-pci.h
+nvidia-fs-2.26.6/nvfs-proc.c
+nvidia-fs-2.26.6/nvfs-rdma.c
+nvidia-fs-2.26.6/nvfs-rdma.h
+nvidia-fs-2.26.6/nvfs-stat.c
+nvidia-fs-2.26.6/nvfs-stat.h
+nvidia-fs-2.26.6/nvfs-vers.h
+nvidia-fs-2.26.6/tests/nvfs-blk-simulation.c

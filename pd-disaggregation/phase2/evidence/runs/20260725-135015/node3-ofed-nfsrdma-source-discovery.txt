@@ -1,0 +1,563 @@
+===dkms===
+iser/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+isert/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+kernel-mft-dkms/4.30.1.113, 6.11.0-26-generic, x86_64: installed
+knem/1.1.4.90mlnx3, 6.11.0-26-generic, x86_64: installed
+mlnx-ofed-kernel/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+nvidia/575.51.03, 6.11.0-25-generic, x86_64: installed
+nvidia/575.51.03, 6.11.0-26-generic, x86_64: installed
+srp/24.10.OFED.24.10.2.1.8.1, 6.11.0-26-generic, x86_64: installed
+xpmem/2.7.4, 6.11.0-26-generic, x86_64: installed
+===usr-src===
+/usr/src
+/usr/src/iser-24.10.OFED.24.10.2.1.8.1
+/usr/src/isert-24.10.OFED.24.10.2.1.8.1
+/usr/src/kernel-mft-dkms-4.30.1.113
+/usr/src/kernel-mft-dkms-4.30.1.113/misc_drivers
+/usr/src/kernel-mft-dkms-4.30.1.113/mst_backward_compatibility
+/usr/src/kernel-mft-dkms-4.30.1.113/nnt_driver
+/usr/src/kernel-mft-dkms-4.30.1.113/scripts
+/usr/src/knem-1.1.4.90mlnx3
+/usr/src/knem-1.1.4.90mlnx3/autom4te.cache
+/usr/src/knem-1.1.4.90mlnx3/common
+/usr/src/knem-1.1.4.90mlnx3/doc
+/usr/src/knem-1.1.4.90mlnx3/driver
+/usr/src/knem-1.1.4.90mlnx3/tools
+/usr/src/linux-headers-6.11.0-25-generic
+/usr/src/linux-headers-6.11.0-25-generic/arch
+/usr/src/linux-headers-6.11.0-25-generic/include
+/usr/src/linux-headers-6.11.0-25-generic/kernel
+/usr/src/linux-headers-6.11.0-25-generic/scripts
+/usr/src/linux-headers-6.11.0-25-generic/tools
+/usr/src/linux-headers-6.11.0-26-generic
+/usr/src/linux-headers-6.11.0-26-generic/arch
+/usr/src/linux-headers-6.11.0-26-generic/include
+/usr/src/linux-headers-6.11.0-26-generic/kernel
+/usr/src/linux-headers-6.11.0-26-generic/scripts
+/usr/src/linux-headers-6.11.0-26-generic/tools
+/usr/src/linux-hwe-6.11-headers-6.11.0-25
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/Documentation
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/arch
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/block
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/certs
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/crypto
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/drivers
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/fs
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/include
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/init
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/io_uring
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/ipc
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/kernel
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/lib
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/mm
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/net
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/rust
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/samples
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/scripts
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/security
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/sound
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/tools
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/ubuntu
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/usr
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/virt
+/usr/src/linux-hwe-6.11-headers-6.11.0-26
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/Documentation
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/arch
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/block
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/certs
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/crypto
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/drivers
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/fs
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/include
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/init
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/io_uring
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/ipc
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/kernel
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/lib
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/mm
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/net
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/rust
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/samples
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/scripts
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/security
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/sound
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/tools
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/ubuntu
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/usr
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/virt
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/backports
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/drivers
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/fs
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/include
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts
+/usr/src/nvidia-575.51.03
+/usr/src/nvidia-575.51.03/common
+/usr/src/nvidia-575.51.03/nvidia
+/usr/src/nvidia-575.51.03/nvidia-drm
+/usr/src/nvidia-575.51.03/nvidia-modeset
+/usr/src/nvidia-575.51.03/nvidia-peermem
+/usr/src/nvidia-575.51.03/nvidia-uvm
+/usr/src/nvidia-575.51.03/patches
+/usr/src/ofa_kernel
+/usr/src/ofa_kernel/x86_64
+/usr/src/python3.12
+/usr/src/python3.12/Grammar
+/usr/src/python3.12/Parser
+/usr/src/srp-24.10.OFED.24.10.2.1.8.1
+/usr/src/srp-24.10.OFED.24.10.2.1.8.1/scsi
+/usr/src/xpmem-2.7.4
+/usr/src/xpmem-2.7.4/debian
+/usr/src/xpmem-2.7.4/include
+/usr/src/xpmem-2.7.4/kernel
+/usr/src/xpmem-2.7.4/lib
+/usr/src/xpmem-2.7.4/m4
+/usr/src/xpmem-2.7.4/test
+===xprtrdma-source===
+/usr/src/linux-hwe-6.11-headers-6.11.0-25/net/sunrpc/xprtrdma/Makefile
+/usr/src/linux-hwe-6.11-headers-6.11.0-26/net/sunrpc/xprtrdma/Makefile
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Module.supported
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/_makefile_
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/autogen.sh
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/backchannel.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/common.postinst
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/changelog
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/compat
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/control
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/control.no_dkms
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/copyright
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/mlnx-nfsrdma-dkms.postinst
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/mlnx-nfsrdma-dkms.prerm
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/rules
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/debian/source/format
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/dkms.conf
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/frwr_ops.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/mlnx-nfsrdma_spec_
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/module.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/nvfs.h
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/nvfs_rpc_rdma.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/nvfs_rpc_rdma.h
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/rpc_rdma.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/rpcrdma_dummy.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma_pcl.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma_rw.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svc_rdma_transport.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/svcrdma_dummy.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/tools/sign-modules
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/transport.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/verbs.c
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/xprt_rdma.h
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/xprtrdma_dummy.c
+===ofed-dkms-conf===
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/dkms.conf
+is_conf_set() {
+	grep -q "^$1=[ym]" "$kernel_source_dir/.config" 2>/dev/null
+}
+STRIP_MODS=${STRIP_MODS:-yes}
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+i=0
+BUILT_MODULE_NAME[$i]=mlx_compat
+BUILT_MODULE_LOCATION[$i]=compat
+DEST_MODULE_NAME[$i]=mlx_compat
+DEST_MODULE_LOCATION[$i]=/kernel/compat
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=ib_core
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=ib_core
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=ib_cm
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=ib_cm
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=iw_cm
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=iw_cm
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=ib_umad
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=ib_umad
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=ib_uverbs
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=ib_uverbs
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=rdma_cm
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=rdma_cm
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=rdma_ucm
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/core
+DEST_MODULE_NAME[$i]=rdma_ucm
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=mlxfw
+BUILT_MODULE_LOCATION[$i]=drivers/net/ethernet/mellanox/mlxfw
+DEST_MODULE_NAME[$i]=mlxfw
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/net/ethernet/mellanox/mlxfw
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=mlx5_core
+BUILT_MODULE_LOCATION[$i]=drivers/net/ethernet/mellanox/mlx5/core
+DEST_MODULE_NAME[$i]=mlx5_core
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/net/ethernet/mellanox/mlx5/core
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=mlx5_ib
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/hw/mlx5
+DEST_MODULE_NAME[$i]=mlx5_ib
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/hw/mlx5
+STRIP[$i]="$STRIP_MODS"
+let i++
+BUILT_MODULE_NAME[$i]=ib_ipoib
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/ulp/ipoib
+DEST_MODULE_NAME[$i]=ib_ipoib
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/ulp/ipoib
+STRIP[$i]="$STRIP_MODS"
+let i++
+if [[ $(VER $kernelver) < $(VER '5.11.0') ]]; then
+BUILT_MODULE_NAME[$i]=auxiliary
+BUILT_MODULE_LOCATION[$i]=drivers/base
+DEST_MODULE_NAME[$i]=auxiliary
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/base
+STRIP[$i]="$STRIP_MODS"
+let i++
+fi
+if [[ ! $(VER $kernelver) < $(VER '4.15.0') ]]; then
+BUILT_MODULE_NAME[$i]=mlxdevm
+BUILT_MODULE_LOCATION[$i]=net/mlxdevm
+DEST_MODULE_NAME[$i]=mlxdevm
+DEST_MODULE_LOCATION[$i]=/kernel/net/mlxdevm
+STRIP[$i]="$STRIP_MODS"
+let i++
+fi
+if is_conf_set CONFIG_INFINIBAND_IRDMA; then
+BUILT_MODULE_NAME[$i]=irdma
+BUILT_MODULE_LOCATION[$i]=drivers/infiniband/hw/irdma
+DEST_MODULE_NAME[$i]=irdma
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/infiniband/hw/irdma
+STRIP[$i]="$STRIP_MODS"
+let i++
+fi
+if is_conf_set CONFIG_MLX5_VFIO_PCI; then
+BUILT_MODULE_NAME[$i]=mlx5-vfio-pci
+BUILT_MODULE_LOCATION[$i]=drivers/vfio/pci/mlx5
+DEST_MODULE_NAME[$i]=mlx5-vfio-pci
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/vfio/pci/mlx5
+STRIP[$i]="$STRIP_MODS"
+let i++
+fi
+if is_conf_set CONFIG_MLX5_VDPA_NET; then
+BUILT_MODULE_NAME[$i]=mlx5_vdpa
+BUILT_MODULE_LOCATION[$i]=drivers/vdpa/mlx5
+DEST_MODULE_NAME[$i]=mlx5_vdpa
+DEST_MODULE_LOCATION[$i]=/kernel/drivers/vdpa/mlx5
+STRIP[$i]="$STRIP_MODS"
+let i++
+fi
+#:# ExtraOption --with-mlx5-ipsec
+#:# ExtraOption --with-gds
+MAKE="./ofed_scripts/pre_build.sh $kernelver $kernel_source_dir mlnx-ofed-kernel 24.10.OFED.24.10.2.1.8.1"
+CLEAN="make clean"
+PACKAGE_NAME=mlnx-ofed-kernel
+PACKAGE_VERSION=24.10.OFED.24.10.2.1.8.1
+AUTOINSTALL=yes
+POST_INSTALL="ofed_scripts/dkms_build_ulps.sh $kernelver"
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/drivers/fwctl/dkms.conf
+# DKMS module name and version
+PACKAGE_NAME="fwctl"
+PACKAGE_VERSION="4.0"
+
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+
+# Module name, source and destination directories, and build command-line
+BUILT_MODULE_NAME[0]="fwctl"
+BUILT_MODULE_LOCATION[0]="./"
+DEST_MODULE_LOCATION[0]="/kernel/../updates/"
+BUILT_MODULE_NAME[1]="mlx5_fwctl"
+BUILT_MODULE_LOCATION[1]="./mlx5"
+DEST_MODULE_LOCATION[1]="/kernel/../updates/"
+MAKE="make -j`MLXNUMC=$(grep ^processor /proc/cpuinfo | wc -l) && echo $(($MLXNUMC<16?$MLXNUMC:16))` KVER=$kernelver K_BUILD=$kernel_source_dir"
+
+# Cleanup command-line
+CLEAN="make clean"
+
+# disable autoinstall since this module depends on mlnx-ofed-kernel-dkms
+# mlnx-ofed-kernel-dkms will build this module on POST_INSTALL
+AUTOINSTALL=
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/drivers/nvme/dkms.conf
+# DKMS module name and version
+PACKAGE_NAME="mlnx-nvme"
+PACKAGE_VERSION="4.0"
+
+is_conf_set() {
+	grep -q "^$1=[ym]" "$kernel_source_dir/.config" 2>/dev/null
+}
+
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+
+# Module name, source and destination directories, and build command-line
+BUILT_MODULE_NAME=()
+BUILT_MODULE_LOCATION=()
+DEST_MODULE_LOCATION=()
+
+#
+# host
+#
+BUILT_MODULE_NAME+=("nvme-core")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvme")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvme-fabrics")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvme-rdma")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvme-fc")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+if is_conf_set CONFIG_NVME_TCP; then
+BUILT_MODULE_NAME+=("nvme-tcp")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+fi
+
+if is_conf_set CONFIG_NVME_APPLE; then
+BUILT_MODULE_NAME+=("nvme-apple")
+BUILT_MODULE_LOCATION+=("./host/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+fi
+#
+# target
+#
+BUILT_MODULE_NAME+=("nvmet")
+BUILT_MODULE_LOCATION+=("./target/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvme-loop")
+BUILT_MODULE_LOCATION+=("./target/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvmet-rdma")
+BUILT_MODULE_LOCATION+=("./target/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+BUILT_MODULE_NAME+=("nvmet-fc")
+BUILT_MODULE_LOCATION+=("./target/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+if is_conf_set CONFIG_NVME_TCP; then
+BUILT_MODULE_NAME+=("nvmet-tcp")
+BUILT_MODULE_LOCATION+=("./target/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+fi
+
+BUILT_MODULE_NAME+=("nvme-fcloop")
+BUILT_MODULE_LOCATION+=("./target/")
+DEST_MODULE_LOCATION+=("/kernel/../updates/")
+
+
+MAKE="make -j`MLXNUMC=$(grep ^processor /proc/cpuinfo | wc -l) && echo $(($MLXNUMC<16?$MLXNUMC:16))` KVER=$kernelver K_BUILD=$kernel_source_dir CONFIG_NVME_HOST_WITHOUT_FC="
+
+# Cleanup command-line
+CLEAN="make clean"
+
+# disable autoinstall since this module depends on mlnx-ofed-kernel-dkms
+# mlnx-ofed-kernel-dkms will build this module on POST_INSTALL
+AUTOINSTALL=
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/drivers/infiniband/ulp/isert/dkms.conf
+# DKMS module name and version
+PACKAGE_NAME="isert"
+PACKAGE_VERSION="4.0"
+
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+
+# Module name, source and destination directories, and build command-line
+BUILT_MODULE_NAME[0]="ib_isert"
+BUILT_MODULE_LOCATION[0]="./"
+DEST_MODULE_LOCATION[0]="/kernel/../updates/"
+MAKE="make -j`MLXNUMC=$(grep ^processor /proc/cpuinfo | wc -l) && echo $(($MLXNUMC<16?$MLXNUMC:16))` KVER=$kernelver K_BUILD=$kernel_source_dir"
+
+# Cleanup command-line
+CLEAN="make clean"
+
+# disable autoinstall since this module depends on mlnx-ofed-kernel-dkms
+# mlnx-ofed-kernel-dkms will build this module on POST_INSTALL
+AUTOINSTALL=
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/drivers/infiniband/ulp/srp/dkms.conf
+# DKMS module name and version
+PACKAGE_NAME="srp"
+PACKAGE_VERSION="4.0"
+
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+
+# Module name, source and destination directories, and build command-line
+BUILT_MODULE_NAME[0]="ib_srp"
+BUILT_MODULE_LOCATION[0]="./"
+DEST_MODULE_LOCATION[0]="/kernel/../updates/"
+BUILT_MODULE_NAME[1]="scsi_transport_srp"
+BUILT_MODULE_LOCATION[1]="./scsi/"
+DEST_MODULE_LOCATION[1]="/kernel/../updates/"
+MAKE="make -j`MLXNUMC=$(grep ^processor /proc/cpuinfo | wc -l) && echo $(($MLXNUMC<16?$MLXNUMC:16))` KVER=$kernelver K_BUILD=$kernel_source_dir"
+
+# Cleanup command-line
+CLEAN="make clean"
+
+# disable autoinstall since this module depends on mlnx-ofed-kernel-dkms
+# mlnx-ofed-kernel-dkms will build this module on POST_INSTALL
+AUTOINSTALL=
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/drivers/infiniband/ulp/iser/dkms.conf
+# DKMS module name and version
+PACKAGE_NAME="iser"
+PACKAGE_VERSION="4.0"
+
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+
+# Module name, source and destination directories, and build command-line
+BUILT_MODULE_NAME[0]="ib_iser"
+BUILT_MODULE_LOCATION[0]="./"
+DEST_MODULE_LOCATION[0]="/kernel/../updates/"
+MAKE="make -j`MLXNUMC=$(grep ^processor /proc/cpuinfo | wc -l) && echo $(($MLXNUMC<16?$MLXNUMC:16))` KVER=$kernelver K_BUILD=$kernel_source_dir"
+
+# Cleanup command-line
+CLEAN="make clean"
+
+# disable autoinstall since this module depends on mlnx-ofed-kernel-dkms
+# mlnx-ofed-kernel-dkms will build this module on POST_INSTALL
+AUTOINSTALL=
+--- /usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/dkms.conf
+# DKMS module name and version
+PACKAGE_NAME="mlnx-nfsrdma"
+PACKAGE_VERSION="3.4"
+
+kernelver=${kernelver:-$(uname -r)}
+kernel_source_dir=${kernel_source_dir:-/lib/modules/$kernelver/build}
+
+# Module name, source and destination directories, and build command-line
+BUILT_MODULE_NAME[0]="rpcrdma"
+BUILT_MODULE_LOCATION[0]="./"
+DEST_MODULE_LOCATION[0]="/kernel/../updates/"
+
+BUILT_MODULE_NAME[1]="svcrdma"
+BUILT_MODULE_LOCATION[1]="./"
+DEST_MODULE_LOCATION[1]="/kernel/../updates/"
+
+BUILT_MODULE_NAME[2]="xprtrdma"
+BUILT_MODULE_LOCATION[2]="./"
+DEST_MODULE_LOCATION[2]="/kernel/../updates/"
+
+MAKE="make -j`MLXNUMC=$(grep ^processor /proc/cpuinfo | wc -l) && echo $(($MLXNUMC<16?$MLXNUMC:16))` KVER=$kernelver K_BUILD=$kernel_source_dir"
+
+# Cleanup command-line
+CLEAN="make clean"
+
+# disable autoinstall since this module depends on mlnx-ofed-kernel-dkms
+# mlnx-ofed-kernel-dkms will build this module on POST_INSTALL
+AUTOINSTALL=
+===ofed-configure-options===
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat/configure:92269:	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for trace/events/rpcrdma.h" >&5
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat/configure:92270:$as_echo_n "checking for trace/events/rpcrdma.h... " >&6; }
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat/configure:92312:		#include "../../net/sunrpc/xprtrdma/xprt_rdma.h"
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat/configure:92314:		#include <trace/events/rpcrdma.h>
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat/configure:92374:		#include "../../net/sunrpc/xprtrdma/xprt_rdma.h"
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/compat/configure:92376:		#include <trace/events/rpcrdma.h>
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:128:    --with-nfsrdma-mod    make CONFIG_SUNRPC_XPRT_RDMA=m [no]
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:129:    --without-nfsrdma-mod    [yes]
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:757:check_kerver_rh_nfs_rdma()
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:957:# nfs-rdma
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:1038:                                        "--without-nvmf_host-mod" "--without-nvmf_target-mod" "--without-gds" "--without-nfsrdma-mod" "$@"
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:1048:                                        "--with-nvmf_host-mod" "--with-nvmf_target-mod" "--with-gds" "--with-nfsrdma-mod" \
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:1676:		--with-nfsrdma-mod)
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:1679:		--without-nfsrdma-mod)
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/configure:1889:	if (! check_kerver_rh_nfs_rdma ${KVERSION}) || support_only_base ${NFSRDMA_SUPPORTED_KVERSION}; then
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/Makefile:23:obj-$(CONFIG_SUNRPC_XPRT_RDMA)  += net/sunrpc/xprtrdma/
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/Makefile:24:obj-$(CONFIG_SUNRPC_XPRT_RDMA_DUMMY)  += net/sunrpc/xprtrdma/
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/Makefile:25:obj-$(CONFIG_SUNRPC_XPRT_RDMA_CLIENT)  += net/sunrpc/xprtrdma/
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/ofed_scripts/Makefile:26:obj-$(CONFIG_SUNRPC_XPRT_RDMA_SERVER)  += net/sunrpc/xprtrdma/
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:7:obj-$(CONFIG_SUNRPC_XPRT_RDMA) += rpcrdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:9:obj-$(CONFIG_SUNRPC_XPRT_RDMA_DUMMY) += rpcrdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:10:obj-$(CONFIG_SUNRPC_XPRT_RDMA_DUMMY) += xprtrdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:11:obj-$(CONFIG_SUNRPC_XPRT_RDMA_DUMMY) += svcrdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:12:obj-$(CONFIG_SUNRPC_XPRT_RDMA_CLIENT) += xprtrdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:13:obj-$(CONFIG_SUNRPC_XPRT_RDMA_SERVER) += svcrdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:14:xprtrdma-y := xprtrdma_dummy.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:15:svcrdma-y := svcrdma_dummy.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:18:rpcrdma-y := rpcrdma_dummy.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:20:rpcrdma-y := transport.o rpc_rdma.o verbs.o \
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:27:rpcrdma-y += nvfs_rpc_rdma.o
+/usr/src/mlnx-ofed-kernel-24.10.OFED.24.10.2.1.8.1/net/sunrpc/xprtrdma/Makefile:30:rpcrdma-$(CONFIG_SUNRPC_BACKCHANNEL) += backchannel.o
+===packages===
+ibacm 2410mlnx54-1.2410068
+ibutils2 2.1.1-0.21902.MLNX20241029.g46cf6278.2410068
+ibverbs-providers 2410mlnx54-1.2410068
+ibverbs-utils 2410mlnx54-1.2410068
+infiniband-diags 2410mlnx54-1.2410068
+iser-dkms 24.10.OFED.24.10.2.1.8.1-1
+isert-dkms 24.10.OFED.24.10.2.1.8.1-1
+knem 1.1.4.90mlnx3-OFED.23.10.0.2.1.1
+knem-dkms 1.1.4.90mlnx3-OFED.23.10.0.2.1.1
+libibmad-dev 2410mlnx54-1.2410068
+libibmad5 2410mlnx54-1.2410068
+libibnetdisc5 2410mlnx54-1.2410068
+libibumad-dev 2410mlnx54-1.2410068
+libibumad3 2410mlnx54-1.2410068
+libibverbs-dev 2410mlnx54-1.2410068
+libibverbs1 2410mlnx54-1.2410068
+libibverbs1-dbg 2410mlnx54-1.2410068
+libnfs14 5.0.2-1build1
+libnfsidmap1 1:2.6.4-3ubuntu5.1
+libopensm 5.21.0.MLNX20241126.d9aa3dff-0.1.2410114
+libopensm-devel 5.21.0.MLNX20241126.d9aa3dff-0.1.2410114
+librdmacm-dev 2410mlnx54-1.2410068
+librdmacm1 2410mlnx54-1.2410068
+librdmacm1t64 50.0-2ubuntu0.2
+mlnx-ethtool 6.9-1.2410068
+mlnx-fw-updater 24.10-2.1.8.0
+mlnx-iproute2 6.10.0-1.2410218
+mlnx-ofed-kernel-dkms 24.10.OFED.24.10.2.1.8.1-1
+mlnx-ofed-kernel-utils 24.10.OFED.24.10.2.1.8.1-1
+mlnx-tools 24.10-0.2410068
+nfs-common 1:2.6.4-3ubuntu5.1
+nfs-kernel-server 1:2.6.4-3ubuntu5.1
+ofed-scripts 24.10.OFED.24.10.2.1.8-1
+opensm 5.21.0.MLNX20241126.d9aa3dff-0.1.2410114
+opensm-doc 5.21.0.MLNX20241126.d9aa3dff-0.1.2410114
+rdma-core 2410mlnx54-1.2410068
+rdmacm-utils 2410mlnx54-1.2410068
+sharp 3.9.0.MLNX20241029.7a20b607-1.2410068
+srp-dkms 24.10.OFED.24.10.2.1.8.1-1
+srptools 2410mlnx54-1.2410068

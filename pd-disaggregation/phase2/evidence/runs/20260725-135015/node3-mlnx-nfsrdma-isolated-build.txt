@@ -1,0 +1,57 @@
+Warning: Permanently added '192.168.160.113' (ED25519) to the list of known hosts.
+BUILD_DIR=/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP
+KERNEL=6.11.0-26-generic
+OFED=MLNX_OFED_LINUX-24.10-2.1.8.0:
+GDS_FLAG=CONFIG_GPU_DIRECT_STORAGE=y
+/bin/sh: 1: Syntax error: Unterminated quoted string
+/bin/sh: 1: [: -lt: unexpected operator
+grep: mlnx-nfsrdma.spec: No such file or directory
+rm -f *.o
+rm -f *.ko *.ko.gz
+rm -f *.mod.c
+rm -f Module*.symvers modules*.order
+/bin/sh: 1: Syntax error: Unterminated quoted string
+/bin/sh: 1: [: -lt: unexpected operator
+grep: mlnx-nfsrdma.spec: No such file or directory
+make -C /lib/modules/6.11.0-26-generic/build O=/lib/modules/6.11.0-26-generic/build M=/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP KBUILD_EXTRA_SYMBOLS=/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/Module.symvers \
+	CONFIG_SUNRPC_XPRT_RDMA=m \
+	CONFIG_SUNRPC_XPRT_RDMA_CLIENT=m \
+	CONFIG_SUNRPC_XPRT_RDMA_SERVER=m \
+	CONFIG_SUNRPC_XPRT_RDMA_DUMMY= \
+	CONFIG_GPU_DIRECT_STORAGE=y \
+	CONFIG_DTRACE= \
+	CONFIG_CTF= \
+	LINUXINCLUDE=' -include /lib/modules/6.11.0-26-generic/build/include/generated/autoconf.h -include /lib/modules/6.11.0-26-generic/build/include/linux/kconfig.h -include /usr/src/ofa_kernel/x86_64/6.11.0-26-generic/include/linux/compat-2.6.h -I/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP -I/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/include -I/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/include/uapi  $(if $(CONFIG_XEN),-D__XEN_INTERFACE_VERSION__=$(CONFIG_XEN_INTERFACE_VERSION)) $(if $(CONFIG_XEN),-I$(srctree)/arch/x86/include/mach-xen) -I$(srctree)/arch/$(SRCARCH)/include -Iarch/$(SRCARCH)/include/generated -Iinclude -I$(srctree)/arch/$(SRCARCH)/include/uapi -Iarch/$(SRCARCH)/include/generated/uapi -I$(srctree)/include -I$(srctree)/include/uapi -Iinclude/generated/uapi $(if $(KBUILD_SRC),-Iinclude2 -I$(srctree)/include) -I$(srctree)/arch/$(SRCARCH)/include -Iarch/$(SRCARCH)/include/generated ' \
+	modules
+make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+make[1]: Entering directory '/usr/src/linux-headers-6.11.0-26-generic'
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  You are using:           gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/transport.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/rpc_rdma.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/verbs.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/frwr_ops.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.o
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:144:35: error: initialization of ‘int (*)(const struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(const struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} from incompatible pointer type ‘int (*)(struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} [-Werror=incompatible-pointer-types]
+  144 |                 .proc_handler   = svcrdma_counter_handler,
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:144:35: note: (near initialization for ‘svcrdma_parm_table[3].proc_handler’)
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:151:35: error: initialization of ‘int (*)(const struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(const struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} from incompatible pointer type ‘int (*)(struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} [-Werror=incompatible-pointer-types]
+  151 |                 .proc_handler   = svcrdma_counter_handler,
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:151:35: note: (near initialization for ‘svcrdma_parm_table[4].proc_handler’)
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:158:35: error: initialization of ‘int (*)(const struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(const struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} from incompatible pointer type ‘int (*)(struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} [-Werror=incompatible-pointer-types]
+  158 |                 .proc_handler   = svcrdma_counter_handler,
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:158:35: note: (near initialization for ‘svcrdma_parm_table[5].proc_handler’)
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:165:35: error: initialization of ‘int (*)(const struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(const struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} from incompatible pointer type ‘int (*)(struct ctl_table *, int,  void *, size_t *, loff_t *)’ {aka ‘int (*)(struct ctl_table *, int,  void *, long unsigned int *, long long int *)’} [-Werror=incompatible-pointer-types]
+  165 |                 .proc_handler   = svcrdma_counter_handler,
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+/tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.c:165:35: note: (near initialization for ‘svcrdma_parm_table[6].proc_handler’)
+cc1: some warnings being treated as errors
+make[3]: *** [scripts/Makefile.build:244: /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP/svc_rdma.o] Error 1
+make[2]: *** [/usr/src/linux-headers-6.11.0-26-generic/Makefile:1927: /tmp/dynamo-phase2-mlnx-nfsrdma.wXRSNP] Error 2
+make[1]: Leaving directory '/usr/src/linux-headers-6.11.0-26-generic'
+make[1]: *** [Makefile:224: __sub-make] Error 2
+make: *** [makefile:105: default] Error 2

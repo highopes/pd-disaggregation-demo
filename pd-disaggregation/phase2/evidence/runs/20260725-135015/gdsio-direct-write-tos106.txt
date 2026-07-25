@@ -1,0 +1,5 @@
+IoType: WRITE XferType: GPUD Threads: 1 DataSetSize: 262144/262144(KiB) IOSize: 1024(KiB) Throughput: 0.468671 GiB/sec, Avg_Latency: 2068.902344 usecs ops: 256 total_time 0.533423 secs
+Per Job Statistics:
+- Job ID: 0 Threads: 1 DataSetSize :262144 (KiB) Throughput: 0.468671 GiB/sec, Avg_Latency: 2068.902344
+-- Per Thread Throughput(Min/Max): 0.472020/0.472020 GiB/sec, Per Thread Latency(Min/Max): 2068.902344/2068.902344
+-- Per Thread Submission Latency (Batch mode only): 0.000000 Per Thread Completion Latency (Batch mode only): 0.000000

@@ -1,0 +1,101 @@
+patching file svc_rdma.c
+make: Entering directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+/bin/sh: 1: Syntax error: Unterminated quoted string
+/bin/sh: 1: [: -lt: unexpected operator
+rm -f *.o
+rm -f *.ko *.ko.gz
+rm -f *.mod.c
+rm -f Module*.symvers modules*.order
+make: Leaving directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+make: Entering directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+/bin/sh: 1: Syntax error: Unterminated quoted string
+/bin/sh: 1: [: -lt: unexpected operator
+make -C /lib/modules/6.11.0-26-generic/build O=/lib/modules/6.11.0-26-generic/build M=/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7 KBUILD_EXTRA_SYMBOLS=/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/Module.symvers \
+	CONFIG_SUNRPC_XPRT_RDMA=m \
+	CONFIG_SUNRPC_XPRT_RDMA_CLIENT=m \
+	CONFIG_SUNRPC_XPRT_RDMA_SERVER=m \
+	CONFIG_SUNRPC_XPRT_RDMA_DUMMY= \
+	CONFIG_GPU_DIRECT_STORAGE=y \
+	CONFIG_DTRACE= \
+	CONFIG_CTF= \
+	LINUXINCLUDE=' -include /lib/modules/6.11.0-26-generic/build/include/generated/autoconf.h -include /lib/modules/6.11.0-26-generic/build/include/linux/kconfig.h -include /usr/src/ofa_kernel/x86_64/6.11.0-26-generic/include/linux/compat-2.6.h -I/root/ns_ai-serving -I/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/include -I/usr/src/ofa_kernel/x86_64/6.11.0-26-generic/include/uapi  $(if $(CONFIG_XEN),-D__XEN_INTERFACE_VERSION__=$(CONFIG_XEN_INTERFACE_VERSION)) $(if $(CONFIG_XEN),-I$(srctree)/arch/x86/include/mach-xen) -I$(srctree)/arch/$(SRCARCH)/include -Iarch/$(SRCARCH)/include/generated -Iinclude -I$(srctree)/arch/$(SRCARCH)/include/uapi -Iarch/$(SRCARCH)/include/generated/uapi -I$(srctree)/include -I$(srctree)/include/uapi -Iinclude/generated/uapi $(if $(KBUILD_SRC),-Iinclude2 -I$(srctree)/include) -I$(srctree)/arch/$(SRCARCH)/include -Iarch/$(SRCARCH)/include/generated ' \
+	modules
+make[1]: Entering directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  You are using:           gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/transport.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/rpc_rdma.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/verbs.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/frwr_ops.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma_backchannel.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma_transport.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma_sendto.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma_recvfrom.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma_rw.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svc_rdma_pcl.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/module.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/nvfs_rpc_rdma.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/backchannel.o
+  LD [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/rpcrdma.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/xprtrdma_dummy.o
+  LD [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/xprtrdma.o
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svcrdma_dummy.o
+  LD [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svcrdma.o
+  MODPOST /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/Module.symvers
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/rpcrdma.mod.o
+  LD [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/rpcrdma.ko
+  BTF [M] /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/rpcrdma.ko
+Skipping BTF generation for /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/rpcrdma.ko due to unavailability of vmlinux
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/xprtrdma.mod.o
+  LD [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/xprtrdma.ko
+  BTF [M] /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/xprtrdma.ko
+Skipping BTF generation for /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/xprtrdma.ko due to unavailability of vmlinux
+  CC [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svcrdma.mod.o
+  LD [M]  /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svcrdma.ko
+  BTF [M] /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svcrdma.ko
+Skipping BTF generation for /tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7/svcrdma.ko due to unavailability of vmlinux
+make[1]: Leaving directory '/usr/src/linux-headers-6.11.0-26-generic'
+make: Leaving directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+make: Entering directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+/bin/sh: 1: Syntax error: Unterminated quoted string
+/bin/sh: 1: [: -lt: unexpected operator
+rm -f *.o
+rm -f *.ko *.ko.gz
+rm -f *.mod.c
+rm -f Module*.symvers modules*.order
+make: Leaving directory '/tmp/dynamo-phase2-mlnx-nfsrdma.8SEvi7'
+Deprecated feature: CLEAN (/usr/src/mlnx-nfsrdma-3.4/dkms.conf)
+Creating symlink /var/lib/dkms/mlnx-nfsrdma/3.4/source -> /usr/src/mlnx-nfsrdma-3.4
+Deprecated feature: CLEAN (/var/lib/dkms/mlnx-nfsrdma/3.4/source/dkms.conf)
+Sign command: /usr/bin/kmodsign
+Signing key: /var/lib/shim-signed/mok/MOK.priv
+Public certificate (MOK): /var/lib/shim-signed/mok/MOK.der
+
+Building module(s)............ done.
+Signing module /var/lib/dkms/mlnx-nfsrdma/3.4/build/./rpcrdma.ko
+Signing module /var/lib/dkms/mlnx-nfsrdma/3.4/build/./svcrdma.ko
+Signing module /var/lib/dkms/mlnx-nfsrdma/3.4/build/./xprtrdma.ko
+Deprecated feature: CLEAN (/var/lib/dkms/mlnx-nfsrdma/3.4/source/dkms.conf)
+Found pre-existing /lib/modules/6.11.0-26-generic/kernel/net/sunrpc/xprtrdma/rpcrdma.ko.zst, archiving for uninstallation
+Installing /lib/modules/6.11.0-26-generic/updates/dkms/rpcrdma.ko.zst
+Installing /lib/modules/6.11.0-26-generic/updates/dkms/svcrdma.ko.zst
+Installing /lib/modules/6.11.0-26-generic/updates/dkms/xprtrdma.ko.zst
+Running depmod... done.
+MLNX_OFED NFS/RDMA installed: /lib/modules/6.11.0-26-generic/updates/dkms/rpcrdma.ko.zst
+mlnx-nfsrdma/3.4, 6.11.0-26-generic, x86_64: installed (Original modules exist)
+rpcrdma               397312  0
+filename:       /lib/modules/6.11.0-26-generic/updates/dkms/rpcrdma.ko.zst
+description:    RPC/RDMA Transport
+depends:        sunrpc,ib_core,rdma_cm,mlx_compat
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 
+filename:       /lib/modules/6.11.0-26-generic/updates/dkms/svcrdma.ko.zst
+description:    svcrdma dummy kernel module
+depends:        mlx_compat
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 
+filename:       /lib/modules/6.11.0-26-generic/updates/dkms/xprtrdma.ko.zst
+description:    xprtrdma dummy kernel module
+depends:        mlx_compat
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 

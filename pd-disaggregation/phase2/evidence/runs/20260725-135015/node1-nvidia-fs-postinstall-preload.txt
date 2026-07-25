@@ -1,0 +1,67 @@
+=== install log summary ===
+Building dependency tree...
+Selecting previously unselected package gds-tools-12-9.
+Preparing to unpack .../gds-tools-12-9_1.14.1.1-1_amd64.deb ...
+Unpacking gds-tools-12-9 (1.14.1.1-1) ...
+Selecting previously unselected package nvidia-fs-dkms.
+Preparing to unpack .../nvidia-fs-dkms_2.26.6-1_amd64.deb ...
+Unpacking nvidia-fs-dkms (2.26.6-1) ...
+Setting up gds-tools-12-9 (1.14.1.1-1) ...
+Setting up nvidia-fs-dkms (2.26.6-1) ...
+=== package state ===
+gds-tools-12-9 1.14.1.1-1 install ok installed
+nvidia-fs-dkms 2.26.6-1 install ok installed
+=== dkms state ===
+nvidia-fs/2.26.6, 6.11.0-26-generic, x86_64: installed
+=== module file ===
+/lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+47ba7ad624d4fd49611c42567f8f1b2418df2ed391e1cf04d17162ccf1f26dd1  /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+filename:       /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst
+description:    NVIDIA GPUDirect Storage
+license:        GPL v2
+version:        2.26.6
+srcversion:     32577DB706994A2BCFDBC23
+depends:        
+retpoline:      Y
+name:           nvidia_fs
+vermagic:       6.11.0-26-generic SMP preempt mod_unload modversions 
+sig_id:         PKCS#7
+signer:         CSCO-K8S-01 Secure Boot Module Signature key
+sig_key:        70:05:81:26:9F:C4:6F:26:B7:1F:C8:6A:4A:E1:D9:F0:14:67:0D:C5
+sig_hashalgo:   sha512
+signature:      0F:10:03:BD:93:E1:68:D5:D0:AD:7D:D5:0B:66:CC:4C:5D:3E:35:7F:
+		3A:5E:1C:0B:5B:52:B7:20:99:23:CF:55:37:1B:94:CE:BF:B4:6A:DF:
+		F7:C6:BE:96:AB:FD:A5:6B:03:22:F8:3C:83:BF:13:EC:73:9E:ED:90:
+		03:76:F1:0F:A5:C4:B9:0B:67:14:1B:1F:AB:83:83:F8:B8:32:D5:88:
+		4C:2E:25:E7:37:F4:0E:AA:BA:E0:CD:F0:C3:4E:24:18:9E:27:24:79:
+		78:87:31:37:50:08:AC:83:9A:8E:D7:F4:1D:C2:DD:1A:03:EF:C0:6D:
+		C3:9B:D5:D1:B9:8A:95:E4:E4:7B:2C:68:21:5D:E8:78:05:8F:48:C7:
+		C9:B7:7F:59:0F:36:B6:64:70:47:42:C3:83:8B:65:0C:42:E0:4B:F7:
+		92:59:F1:B7:48:E1:EA:17:C3:39:A0:A2:99:F8:03:5C:35:54:CA:3F:
+		F4:93:D1:96:98:CA:18:C9:97:81:8E:B4:2D:12:64:6D:BF:A5:F1:B8:
+		67:3E:73:D1:B4:93:83:16:E0:71:4E:4F:77:36:82:DA:32:0C:18:44:
+		6D:60:B3:96:37:EF:2B:1C:FA:73:39:AE:FA:30:DD:30:A4:0B:8B:8B:
+		D7:75:25:78:5E:51:6D:32:34:8A:1D:EA:D8:4E:FA:AB
+parm:           max_devices:uint
+parm:           nvfs_max_devices:number of character devices to expose
+parm:           dbg_enabled:uint
+parm:           nvfs_dbg_enabled:enable debug tracing
+parm:           info_enabled:uint
+parm:           nvfs_info_enabled:enable info tracing
+parm:           peer_stats_enabled:uint
+parm:           nvfs_peer_stats_enabled:enable peer stats
+parm:           rw_stats_enabled:uint
+parm:           nvfs_rw_stats_enabled:enable read-write stats
+parm:           use_legacy_p2p_allocation:uint
+parm:           nvfs_use_legacy_p2p_allocation:Use legacy p2p allocation
+=== dry-run load ===
+insmod /lib/modules/6.11.0-26-generic/updates/dkms/nvidia-fs.ko.zst max_devices=16 
+=== currently loaded ===
+nvidia_fs_not_loaded
+=== driver/P-D unchanged ===
+575.51.03
+NVIDIA L4, 575.51.03, 23034 MiB
+NAME                                     READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+qwen3-14b-pd-0-frontend-2bvbr            1/1     Running   0          43h   10.244.2.94       csco-k8s-03   <none>           <none>
+qwen3-14b-pd-0-vllmdecodeworker-m6hvx    1/1     Running   0          22h   192.168.160.112   csco-k8s-02   <none>           <none>
+qwen3-14b-pd-0-vllmprefillworker-98f5n   1/1     Running   0          22h   192.168.160.111   csco-k8s-01   <none>           <none>

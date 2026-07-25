@@ -1,0 +1,278 @@
+AUDIT_DIR=/tmp/dynamo-phase2-nvidia-fs-228-audit.agsOmf
+fe0dc3b7ff2f03add2ee4c98d087829b42ddcd9a01c00be50338d0adf495e73f  /tmp/dynamo-phase2-nvidia-fs-228-audit.agsOmf/nvidia-fs-dkms_2.28.4-1_amd64.deb
+=== changelog ===
+nvidia-fs (2.28.1) RELEASE; urgency=low
+  * Fix compilation issues for 6.17 kernel
+  * Update nvidia-fs to adapt to blk based API to map NVMe DMA requests
+nvidia-fs (2.27.3) RELEASE; urgency=low
+  * Minor bug fixes
+nvidia-fs (2.26.6) RELEASE; urgency=low
+  * Fix issues for 6.11 kernel
+  * Fix compilation issues for 6.14 kernel 
+  * Minor code cleanup
+nvidia-fs (2.17.1) RELEASE; urgency=low
+  * Added support for Grace-Hopper platform with 4k and 64k Page support
+  * removed the use of symbol_get APIs for nvidia_p2p_* APIs. nvidia-fs is restricted to NVIDIA UNIX Open Kernel Module for x86_64 
+
+-- Aug 2023
+
+nvidia-fs (2.17.0) RELEASE; urgency=low
+
+  * fixed  compilations issues wth linux ver 6.x kernels
+
+-- June 2023
+
+nvidia-fs (2.16.1) RELEASE; urgency=low
+  * no changes
+
+-- June 2023
+nvidia-fs (2.15.3) RELEASE; urgency=low
+
+  * fixed failures in nvme_queue_rqs API when nvfs_nvidia_p2p_dma_map_pages can suspend during dma_map_pages call 
+  * fix memory leak in shadow pages due to missing unpin_user_page call
+
+ -- Apr 2023
+nvidia-fs (2.15.1) RELEASE; urgency=low
+
+  * Added configure option to handle change in kiocb callback ki_complete with two parameters
+
+ -- Feb 2023
+nvidia-fs (2.14) RELEASE; urgency=low
+ 
+  * Removed HIPRI support.
+
+ -- Nov 2022
+
+nvidia-fs (2.14) RELEASE; urgency=low
+ 
+  * Minor bug fixes
+
+ -- Oct 2022
+
+nvidia-fs (2.13) RELEASE; urgency=low
+ 
+  * Minor bug fixes
+
+nvidia-fs (2.12) RELEASE; urgency=low
+ 
+  * Minor fixes to support newer kernels 
+ 
+ --   Mar 2022
+
+nvidia-fs (2.11) RELEASE; urgency=low
+ 
+  * No changes, version bump for minor releases
+
+nvidia-fs (2.10) RELEASE; urgency=low
+ 
+  * Enable batch API support for GDS 
+  * performance improvements in munmap
+ 
+ --   Jan 2022
+
+nvidia-fs (2.9) RELEASE; urgency=low
+ 
+  * Enable MOFEDPeerDirect support using nvidia_peermem.ko
+ 
+ --   Mon 15 Nov 2021
+
+nvidia-fs (2.8) RELEASE; urgency=low
+ 
+  * Minor bug fixes in stats and GPFS paths
+ 
+ --Thu, 15 Oct 2021
+
+nvidia-fs (2.7) RELEASED; urgency=low
+
+  * Add read support for IBM GPFS using userspace RDMA DC transport 
+
+ --Thu, 15 Jun 2021
+
+nvidia-fs (2.6) RELEASED; urgency=low
+
+  * NUMA-based pcie peer affinity computation
+
+  * Minor bug fixes to improve resiliency and supportability
+
+ --   Thu, 25 Feb 2021
+
+nvidia-fs (2.5) RELEASED; urgency=low
+
+  * Add support for Excelero Block Devices
+
+ --   Mon, 2 Feb 2021
+
+nvidia-fs (2.4) RELEASED; urgency=low
+
+  * Fix GDS hangs when process exits while the pages are mapped in rpcrdma
+    driver
+
+ --   Thu, 28 Jan 2021
+
+nvidia-fs (2.3) RELEASED; urgency=low
+
+  * Add support for Scaleflux Block Devices
+
+ --   Thu, 15 Oct 2020
+
+nvidia-fs (2.2) RELEASED; urgency=low
+
+  * Minor bug fixes to improve resiliency and supportability
+
+ --   Fri, 02 Oct 2020
+
+nvidia-fs (2.1) RELEASED; urgency=low
+
+  * Minor bug fixes to improve resiliency and supportability
+
+ --   Sat, 06 June 2020
+
+nvidia-fs (2.0) RELEASED; urgency=low
+
+  * add dynamic NIC selection for distributed filesystems based on the GPU to NIC affinity
+
+  * add additional stats to track cross-root-port access and peer affinity stats
+
+  * add feature bits into vendor registration APIs to support backward compatibility
+
+  * clean up the registration function signature to handle callback feature bits
+
+  * add additional APIs for vendor callbacks nvfs_is_gpu_page, nvfs_gpu_index and nvfs_device_priority
+
+  * add additional error code to nvfs_dma_unmap_sg  NVFS_IO_ERR when nvidia-fs when called on GPU page with failed DMA mapping
+
+  * Minor bug fixes to improve resiliency and supportability
+
+ --   Mon, 27 April 2020
+
+nvidia-fs (1.0) RELEASED; urgency=low
+
+  * Alpha release with nvidia-fs kernel driver
+
+  * callback APIs and code for vendor registration and dma callbacks for blk and sg_lists
+
+  * NVMe and NVMe-oF patches for internal use on EXT4 filesystem
+
+ --   Thu, 29 August 2019
+=== PeerDirect logic ===
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-164-#ifdef GDS_VERSION
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-165-#define GDS_STRING2(x) #x
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-166-#define GDS_STRING(x) GDS_STRING2(x)
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-167-    seq_printf(m, "GDS Version: %s \n", GDS_STRING(GDS_VERSION));
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-168-#undef GDS_STRING2
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-169-#undef GDS_STRING
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-170-#endif
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-171-        seq_printf(m, "NVFS statistics(ver: %d.0)\n", NVFS_STAT_VERSION);
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-172-	seq_printf(m, "NVFS Driver(version: %u.%u.%u)\n",
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-173-			nvfs_major_version(nvfs_driver_version()),
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-174-			nvfs_minor_version(nvfs_driver_version()),
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-175-			NVFS_DRIVER_PATCH_VERSION);
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c:176:#ifdef GDS_DMABUF_SUPPORTED 
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c:177:        seq_printf(m, "Mellanox PeerDirect Supported: %s\n", "True");
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-178-#else
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-179-        {
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-180-                struct path path;
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c:181:                int ret = kern_path("/sys/kernel/mm/memory_peers/nv_mem/version", LOOKUP_FOLLOW, &path);
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-182-                if(ret)
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c:183:                        seq_printf(m, "Mellanox PeerDirect Supported: %s\n", "False");
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-184-                else
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c:185:                        seq_printf(m, "Mellanox PeerDirect Supported: %s\n", "True");
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-186-        }
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-187-#endif
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-188-        seq_printf(m, "IO stats: %s, peer IO stats: %s\n",
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-189-                   nvfs_rw_stats_enabled ? "Enabled" : "Disabled",
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-190-                   nvfs_peer_stats_enabled ? "Enabled" : "Disabled");
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-191-
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-192-        seq_printf(m, "Logging level: %s\n\n",
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-193-                   (nvfs_dbg_enabled ? "debug" : (nvfs_info_enabled ? "info" : "warn")));
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-194-
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-195-#ifdef HAVE_ATOMIC64_LONG
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-196-	seq_printf(m, "Active Shadow-Buffer (MiB): %lu\n",
+root/usr/src/nvidia-fs-2.28.4/nvfs-stat.c-197-#else
+=== symbol script zstd support ===
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-42-	if [ "X${nv_sources}" == "X" ]; then
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-43-		nv_sources=$(/bin/ls -1d /usr/src/nvidia-* 2>/dev/null | tail -1)
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-44-	fi
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-45-	if [ "X${nv_sources}" == "X" ]; then
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-46-		return
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-47-	fi
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-48-
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-49-	echo
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh:50:	echo "Attempting to compile nvidia from $nv_sources sources to build Module.symvers..."
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-51-	echo
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-52-	local tmpdir=`mktemp -d /tmp/nv.XXXXXX`
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-53-	if [ ! -d "$tmpdir" ]; then
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-54-		echo "-E- Failed to create a temp directory!" >&2
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-55-		exit 1
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-56-	fi
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-57-	/bin/cp -a $nv_sources $tmpdir
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-58-	cd $tmpdir/*
+--
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-76-modules_pat="$crc_mod_str|T nvidia_p2p_"
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-77-for mod in nvidia $(ls /lib/modules/$KVER/updates/dkms/nvidia*.ko* 2>/dev/null)
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-78-do
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-79-	nvidia_mod=$(/sbin/modinfo -F filename -k "$KVER" $mod 2>/dev/null)
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-80-	if [ ! -e "$nvidia_mod" ]; then
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-81-		continue
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-82-	fi
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-83-
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh:84:	# WA for nm: nvidia.ko.xz: File format not recognized
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-85-	case "$nvidia_mod" in
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh:86:		*ko.xz)
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-87-			/bin/cp -fv $nvidia_mod .
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-88-			nvidia_mod=$(basename $nvidia_mod | sed -e "s/.xz//g")
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-89-			xz -d ${nvidia_mod}.xz
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-90-			;;
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-91-	esac
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-92-
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-93-	if ! (nm -o $nvidia_mod | grep -q -E "$modules_pat"); then
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-94-		continue
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-95-	fi
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-96-
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-97-	# On some PPC kernels we might have relative CRCs, so we can't build symvers based on nm output.
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-98-	# In that case try to recompile the nvidia driver from source code and get the needed
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh:99:	# nvidia_p2p_* symbols from the generated Module.symvers file.
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh:100:	# If we fail to generate Module.symvers, then just build the nv_peer_mem without
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-101-	# specifying the nvidia_p2p_ symbol versions.
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-102-	if (nm -o $nvidia_mod | grep "$crc_mod_str" | grep -qe "\sR\s*__crc"); then
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-103-		echo "-W- Module $nvidia_mod contains relative CRCs, cannot get symbols from it!" >&2
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-104-		try_compile_nvidia_sources $nvidia_mod
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-105-		break
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-106-	fi
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-107-
+root/usr/src/nvidia-fs-2.28.4/create_nv.symvers.sh-108-	echo "Getting symbol versions from $nvidia_mod ..."
+--
+root/usr/src/nvidia-fs-2.28.4/Makefile-104-
+root/usr/src/nvidia-fs-2.28.4/Makefile-105-nv_configure:
+root/usr/src/nvidia-fs-2.28.4/Makefile-106-	@ ./configure $(KVER)
+root/usr/src/nvidia-fs-2.28.4/Makefile-107-
+root/usr/src/nvidia-fs-2.28.4/Makefile-108-nv_symbols:
+root/usr/src/nvidia-fs-2.28.4/Makefile-109-	@ echo "Picking NVIDIA driver sources from NVIDIA_SRC_DIR=$(NVIDIA_SRC_DIR). If that does not meet your expectation, you might have a stale driver still around and that might cause problems."
+root/usr/src/nvidia-fs-2.28.4/Makefile-110-	@ chmod +x ./create_nv.symvers.sh
+root/usr/src/nvidia-fs-2.28.4/Makefile-111-	@ ./create_nv.symvers.sh
+root/usr/src/nvidia-fs-2.28.4/Makefile:112:	@ cat nv.symvers >> Module.symvers
+root/usr/src/nvidia-fs-2.28.4/Makefile-113-
+root/usr/src/nvidia-fs-2.28.4/Makefile-114-module: nv_symbols nv_configure
+root/usr/src/nvidia-fs-2.28.4/Makefile-115-	@ KCPPFLAGS="$(NVFS_MODULE_FLAGS) -DNVFS_BATCH_SUPPORT=y" CONFIG_NVFS_BATCH_SUPPORT=y CONFIG_NVFS_STATS=y $(MAKE) -j4 -C $(KDIR) $(MAKE_PARAMS) M=$$PWD modules
+root/usr/src/nvidia-fs-2.28.4/Makefile-116-
+root/usr/src/nvidia-fs-2.28.4/Makefile-117-install:
+root/usr/src/nvidia-fs-2.28.4/Makefile-118-	[ -d $(DESTDIR)/$(MODULE_DESTDIR) ] || mkdir -p $(DESTDIR)/$(MODULE_DESTDIR)
+root/usr/src/nvidia-fs-2.28.4/Makefile-119-	cp $$PWD/nvidia-fs.ko $(DESTDIR)/$(MODULE_DESTDIR)
+root/usr/src/nvidia-fs-2.28.4/Makefile-120-	if [ ! -n "$(DESTDIR)" ]; then $(DEPMOD) -a $(KVER); fi
+--
+root/usr/src/nvidia-fs-2.28.4/Makefile-122-uninstall:
+root/usr/src/nvidia-fs-2.28.4/Makefile-123-	/bin/rm -f $(DESTDIR)/$(MODULE_DESTDIR)/nvidia_fs.ko
+root/usr/src/nvidia-fs-2.28.4/Makefile-124-	if [ ! -n "$(DESTDIR)" ]; then $(DEPMOD) -r -ae $(KVER);fi;
+root/usr/src/nvidia-fs-2.28.4/Makefile-125-
+root/usr/src/nvidia-fs-2.28.4/Makefile-126-help:
+root/usr/src/nvidia-fs-2.28.4/Makefile-127-	$(MAKE) -C $(KDIR) M=$$PWD help
+root/usr/src/nvidia-fs-2.28.4/Makefile-128-
+root/usr/src/nvidia-fs-2.28.4/Makefile-129-clean:
+root/usr/src/nvidia-fs-2.28.4/Makefile:130:	rm -rf *.o *.ko* *.mod.* .*.cmd nv.symvers Module.symvers modules.order .tmp_versions/ *~ core .depend TAGS .cache.mk *.o.ur-safe
+root/usr/src/nvidia-fs-2.28.4/Makefile-131-	rm -f config-host.h
+root/usr/src/nvidia-fs-2.28.4/Makefile-132-	rm -f nvidia-fs.mod
+root/usr/src/nvidia-fs-2.28.4/Makefile-133-
+root/usr/src/nvidia-fs-2.28.4/Makefile-134-TAGS:
+root/usr/src/nvidia-fs-2.28.4/Makefile-135-	find $(KERNELDIR) -follow -name \*.h -o -name \*.c  |xargs etags
+root/usr/src/nvidia-fs-2.28.4/Makefile-136-
+root/usr/src/nvidia-fs-2.28.4/Makefile-137-.PHONY: nv_symbols clean all help install default linksyms nvidia_src_dir

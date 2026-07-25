@@ -1,0 +1,483 @@
+=== CUDA/NVIDIA apt sources (URIs only) ===
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /
+deb https://download.docker.com/linux/ubuntu noble stable
+deb [signed-by=/etc/apt/keyrings/nvidia-container-toolkit.gpg]   https://nvidia.github.io/libnvidia-container/stable/deb/amd64 /
+=== package search ===
+gds-tools - GPUDirect Storage - tools
+gds-tools-11-7 - Tools for GPU Direct Storage
+gds-tools-11-8 - Tools for GPU Direct Storage
+gds-tools-12-0 - Tools for GPU Direct Storage
+gds-tools-12-1 - Tools for GPU Direct Storage
+gds-tools-12-2 - Tools for GPU Direct Storage
+gds-tools-12-3 - Tools for GPU Direct Storage
+gds-tools-12-4 - Tools for GPU Direct Storage
+gds-tools-12-5 - Tools for GPU Direct Storage
+gds-tools-12-6 - Tools for GPU Direct Storage
+gds-tools-12-8 - Tools for GPU Direct Storage
+gds-tools-12-9 - Tools for GPU Direct Storage
+gds-tools-13-0 - Tools for GPU Direct Storage
+gds-tools-13-1 - Tools for GPU Direct Storage
+gds-tools-13-2 - Tools for GPU Direct Storage
+libcufile-11-7 - Library for GPU Direct Storage with CUDA 11.7
+libcufile-11-8 - Library for GPU Direct Storage with CUDA 11.8
+libcufile-12-0 - Library for GPU Direct Storage with CUDA 12.0
+libcufile-12-1 - Library for GPU Direct Storage with CUDA 12.1
+libcufile-12-2 - Library for GPU Direct Storage with CUDA 12.2
+libcufile-12-3 - Library for GPU Direct Storage with CUDA 12.3
+libcufile-12-4 - Library for GPU Direct Storage with CUDA 12.4
+libcufile-12-5 - Library for GPU Direct Storage with CUDA 12.5
+libcufile-12-6 - Library for GPU Direct Storage with CUDA 12.6
+libcufile-12-8 - Library for GPU Direct Storage with CUDA 12.8
+libcufile-12-9 - Library for GPU Direct Storage with CUDA 12.9
+libcufile-13-0 - Library for GPU Direct Storage with CUDA 13.0
+libcufile-13-1 - Library for GPU Direct Storage with CUDA 13.1
+libcufile-13-2 - Library for GPU Direct Storage with CUDA 13.2
+libcufile-dev - GPUDirect Storage - development files
+libcufile-dev-11-7 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-11-8 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-0 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-1 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-2 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-3 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-4 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-5 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-6 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-8 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-12-9 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-13-0 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-13-1 - Library for GPU Direct Storage native dev links, headers
+libcufile-dev-13-2 - Library for GPU Direct Storage native dev links, headers
+libcufile-rdma1 - GPUDirect Storage cuFile RDMA runtime library
+libcufile0 - GPUDirect Storage cuFile runtime library
+linux-modules-nvidia-fs-6.11.0-1002-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1002
+linux-modules-nvidia-fs-6.11.0-1003-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1003
+linux-modules-nvidia-fs-6.11.0-1007-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1007
+linux-modules-nvidia-fs-6.11.0-1010-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1010
+linux-modules-nvidia-fs-6.11.0-1011-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1011
+linux-modules-nvidia-fs-6.11.0-1012-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1012
+linux-modules-nvidia-fs-6.11.0-1013-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1013
+linux-modules-nvidia-fs-6.11.0-1016-nvidia - Linux kernel nvidia-fs modules for version 6.11.0-1016
+linux-modules-nvidia-fs-6.14.0-1011-nvidia - Linux kernel nvidia-fs modules for version 6.14.0-1011
+linux-modules-nvidia-fs-6.14.0-1013-nvidia - Linux kernel nvidia-fs modules for version 6.14.0-1013
+linux-modules-nvidia-fs-6.14.0-1015-nvidia - Linux kernel nvidia-fs modules for version 6.14.0-1015
+linux-modules-nvidia-fs-6.17.0-1008-nvidia - Linux kernel nvidia-fs modules for version 6.17.0-1008
+linux-modules-nvidia-fs-6.17.0-1014-nvidia - Linux kernel nvidia-fs modules for version 6.17.0-1014
+linux-modules-nvidia-fs-6.17.0-1018-nvidia - Linux kernel nvidia-fs modules for version 6.17.0-1018
+linux-modules-nvidia-fs-6.8.0-1007-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1007
+linux-modules-nvidia-fs-6.8.0-1008-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1008
+linux-modules-nvidia-fs-6.8.0-1009-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1009
+linux-modules-nvidia-fs-6.8.0-1009-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1009
+linux-modules-nvidia-fs-6.8.0-1010-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1010
+linux-modules-nvidia-fs-6.8.0-1011-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1011
+linux-modules-nvidia-fs-6.8.0-1011-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1011
+linux-modules-nvidia-fs-6.8.0-1012-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1012
+linux-modules-nvidia-fs-6.8.0-1012-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1012
+linux-modules-nvidia-fs-6.8.0-1013-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1013
+linux-modules-nvidia-fs-6.8.0-1013-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1013
+linux-modules-nvidia-fs-6.8.0-1014-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1014
+linux-modules-nvidia-fs-6.8.0-1014-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1014
+linux-modules-nvidia-fs-6.8.0-1015-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1015
+linux-modules-nvidia-fs-6.8.0-1015-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1015
+linux-modules-nvidia-fs-6.8.0-1017-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1017
+linux-modules-nvidia-fs-6.8.0-1017-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1017
+linux-modules-nvidia-fs-6.8.0-1018-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1018
+linux-modules-nvidia-fs-6.8.0-1018-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1018
+linux-modules-nvidia-fs-6.8.0-1019-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1019
+linux-modules-nvidia-fs-6.8.0-1019-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1019
+linux-modules-nvidia-fs-6.8.0-1020-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1020
+linux-modules-nvidia-fs-6.8.0-1020-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1020
+linux-modules-nvidia-fs-6.8.0-1021-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1021
+linux-modules-nvidia-fs-6.8.0-1021-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1021
+linux-modules-nvidia-fs-6.8.0-1022-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1022
+linux-modules-nvidia-fs-6.8.0-1022-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1022
+linux-modules-nvidia-fs-6.8.0-1023-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1023
+linux-modules-nvidia-fs-6.8.0-1023-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1023
+linux-modules-nvidia-fs-6.8.0-1024-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1024
+linux-modules-nvidia-fs-6.8.0-1024-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1024
+linux-modules-nvidia-fs-6.8.0-1025-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1025
+linux-modules-nvidia-fs-6.8.0-1025-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1025
+linux-modules-nvidia-fs-6.8.0-1026-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1026
+linux-modules-nvidia-fs-6.8.0-1026-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1026
+linux-modules-nvidia-fs-6.8.0-1027-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1027
+linux-modules-nvidia-fs-6.8.0-1027-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1027
+linux-modules-nvidia-fs-6.8.0-1028-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1028
+linux-modules-nvidia-fs-6.8.0-1028-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1028
+linux-modules-nvidia-fs-6.8.0-1029-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1029
+linux-modules-nvidia-fs-6.8.0-1029-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1029
+linux-modules-nvidia-fs-6.8.0-1030-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1030
+linux-modules-nvidia-fs-6.8.0-1030-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1030
+linux-modules-nvidia-fs-6.8.0-1031-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1031
+linux-modules-nvidia-fs-6.8.0-1031-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1031
+linux-modules-nvidia-fs-6.8.0-1032-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1032
+linux-modules-nvidia-fs-6.8.0-1032-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1032
+linux-modules-nvidia-fs-6.8.0-1035-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1035
+linux-modules-nvidia-fs-6.8.0-1035-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1035
+linux-modules-nvidia-fs-6.8.0-1036-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1036
+linux-modules-nvidia-fs-6.8.0-1036-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1036
+linux-modules-nvidia-fs-6.8.0-1038-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1038
+linux-modules-nvidia-fs-6.8.0-1038-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1038
+linux-modules-nvidia-fs-6.8.0-1039-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1039
+linux-modules-nvidia-fs-6.8.0-1039-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1039
+linux-modules-nvidia-fs-6.8.0-1040-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1040
+linux-modules-nvidia-fs-6.8.0-1040-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1040
+linux-modules-nvidia-fs-6.8.0-1041-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1041
+linux-modules-nvidia-fs-6.8.0-1041-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1041
+linux-modules-nvidia-fs-6.8.0-1042-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1042
+linux-modules-nvidia-fs-6.8.0-1042-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1042
+linux-modules-nvidia-fs-6.8.0-1043-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1043
+linux-modules-nvidia-fs-6.8.0-1043-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1043
+linux-modules-nvidia-fs-6.8.0-1044-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1044
+linux-modules-nvidia-fs-6.8.0-1044-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1044
+linux-modules-nvidia-fs-6.8.0-1045-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1045
+linux-modules-nvidia-fs-6.8.0-1045-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1045
+linux-modules-nvidia-fs-6.8.0-1046-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1046
+linux-modules-nvidia-fs-6.8.0-1046-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1046
+linux-modules-nvidia-fs-6.8.0-1047-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1047
+linux-modules-nvidia-fs-6.8.0-1047-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1047
+linux-modules-nvidia-fs-6.8.0-1049-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1049
+linux-modules-nvidia-fs-6.8.0-1049-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1049
+linux-modules-nvidia-fs-6.8.0-1050-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1050
+linux-modules-nvidia-fs-6.8.0-1050-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1050
+linux-modules-nvidia-fs-6.8.0-1051-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1051
+linux-modules-nvidia-fs-6.8.0-1051-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1051
+linux-modules-nvidia-fs-6.8.0-1052-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1052
+linux-modules-nvidia-fs-6.8.0-1052-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1052
+linux-modules-nvidia-fs-6.8.0-1054-nvidia - Linux kernel nvidia-fs modules for version 6.8.0-1054
+linux-modules-nvidia-fs-6.8.0-1054-nvidia-lowlatency - Linux kernel nvidia-fs modules for version 6.8.0-1054
+linux-modules-nvidia-fs-nvidia - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-6.11 - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-6.14 - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-6.17 - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-6.8 - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-hwe-24.04 - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-hwe-24.04-edge - Extra drivers for nvidia-fs for the nvidia flavour
+linux-modules-nvidia-fs-nvidia-lowlatency - Extra drivers for nvidia-fs for the nvidia-lowlatency flavour
+linux-modules-nvidia-fs-nvidia-lowlatency-6.8 - Extra drivers for nvidia-fs for the nvidia-lowlatency flavour
+nvidia-fs - NVIDIA filesystem for GPUDirect Storage
+nvidia-fs-dkms - NVIDIA filesystem DKMS package
+nvidia-gds - GPU Direct Storage meta-package
+nvidia-gds-11-7 - GPU Direct Storage 11.7 meta-package
+nvidia-gds-11-8 - GPU Direct Storage 11.8 meta-package
+nvidia-gds-12-0 - GPU Direct Storage 12.0 meta-package
+nvidia-gds-12-1 - GPU Direct Storage 12.1 meta-package
+nvidia-gds-12-2 - GPU Direct Storage 12.2 meta-package
+nvidia-gds-12-3 - GPU Direct Storage 12.3 meta-package
+nvidia-gds-12-4 - GPU Direct Storage 12.4 meta-package
+nvidia-gds-12-5 - GPU Direct Storage 12.5 meta-package
+nvidia-gds-12-6 - GPU Direct Storage 12.6 meta-package
+nvidia-gds-12-8 - GPU Direct Storage 12.8 meta-package
+nvidia-gds-12-9 - GPU Direct Storage 12.9 meta-package
+nvidia-gds-13-0 - GPU Direct Storage 13.0 meta-package
+nvidia-gds-13-1 - GPU Direct Storage 13.1 meta-package
+nvidia-gds-13-2 - GPU Direct Storage 13.2 meta-package
+=== package policy ===
+nvidia-gds:
+  Installed: (none)
+  Candidate: 13.2.1-1
+  Version table:
+     13.2.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.2.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.1.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.1.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.1.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.0.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.0.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.0.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     13.0.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.9.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.9.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.9.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.8.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.8.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.8.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.6.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.6.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.6.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.6.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.5.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.5.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.4.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.4.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.3.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.3.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.3.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.2.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.2.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.2.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.1.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.1.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.0.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.0.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     11.8.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     11.7.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     11.7.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds-12-9:
+  Installed: (none)
+  Candidate: 12.9.2-1
+  Version table:
+     12.9.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.9.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     12.9.0-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs:
+  Installed: (none)
+  Candidate: 2.28.4-1
+  Version table:
+     2.28.4-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.28.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.27.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.26.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.25.7-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.25.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.24.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.24.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.22.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.20.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.20.5-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.19.7-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.19.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.18.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.17.5-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.17.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.16.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.15.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.15.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.14.14-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.14.12-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.13.5-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.12.8-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.12.4-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms:
+  Installed: (none)
+  Candidate: 2.28.4-1
+  Version table:
+     2.28.4-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.28.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.27.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.26.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.25.7-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.25.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.24.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.24.2-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.22.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.20.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.20.5-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.19.7-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.19.6-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.18.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.17.5-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.17.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.16.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.15.3-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.15.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.14.14-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.14.14~12.0.1-4build4 500
+        500 http://mirrors.aliyun.com/ubuntu noble/multiverse amd64 Packages
+     2.14.12-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.13.5-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.12.8-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     2.12.4-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+gds-tools-12-9:
+  Installed: (none)
+  Candidate: 1.14.1.1-1
+  Version table:
+     1.14.1.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     1.14.0.30-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+libcufile-12-9:
+  Installed: (none)
+  Candidate: 1.14.1.1-1
+  Version table:
+     1.14.1.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     1.14.0.30-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+libcufile-dev-12-9:
+  Installed: (none)
+  Candidate: 1.14.1.1-1
+  Version table:
+     1.14.1.1-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+     1.14.0.30-1 600
+        600 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+=== madison ===
+nvidia-gds |   13.2.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.2.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.1.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.1.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.1.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.0.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.0.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.0.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   13.0.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.9.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.9.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.9.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.8.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.8.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.8.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.6.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.6.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.6.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.6.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.5.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.5.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.4.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.4.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.3.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.3.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.3.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.2.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.2.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.2.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.1.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.1.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.0.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   12.0.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   11.8.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   11.7.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds |   11.7.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds-12-9 |   12.9.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds-12-9 |   12.9.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-gds-12-9 |   12.9.0-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.28.4-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.28.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.27.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.26.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.25.7-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.25.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.24.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.24.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.22.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.20.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.20.5-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.19.7-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.19.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.18.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.17.5-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.17.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.16.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.15.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.15.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |  2.14.14-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |  2.14.12-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.13.5-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.12.8-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+ nvidia-fs |   2.12.4-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.28.4-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.28.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.27.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.26.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.25.7-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.25.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.24.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.24.2-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.22.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.20.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.20.5-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.19.7-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.19.6-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.18.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.17.5-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.17.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.16.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.15.3-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.15.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |  2.14.14-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms | 2.14.14~12.0.1-4build4 | http://mirrors.aliyun.com/ubuntu noble/multiverse amd64 Packages
+nvidia-fs-dkms |  2.14.12-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.13.5-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.12.8-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+nvidia-fs-dkms |   2.12.4-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+gds-tools-12-9 | 1.14.1.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+gds-tools-12-9 | 1.14.0.30-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+libcufile-12-9 | 1.14.1.1-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages
+libcufile-12-9 | 1.14.0.30-1 | https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages

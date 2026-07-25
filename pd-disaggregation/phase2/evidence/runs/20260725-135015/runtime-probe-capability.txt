@@ -1,0 +1,31 @@
+--- mount ---
+TARGET         SOURCE                        FSTYPE OPTIONS
+/mnt/dynamo-g4 172.31.230.113:/srv/dynamo-g4 nfs    rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=rdma,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.31.230.113,mountvers=3,mountproto=tcp,local_lock=none,addr=172.31.230.113
+--- gpu devices ---
+NVIDIA L4, 575.51.03, 1527 MiB
+crw-rw-rw- 1 root root 235,   0 May  5 14:47 /dev/nvidia-uvm
+crw-rw-rw- 1 root root 235,   1 May  5 14:47 /dev/nvidia-uvm-tools
+crw-rw-rw- 1 root root 195,   0 May  5 14:47 /dev/nvidia0
+crw-rw-rw- 1 root root 195, 255 May  5 14:47 /dev/nvidiactl
+--- gdsio linkage ---
+	libcufile.so.0 => /usr/local/cuda/lib64/libcufile.so.0 (0x000076997f34c000)
+	libcuda.so.1 => /usr/lib/x86_64-linux-gnu/libcuda.so.1 (0x0000769979a00000)
+--- NIXL plugins ---
+2026-07-25 07:54:38 NIXL INFO    _api.py:363 Backend UCX was instantiated
+2026-07-25 07:54:38 NIXL INFO    _api.py:253 Initialized NIXL agent: phase2_gds_mt_probe
+2026-07-25 07:54:42 NIXL INFO    _api.py:363 Backend GDS_MT was instantiated
+GDS_MT=INSTANTIATED
+2026-07-25 07:54:42 NIXL INFO    _api.py:363 Backend UCX was instantiated
+2026-07-25 07:54:42 NIXL INFO    _api.py:253 Initialized NIXL agent: phase2_gds_probe
+error flushing log file
+error :9
+python3: ./cufile_logger.h:187: static void CUFileLog::Flush(): Assertion `0' failed.
+bash: line 17:    40 Aborted                 (core dumped) python3 - <<'PY'
+from nixl._api import nixl_agent
+for plugin in ("GDS_MT", "GDS"):
+    agent = nixl_agent(f"phase2_{plugin.lower()}_probe")
+    agent.create_backend(plugin)
+    print(f"{plugin}=INSTANTIATED")
+PY
+
+command terminated with exit code 134

@@ -1,0 +1,13 @@
+apiVersion: node.k8s.io/v1
+handler: nvidia
+kind: RuntimeClass
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"node.k8s.io/v1","handler":"nvidia","kind":"RuntimeClass","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"dynamo-platform"},"name":"nvidia"}}
+  creationTimestamp: "2026-07-23T03:12:45Z"
+  labels:
+    app.kubernetes.io/part-of: dynamo-platform
+  name: nvidia
+  resourceVersion: "2030703303"
+  uid: 320ecf20-7538-433d-80ac-94d364903a22

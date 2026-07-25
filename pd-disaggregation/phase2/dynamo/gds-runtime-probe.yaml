@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: phase2-gds-runtime-probe
+  namespace: ai-serving
+  labels:
+    app: phase2-gds-runtime-probe
+spec:
+  restartPolicy: Never
+  runtimeClassName: nvidia
+  nodeSelector:
+    kubernetes.io/hostname: csco-k8s-01
+  containers:
+    - name: probe
+      image: nvcr.io/nvidia/ai-dynamo/vllm-runtime:1.2.1
+      imagePullPolicy: IfNotPresent
+      command: ["/bin/bash", "-lc"]
+      args: ["trap 'exit 0' TERM INT; sleep 1800 & wait"]
+      env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: all
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: all
+        - name: NVIDIA_GDS
+          value: enabled
+      securityContext:
+        runAsUser: 0
+        allowPrivilegeEscalation: false
+        capabilities:
+          add: ["IPC_LOCK", "SYS_RESOURCE"]
+          drop: ["ALL"]
+      volumeMounts:
+        - name: remote-kv
+          mountPath: /mnt/dynamo-g4
+          mountPropagation: HostToContainer
+        - name: udev
+          mountPath: /run/udev
+          readOnly: true
+        - name: host-gdsio
+          mountPath: /opt/phase2/gdsio
+          readOnly: true
+  volumes:
+    - name: remote-kv
+      hostPath:
+        path: /mnt/dynamo-g4
+        type: Directory
+    - name: udev
+      hostPath:
+        path: /run/udev
+        type: Directory
+    - name: host-gdsio
+      hostPath:
+        path: /usr/local/cuda-12.9/gds/tools/gdsio
+        type: File

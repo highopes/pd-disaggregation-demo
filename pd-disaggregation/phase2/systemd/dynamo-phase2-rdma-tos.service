@@ -1,0 +1,15 @@
+[Unit]
+Description=Dynamo Phase 2 endpoint-specific NFSoRDMA ToS 106 rule
+Wants=network-online.target
+After=network-online.target rdma-load-modules@rdma.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/libexec/dynamo-phase2/rdma-cm-tos106.sh apply
+ExecStop=/usr/local/libexec/dynamo-phase2/rdma-cm-tos106.sh remove
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

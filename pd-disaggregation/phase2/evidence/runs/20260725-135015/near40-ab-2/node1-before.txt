@@ -1,0 +1,20 @@
+2026-07-25T16:58:44+08:00
+     rx_vport_rdma_unicast_packets: 4011256
+     rx_vport_rdma_unicast_bytes: 14255241888
+     tx_vport_rdma_unicast_packets: 6821244
+     tx_vport_rdma_unicast_bytes: 27268965352
+     rx_vport_rdma_multicast_packets: 0
+     rx_vport_rdma_multicast_bytes: 0
+     tx_vport_rdma_multicast_packets: 0
+     tx_vport_rdma_multicast_bytes: 0
+     rx_crc_errors_phy: 0
+     rx_in_range_len_errors_phy: 0
+     rx_discards_phy: 0
+     tx_discards_phy: 0
+     tx_errors_phy: 0
+     rx_prio3_bytes: 14246551256
+     rx_prio3_packets: 3701352
+     rx_prio3_discards: 0
+     tx_prio3_bytes: 26345580876
+     tx_prio3_packets: 6434288
+link mlx5_0/1 rx_write_requests 11602 rx_read_requests 164307 rx_atomic_requests 0 rx_dct_connect 0 out_of_buffer 0 out_of_sequence 0 duplicate_request 737 rnr_nak_retry_err 0 packet_seq_err 0 implied_nak_seq_err 0 local_ack_timeout_err 0 resp_local_length_error 0 resp_cqe_error 69 req_cqe_error 1 req_remote_invalid_request 0 req_remote_access_errors 0 resp_remote_access_errors 0 resp_cqe_flush_error 68 req_cqe_flush_error 0 req_transport_retries_exceeded 0 req_rnr_retries_exceeded 0 roce_adp_retrans 5 roce_adp_retrans_to 0 roce_slow_restart 0 roce_slow_restart_cnps 5 roce_slow_restart_trans 0 rp_cnp_ignored 0 rp_cnp_handled 268480 np_ecn_marked_roce_packets 864695 np_cnp_sent 160258 rx_icrc_encapsulated 0 

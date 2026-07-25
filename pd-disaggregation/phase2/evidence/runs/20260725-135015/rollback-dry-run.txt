@@ -1,0 +1,9 @@
+PASS: rollback preconditions verified
+DRY-RUN order:
+1. kubectl apply latest 40K/FP8 baseline: /root/ns_ai-serving/pd-disaggregation/phase2/backup/qwen3-14b-pd.repo.yaml
+2. wait DGD Ready and verify new NVML/CUDA processes
+3. stop/disable node1 Phase 2 mount and endpoint-specific ToS unit
+4. stop/disable node3 NFS/RDMA, RAM storage and endpoint-specific ToS units
+5. verify Phase 1 node1<->node2 P/D RoCE; do not touch dynamo-roce-qos.service
+6. no Nexus rollback command: Phase 2 made no switch configuration change
+7. restore nvidia-fs rw/peer statistics enable flags to their pre-Phase-2 value 0
