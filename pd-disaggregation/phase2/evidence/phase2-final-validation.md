@@ -14,7 +14,7 @@ Discovery 起点为 branch `main`、HEAD `ad8366dc2dbe858336e063f4de821f64df00b0
 
 ## 3. 最终 topology
 
-Frontend=node3，Prefill=node1，Decode=node2；node3 同时提供独立的 volatile RAM-backed NFS/RDMA Storage Emulator。完整图见 [`../architecture.md`](../architecture.md)。最终 DGD Ready=True，三个 Pod Running/Ready/0 restart。
+Frontend=node3，Prefill=node1，Decode=node2；node3 同时提供独立的 volatile RAM-backed NFS/RDMA Storage Emulator。完整图见根文档的[整体架构](../../../README.md#architecture)。最终 DGD Ready=True，三个 Pod Running/Ready/0 restart。
 
 ## 4. Three-endpoint Nexus mapping
 
@@ -123,7 +123,7 @@ Cold/Warm Qwen API 均 HTTP 200 且正确回答；DGD Ready。CEE Hubble `v1.18.
 
 ## 27. Rollback result
 
-[`../scripts/rollback-phase2.sh`](../scripts/rollback-phase2.sh) `--dry-run` PASS，40K/FP8 baseline 和 Phase 2 manifest 均通过 Kubernetes server-side dry-run。组件脚本有 device/path/IP/marker/open-user gates；Nexus rollback 是 no-op；不碰 Phase 1 QoS。没有执行 destructive rollback，以保留用户要求的最终 Direct GDS Demo 状态。详见 [`../ROLLBACK.md`](../ROLLBACK.md)。
+[`../scripts/rollback-phase2.sh`](../scripts/rollback-phase2.sh) `--dry-run` PASS，40K/FP8 baseline 和 Phase 2 manifest 均通过 Kubernetes server-side dry-run。组件脚本有 device/path/IP/marker/open-user gates；Nexus rollback 是 no-op；不碰 Phase 1 QoS。没有执行 destructive rollback，以保留用户要求的最终 Direct GDS Demo 状态。详见根文档的[回滚](../../../README.md#rollback)。
 
 ## 28. 与真实 VAST G4 的差异
 
