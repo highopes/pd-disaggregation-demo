@@ -1,0 +1,20 @@
+# Near-40K Cold Prefill vs Warm GDS Reload
+
+| Metric | Cold GPU Prefill | Warm GDS Reload |
+|---|---:|---:|
+| Input tokens | 39998 | 39998 |
+| Correct answer | True | True |
+| TTFT | 32.035 s | 6.714 s |
+| Total | 34.163 s | 8.836 s |
+| Cached/matched request tokens | 0 | 39936 |
+| Device→Disk offload blocks | 312.0 | — |
+| Disk→Device onboard blocks | — | 312.0 |
+
+- Run ID: `0726201446-aa9285`
+- Payload SHA-256: `47fc83979cdd37c2db45943b5a961f54a61d5b8e7211b5b8838e4f137bd9a6b4`
+- Expected/Cold/Warm: `PHASE2_0726201446-aa9285_5694` / `PHASE2_0726201446-aa9285_5694` / `PHASE2_0726201446-aa9285_5694`
+- TTFT saved: 25.321 s
+- TTFT speedup: 4.771x
+- Total saved: 25.327 s
+- Total speedup: 3.866x
+- Raw KVBM matched-token counter delta: 79872.0 (runtime-internal cumulative accounting)

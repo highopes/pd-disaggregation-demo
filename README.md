@@ -742,22 +742,21 @@ pd-disaggregation/phase2/scripts/validate-gds.sh
 三个 validator 的行为不同：
 
 - `validate-nfs-rdma.sh` 只读核对 mount source、NFSv3、`proto=rdma`、port 20049、marker、node1 route source，并经 SSH read-back node3 listener/export。
-- `validate-gds.sh` 要求 host `nvidia_fs`/device/stats 与 RDMA mount 存在，使用 matching CUDA 12.9 library 运行 `gdscheck`，核对 Prefill GDS env/device/mount 和 `G1->G3 direct offload enabled` 日志，并要求累计 direct read/write counters 已经大于 0。因此必须先完成 synthetic GDS；它本身不发 I/O，也不证明 counters 来自当前请求。
-- `validate-kvbm.sh` 要求 DGD Ready、Prefill spec 含 Pd/Dynamo/NixlConnector、40K/FP8 和 GDS 配置，并要求 `kvbm_offload_blocks_d2d`、`kvbm_onboard_blocks_d2d`、`kvbm_matched_tokens` 都已经大于 0。全新 cache 在第一次 cold/warm A/B 前这些值应为 0，所以此处**暂不运行**；在下一步 A/B 后运行。
+- `validate-gds.sh` 要求 host `nvidia_fs`/device/stats 与 RDMA mount 存在，使用 matching CUDA 12.9 library 运行 `gdscheck`，核对 Prefill GDS env/device/mount 和 `G1->G3 direct offload enabled` 日志。普通模式还要求累计 direct read/write counters 已经大于 0；`--preflight` 模式不依赖历史 I/O，但要求 I/O statistics 已开启，供新 A/B 在发请求前检查能力。指定 `RUN_EVIDENCE` 时，它还要求该次 cold 的 direct write 和 warm 的 direct read 增量都大于 0，且 error counter 没有增长。
+- `validate-kvbm.sh` 要求 DGD Ready、Prefill spec 含 Pd/Dynamo/NixlConnector、40K/FP8 和 GDS 配置。普通模式要求 `kvbm_offload_blocks_d2d`、`kvbm_onboard_blocks_d2d`、`kvbm_matched_tokens` 都已经大于 0；`--preflight` 只要求三个 metric 存在，允许全新 cache 的值为 0。
 
 KVBM 在 NFSv3 上不能使用 `fallocate`，本环境通过 `DYN_KVBM_DISK_ZEROFILL_FALLBACK=true` 启用 4 KiB 对齐 O_DIRECT zero-fill，最终创建 5,997,854,720-byte cache 文件；`DYN_KVBM_DISABLE_DISK_OFFLOAD_FILTER=true` 允许 Demo prefix 进入 disk tier。这是已知兼容/演示设置，不代表 NFS 提供 `fallocate`，也不应未经容量与淘汰策略评估复制到生产环境。
 
 #### 9. 正式 cold/warm A/B Gate
 
-首次安装的 KVBM metrics 还是 0，不能直接调用 `demo-phase2.sh --run-ab`：该包装器会在新请求前先执行 `validate-kvbm.sh`，目的是保护已经建成的 Demo，而不是引导空 cache。首次 A/B 应直接调用底层采集器：
+首次安装和以后任何一次新的正式 A/B 都使用同一个入口；输出目录必须尚不存在：
 
 ```bash
 new_run="pd-disaggregation/phase2/evidence/runs/$(date +%Y%m%d-%H%M%S)-ab"
-pd-disaggregation/phase2/scripts/demo-kv-offload-reload.sh "$new_run"
-RUN_EVIDENCE="$new_run" pd-disaggregation/phase2/scripts/validate-gds.sh
-pd-disaggregation/phase2/scripts/validate-kvbm.sh
-pd-disaggregation/phase2/scripts/demo-phase2.sh --evidence "$new_run"
+pd-disaggregation/phase2/scripts/demo-phase2.sh --run-ab "$new_run"
 ```
+
+包装器会先拒绝已存在的目录，再执行 NFS/RDMA、GDS `--preflight` 和 KVBM `--preflight`；这些检查不依赖历史非零 counters，因此空 cache 也可启动。preflight 通过后才调用底层采集器，完成后再绑定本次 `RUN_EVIDENCE` 执行严格 GDS/KVBM Gate 和最终摘要。若 preflight、请求或 Gate 失败，脚本返回非零；已经生成的部分 evidence 会保留用于诊断，不得复用或覆盖，应修复原因后换一个新目录重跑。
 
 `demo-kv-offload-reload.sh` 会拒绝已存在的输出目录，随后执行以下完整流程：
 
@@ -767,7 +766,7 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh --evidence "$new_run"
 4. 对逐字节相同 payload 发 warm request，等待 onboard 和 matched counters 增长，再采集 after-warm 与三角色最近 30 分钟日志。
 5. `compare-prefill-vs-gds.py summarize` 严格要求 cold/warm HTTP 200、答案正确、payload hash 与 token 数一致、实际 input 在目标范围、warm cached tokens>0，以及 offload/onboard/matched delta>0；生成 `comparison.json`/`.md`。它不以“warm 必须更快”作为功能 Gate，避免把噪声当正确性。
 
-`demo-phase2.sh --evidence` 随后重新跑 NFS/GDS/KVBM validators，读取指定 evidence 的 comparison 和 `nvidia-fs` before/after，拒绝错误 counter，并打印 Direct GDS write/read、P→D NIXL 与 TTFT 摘要。至此已有非零 KVBM counters；以后要生成新 A/B，才可使用 `demo-phase2.sh --run-ab <全新目录>`，它会先确认现有链路健康再调用同一底层采集器。
+`demo-phase2.sh --run-ab` 随后重新跑 NFS/GDS/KVBM validators，读取刚生成的 comparison 和 `nvidia-fs` before/after，硬性要求本次 Direct GDS write/read 的 ops 与 MiB 增量均大于 0、error counter 不增长，并打印 P→D NIXL 与 TTFT 摘要。`demo-phase2.sh --evidence <已有目录>` 使用相同严格 Gate 复核归档 evidence，但不发新请求。
 
 A/B 必须满足：冷、热 payload hash 相同；使用运行中模型的真实 tokenizer；答案正确且一致；cold 出现 offload/direct writes；warm 出现 cached tokens/onboard/direct reads；P→D NIXL 两次都存在；node1/node2/node3 与 Nexus counters 方向一致且 errors/discards 为 0。不要只凭 TTFT 更快宣告通过。
 

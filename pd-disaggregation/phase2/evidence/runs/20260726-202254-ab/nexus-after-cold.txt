@@ -1,0 +1,1 @@
+Nexus snapshot skipped: credentials absent from environment

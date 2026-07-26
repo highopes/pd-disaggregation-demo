@@ -100,28 +100,40 @@ capture_snapshot() {
   fi
 }
 
+echo "=== Preparing unique near-40K A/B payload: $OUTPUT_DIR ==="
 python3 "$COMPARE" prepare --output-dir "$OUTPUT_DIR" \
   > "$OUTPUT_DIR.prepare.console.txt"
 
+echo '=== Capturing before snapshot ==='
 capture_snapshot before
 cold_offload_before=$(metric_value "$OUTPUT_DIR/metrics-before.txt" kvbm_offload_blocks_d2d)
 
+echo '=== Sending cold request and waiting for Device-to-Disk offload ==='
 set +e
 python3 "$COMPARE" request --output-dir "$OUTPUT_DIR" --label cold \
   > "$OUTPUT_DIR/cold.console.txt" 2>&1
 cold_rc=$?
 set -e
+if (( cold_rc != 0 )); then
+  cat "$OUTPUT_DIR/cold.console.txt" >&2
+  die "cold request failed with exit code $cold_rc; partial evidence retained in $OUTPUT_DIR"
+fi
 wait_for_counter_increase kvbm_offload_blocks_d2d "$cold_offload_before" 300
 capture_snapshot after-cold
 
 warm_onboard_before=$(metric_value "$OUTPUT_DIR/metrics-after-cold.txt" kvbm_onboard_blocks_d2d)
 warm_matched_before=$(metric_value "$OUTPUT_DIR/metrics-after-cold.txt" kvbm_matched_tokens)
 
+echo '=== Sending byte-identical warm request and waiting for Disk-to-Device reload ==='
 set +e
 python3 "$COMPARE" request --output-dir "$OUTPUT_DIR" --label warm \
   > "$OUTPUT_DIR/warm.console.txt" 2>&1
 warm_rc=$?
 set -e
+if (( warm_rc != 0 )); then
+  cat "$OUTPUT_DIR/warm.console.txt" >&2
+  die "warm request failed with exit code $warm_rc; partial evidence retained in $OUTPUT_DIR"
+fi
 wait_for_counter_increase kvbm_onboard_blocks_d2d "$warm_onboard_before" 300
 wait_for_counter_increase kvbm_matched_tokens "$warm_matched_before" 300
 capture_snapshot after-warm
@@ -134,6 +146,7 @@ kubectl -n "$NAMESPACE" logs "$frontend_pod" --since=30m > "$OUTPUT_DIR/frontend
 kubectl -n "$NAMESPACE" logs "$(prefill_pod)" --since=30m > "$OUTPUT_DIR/prefill.log"
 kubectl -n "$NAMESPACE" logs "$decode_pod" --since=30m > "$OUTPUT_DIR/decode.log"
 
+echo '=== Applying strict cold/warm comparison gates ==='
 set +e
 python3 "$COMPARE" summarize --output-dir "$OUTPUT_DIR" \
   > "$OUTPUT_DIR/summary.console.txt" 2>&1

@@ -1,0 +1,17 @@
+{
+  "run_id": "0726201446-aa9285",
+  "model": "Qwen/Qwen3-14B-FP8",
+  "repeat_count": 5694,
+  "repeat_unit": "天地玄黄宇宙洪荒。",
+  "body_characters": 51246,
+  "predicted_input_tokens": 39998,
+  "max_context_tokens": 40960,
+  "max_output_tokens": 32,
+  "context_margin_tokens": 930,
+  "expected_answer": "PHASE2_0726201446-aa9285_5694",
+  "tokenizer_name_or_path": "Qwen/Qwen3-14B-FP8",
+  "tokenizer_revision": null,
+  "payload_sha256": "47fc83979cdd37c2db45943b5a961f54a61d5b8e7211b5b8838e4f137bd9a6b4",
+  "prefill_pod": "qwen3-14b-pd-0-vllmprefillworker-f9f9j",
+  "created_at_epoch": 1785068109.9923465
+}
