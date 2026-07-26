@@ -941,7 +941,7 @@ pd-disaggregation/phase2/scripts/validate-kvbm.sh \
 pd-disaggregation/phase2/scripts/demo-phase2.sh
 ```
 
-期望屏幕摘要：
+前半部分是当前环境实时状态, 后半部分是A/B测试结果,如果不加任何执行参数, 这个结果是一个基线参照结果,测于2026年7月25日：
 
 ```text
 Cold GPU Prefill TTFT : 32.575 s
@@ -950,7 +950,7 @@ TTFT Saved            : 25.918 s
 TTFT Speedup          :  4.893 x
 ```
 
-若需要新的正式 A/B，显式指定一个不存在的目录：
+若需要新的正式 A/B，显式指定一个不存在的目录, 比如：
 
 ```bash
 new_run="pd-disaggregation/phase2/evidence/runs/$(date +%Y%m%d-%H%M%S)-ab"
@@ -958,6 +958,8 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh --run-ab "$new_run"
 ```
 
 工程师必须检查同一 payload SHA-256、冷/热正确答案、39,936 cached tokens、312 block offload/onboard、1,560 MiB Direct GDS write/read、两次 P→D NIXL 以及三端/Nexus counter，而不是只展示 4.893×。
+
+注意, 测试结果中的kvbm_disk_cache_hit_rate是计算了最近1000次的所有请求的命中率, 包括了冷和热两类, 0.5说明热请求的实际命中率接近100%.
 
 ### 7. API 安全与企业可观测性回归
 
