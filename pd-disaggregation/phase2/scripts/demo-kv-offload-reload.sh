@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+umask 077
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 PHASE2_DIR=$(cd -- "$SCRIPT_DIR/.." && pwd)
@@ -15,10 +16,22 @@ die() {
 
 [[ -x "$COMPARE" ]] || die "comparison script is not executable: $COMPARE"
 [[ ! -e "$OUTPUT_DIR" ]] || die "refusing non-new output directory: $OUTPUT_DIR"
+command -v jq >/dev/null 2>&1 || die "jq is required"
+
+ready_pod() {
+  local app_label=$1
+  kubectl -n "$NAMESPACE" get pod -l "app=$app_label" -o json |
+    jq -er '
+      [.items[]
+       | select(.status.phase == "Running")
+       | select(any(.status.containerStatuses[]?; .ready == true))]
+      | if length == 1 then .[0].metadata.name
+        else error("expected exactly one Ready pod") end
+    '
+}
 
 prefill_pod() {
-  kubectl -n "$NAMESPACE" get pod -l app=dynamo-qwen-prefill \
-    -o jsonpath='{.items[0].metadata.name}'
+  ready_pod dynamo-qwen-prefill
 }
 
 metric_value() {
@@ -34,21 +47,24 @@ live_metric_value() {
     awk -v metric="$metric" '$1 == metric {print $2; found=1} END {if (!found) exit 1}'
 }
 
-wait_for_counter_increase() {
+wait_for_counter_delta() {
   local metric=$1
   local baseline=$2
-  local timeout_seconds=$3
+  local expected_delta=$3
+  local timeout_seconds=$4
   local start=$SECONDS
   local current
   while (( SECONDS - start < timeout_seconds )); do
     current=$(live_metric_value "$metric")
-    if awk -v current="$current" -v baseline="$baseline" 'BEGIN {exit !(current > baseline)}'; then
-      printf '%s increased: baseline=%s current=%s\n' "$metric" "$baseline" "$current"
+    if awk -v current="$current" -v baseline="$baseline" -v expected="$expected_delta" \
+      'BEGIN {exit !(current - baseline >= expected)}'; then
+      printf '%s reached expected delta: baseline=%s current=%s expected_delta=%s\n' \
+        "$metric" "$baseline" "$current" "$expected_delta"
       return 0
     fi
     sleep 2
   done
-  die "timed out waiting for $metric to increase above $baseline"
+  die "timed out waiting for $metric delta >= $expected_delta from $baseline"
 }
 
 capture_host_counters() {
@@ -100,9 +116,34 @@ capture_snapshot() {
   fi
 }
 
-echo "=== Preparing unique near-40K A/B payload: $OUTPUT_DIR ==="
-python3 "$COMPARE" prepare --output-dir "$OUTPUT_DIR" \
+echo "=== Preparing unique near-40K Cold -> Warm payload: $OUTPUT_DIR ==="
+python3 "$COMPARE" prepare --performance-only --output-dir "$OUTPUT_DIR" \
   > "$OUTPUT_DIR.prepare.console.txt"
+expected_blocks=$(jq -er '.expected_kv_blocks' "$OUTPUT_DIR/metadata.json")
+expected_cached_tokens=$(jq -er '.expected_cached_tokens' "$OUTPUT_DIR/metadata.json")
+expected_answer=$(jq -er '.expected_answer' "$OUTPUT_DIR/metadata.json")
+run_id=$(jq -er '.run_id' "$OUTPUT_DIR/metadata.json")
+
+frontend_pod=$(ready_pod dynamo-qwen-frontend)
+kubectl -n "$NAMESPACE" cp "$COMPARE" "$frontend_pod:/tmp/compare-prefill-vs-gds.py"
+kubectl -n "$NAMESPACE" cp "$SCRIPT_DIR/inpod-stream-client.py" \
+  "$frontend_pod:/tmp/inpod-stream-client.py"
+kubectl -n "$NAMESPACE" cp "$OUTPUT_DIR/payload.json" \
+  "$frontend_pod:/tmp/phase2-payload.json"
+
+run_inpod_request() {
+  local label=$1
+  local output_file="$OUTPUT_DIR/${label}.json"
+  kubectl -n "$NAMESPACE" exec "$frontend_pod" -- \
+    python3 /tmp/inpod-stream-client.py \
+      --payload /tmp/phase2-payload.json \
+      --label "$label" \
+      --request-id "phase2-${run_id}-${label}" \
+      --expected-answer "$expected_answer" \
+    > "$output_file"
+  cp "$output_file" "$OUTPUT_DIR/${label}.console.txt"
+  cat "$output_file"
+}
 
 echo '=== Capturing before snapshot ==='
 capture_snapshot before
@@ -110,41 +151,45 @@ cold_offload_before=$(metric_value "$OUTPUT_DIR/metrics-before.txt" kvbm_offload
 
 echo '=== Sending cold request and waiting for Device-to-Disk offload ==='
 set +e
-python3 "$COMPARE" request --output-dir "$OUTPUT_DIR" --label cold \
-  > "$OUTPUT_DIR/cold.console.txt" 2>&1
+run_inpod_request cold
 cold_rc=$?
 set -e
 if (( cold_rc != 0 )); then
   cat "$OUTPUT_DIR/cold.console.txt" >&2
   die "cold request failed with exit code $cold_rc; partial evidence retained in $OUTPUT_DIR"
 fi
-wait_for_counter_increase kvbm_offload_blocks_d2d "$cold_offload_before" 300
+wait_for_counter_delta kvbm_offload_blocks_d2d "$cold_offload_before" "$expected_blocks" 300
 capture_snapshot after-cold
 
 warm_onboard_before=$(metric_value "$OUTPUT_DIR/metrics-after-cold.txt" kvbm_onboard_blocks_d2d)
 warm_matched_before=$(metric_value "$OUTPUT_DIR/metrics-after-cold.txt" kvbm_matched_tokens)
 
-echo '=== Sending byte-identical warm request and waiting for Disk-to-Device reload ==='
-set +e
-python3 "$COMPARE" request --output-dir "$OUTPUT_DIR" --label warm \
-  > "$OUTPUT_DIR/warm.console.txt" 2>&1
-warm_rc=$?
-set -e
-if (( warm_rc != 0 )); then
-  cat "$OUTPUT_DIR/warm.console.txt" >&2
-  die "warm request failed with exit code $warm_rc; partial evidence retained in $OUTPUT_DIR"
-fi
-wait_for_counter_increase kvbm_onboard_blocks_d2d "$warm_onboard_before" 300
-wait_for_counter_increase kvbm_matched_tokens "$warm_matched_before" 300
+echo '=== Sending three byte-identical Warm requests; every sample must fully reload KV ==='
+warm_rc=0
+for sample in 1 2 3; do
+  label=warm
+  if (( sample > 1 )); then
+    label="warm-${sample}"
+  fi
+  set +e
+  run_inpod_request "$label"
+  sample_rc=$?
+  set -e
+  if (( sample_rc != 0 )); then
+    cat "$OUTPUT_DIR/${label}.console.txt" >&2
+    die "Warm sample $sample failed with exit code $sample_rc; partial evidence retained in $OUTPUT_DIR"
+  fi
+  wait_for_counter_delta kvbm_onboard_blocks_d2d "$warm_onboard_before" "$expected_blocks" 300
+  wait_for_counter_delta kvbm_matched_tokens "$warm_matched_before" "$expected_cached_tokens" 300
+  warm_onboard_before=$(live_metric_value kvbm_onboard_blocks_d2d)
+  warm_matched_before=$(live_metric_value kvbm_matched_tokens)
+done
 capture_snapshot after-warm
 
-frontend_pod=$(kubectl -n "$NAMESPACE" get pod -l app=dynamo-qwen-frontend \
-  -o jsonpath='{.items[0].metadata.name}')
-decode_pod=$(kubectl -n "$NAMESPACE" get pod -l app=dynamo-qwen-decode \
-  -o jsonpath='{.items[0].metadata.name}')
-kubectl -n "$NAMESPACE" logs "$frontend_pod" --since=30m > "$OUTPUT_DIR/frontend.log"
-kubectl -n "$NAMESPACE" logs "$(prefill_pod)" --since=30m > "$OUTPUT_DIR/prefill.log"
-kubectl -n "$NAMESPACE" logs "$decode_pod" --since=30m > "$OUTPUT_DIR/decode.log"
+decode_pod=$(ready_pod dynamo-qwen-decode)
+kubectl -n "$NAMESPACE" logs "$frontend_pod" --since=45m > "$OUTPUT_DIR/frontend.log"
+kubectl -n "$NAMESPACE" logs "$(prefill_pod)" --since=45m > "$OUTPUT_DIR/prefill.log"
+kubectl -n "$NAMESPACE" logs "$decode_pod" --since=45m > "$OUTPUT_DIR/decode.log"
 
 echo '=== Applying strict cold/warm comparison gates ==='
 set +e
@@ -154,9 +199,12 @@ summary_rc=$?
 set -e
 
 cat "$OUTPUT_DIR/summary.console.txt"
-printf 'cold_rc=%s warm_rc=%s summary_rc=%s\n' "$cold_rc" "$warm_rc" "$summary_rc"
+printf 'cold_rc=%s warm_rc=%s summary_rc=%s\n' \
+  "$cold_rc" "$warm_rc" "$summary_rc"
 if (( cold_rc != 0 || warm_rc != 0 || summary_rc != 0 )); then
-  echo "FAIL: near-40K KVBM/GDS A/B did not satisfy every strict gate"
+  echo "FAIL: near-40K KVBM/GDS reuse test did not satisfy every strict gate"
   exit 2
 fi
-echo "PASS: near-40K Cold Prefill vs Warm Direct GDS Reload"
+
+RUN_EVIDENCE="$OUTPUT_DIR" "$SCRIPT_DIR/validate-gds.sh"
+echo "PASS: complete near-40K KV was offloaded and reloaded through Direct GDS"

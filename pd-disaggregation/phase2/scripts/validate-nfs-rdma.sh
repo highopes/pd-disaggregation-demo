@@ -19,10 +19,10 @@ route=$(ip route get "$SERVER_IP")
 grep -Fq "src $CLIENT_IP" <<<"$route" || die "route does not use storage source $CLIENT_IP"
 
 ssh -o BatchMode=yes -o ConnectTimeout=10 root@192.168.160.113 \
-  "grep -Eq '(^|[[:space:]])rdma[[:space:]]+20049($|[[:space:]])' /proc/fs/nfsd/portlist && exportfs -v | grep -Fq '/srv/dynamo-g4'" \
+  "grep -Eq '(^|[[:space:]])rdma[[:space:]]+20049($|[[:space:]])' /proc/fs/nfsd/portlist && exportfs -v | grep -Fq '/srv/dynamo-g4' && test \"\$(cat /proc/fs/nfsd/threads)\" = 64 && grep -Fxq 'threads=64' /etc/nfs.conf.d/dynamo-phase2.conf" \
   || die "node3 RDMA listener/export read-back failed"
 
 findmnt -T "$MOUNT_POINT" -o TARGET,SOURCE,FSTYPE,OPTIONS
 nfsstat -m "$MOUNT_POINT" 2>/dev/null || nfsstat -m
 echo "$route"
-echo "PASS: NFSv3 source=$SERVER_IP proto=rdma port=20049 over the CX-7 path; mountproto=tcp is mountd control only"
+echo "PASS: NFSv3 source=$SERVER_IP proto=rdma port=20049, nfsd=64 over the CX-7 path; mountproto=tcp is mountd control only"

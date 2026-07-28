@@ -3,6 +3,7 @@ set -euo pipefail
 
 EXPORT_PATH="${EXPORT_PATH:-/srv/dynamo-g4}"
 EXPORT_FILE="${EXPORT_FILE:-/etc/exports.d/dynamo-phase2.exports}"
+NFS_CONFIG_FILE="${NFS_CONFIG_FILE:-/etc/nfs.conf.d/dynamo-phase2.conf}"
 STATE_FILE="${STATE_FILE:-/var/lib/dynamo-phase2/nfs.env}"
 
 die() {
@@ -12,6 +13,7 @@ die() {
 
 [[ "$EXPORT_PATH" == "/srv/dynamo-g4" ]] || die "refusing unexpected export path"
 [[ "$EXPORT_FILE" == "/etc/exports.d/dynamo-phase2.exports" ]] || die "refusing unexpected export file"
+[[ "$NFS_CONFIG_FILE" == "/etc/nfs.conf.d/dynamo-phase2.conf" ]] || die "refusing unexpected NFS config file"
 
 service_was_active=0
 package_installed_before=1
@@ -20,6 +22,12 @@ if [[ -r "$STATE_FILE" ]]; then
   source "$STATE_FILE"
   service_was_active="${SERVICE_WAS_ACTIVE:-0}"
   package_installed_before="${PACKAGE_INSTALLED_BEFORE:-1}"
+fi
+
+if [[ -e "$NFS_CONFIG_FILE" ]]; then
+  [[ "$(tr -d '\r' < "$NFS_CONFIG_FILE")" == $'[nfsd]\nthreads=64' ]] \
+    || die "$NFS_CONFIG_FILE has unexpected content"
+  rm -f "$NFS_CONFIG_FILE"
 fi
 
 if command -v showmount >/dev/null 2>&1; then

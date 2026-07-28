@@ -28,7 +28,15 @@ spec:
               workingDir: /workspace/examples/backends/vllm
               command: ["/bin/sh", "-c"]
               args:
-                - exec python3 -m dynamo.frontend --http-port 8000 --kv-cache-block-size 128
+                - exec python3 -m dynamo.frontend --http-port 8000 --kv-cache-block-size 256
+              env:
+                # Cold near-40K prefill emits no SSE event before its first
+                # token.  Keep the frontend from cancelling a valid long
+                # prefill at the default 60-second inactivity threshold.
+                - name: DYN_HTTP_BACKEND_STREAM_TIMEOUT_SECS
+                  value: "300"
+                - name: DYN_TCP_REQUEST_TIMEOUT
+                  value: "300"
               ports:
                 - name: http
                   containerPort: 8000
@@ -63,15 +71,15 @@ spec:
                   --served-model-name Qwen/Qwen3-14B-FP8
                   --dtype auto
                   --tensor-parallel-size 1
-                  --gpu-memory-utilization 0.90
-                  --max-model-len 40960
+                  --gpu-memory-utilization 0.985
+                  --max-model-len 39168
                   --max-num-seqs 1
-                  --kv-cache-dtype fp8
-                  --calculate-kv-scales
+                  --kv-cache-dtype auto
                   --trust-remote-code
                   --enforce-eager
                   --no-enable-prefix-caching
-                  --block-size 128
+                  --attention-backend TRITON_ATTN
+                  --block-size 256
                   --disaggregation-mode decode
                   --kv-transfer-config '{"kv_connector":"NixlConnector","kv_role":"kv_both"}'
               env:
@@ -96,9 +104,9 @@ spec:
                 - name: UCX_RCACHE_MAX_UNRELEASED
                   value: "1024"
                 - name: UCX_LOG_LEVEL
-                  value: info
+                  value: warn
                 - name: NIXL_LOG_LEVEL
-                  value: INFO
+                  value: ERROR
                 - name: DYN_SYSTEM_PORT
                   value: "19191"
               resources:
@@ -173,15 +181,15 @@ spec:
                   --served-model-name Qwen/Qwen3-14B-FP8
                   --dtype auto
                   --tensor-parallel-size 1
-                  --gpu-memory-utilization 0.90
-                  --max-model-len 40960
+                  --gpu-memory-utilization 0.985
+                  --max-model-len 39168
                   --max-num-seqs 1
-                  --kv-cache-dtype fp8
-                  --calculate-kv-scales
+                  --kv-cache-dtype auto
                   --trust-remote-code
                   --enforce-eager
                   --no-enable-prefix-caching
-                  --block-size 128
+                  --attention-backend TRITON_ATTN
+                  --block-size 256
                   --disaggregation-mode prefill
                   --kv-transfer-config '{"kv_connector":"PdConnector","kv_role":"kv_both","kv_connector_extra_config":{"connectors":[{"kv_connector":"DynamoConnector","kv_connector_module_path":"kvbm.vllm_integration.connector","kv_role":"kv_both"},{"kv_connector":"NixlConnector","kv_role":"kv_both"}]},"kv_connector_module_path":"kvbm.vllm_integration.connector"}'
               env:
@@ -206,9 +214,9 @@ spec:
                 - name: UCX_RCACHE_MAX_UNRELEASED
                   value: "1024"
                 - name: UCX_LOG_LEVEL
-                  value: info
+                  value: warn
                 - name: NIXL_LOG_LEVEL
-                  value: INFO
+                  value: ERROR
                 - name: DYN_SYSTEM_PORT
                   value: "19191"
                 - name: NVIDIA_DRIVER_CAPABILITIES
@@ -218,11 +226,17 @@ spec:
                 - name: DYN_KVBM_DISK_CACHE_DIR
                   value: /mnt/dynamo-g4/kvbm
                 - name: DYN_KVBM_DISK_CACHE_GB
-                  value: "6"
+                  value: "7"
                 - name: DYN_KVBM_DISK_ZEROFILL_FALLBACK
                   value: "true"
                 - name: DYN_KVBM_DISABLE_DISK_OFFLOAD_FILTER
                   value: "true"
+                # Keep the empirically optimal four I/O streams, but submit
+                # more blocks per transfer task to reduce scheduler overhead.
+                - name: DYN_KVBM_MAX_CONCURRENT_TRANSFERS
+                  value: "4"
+                - name: DYN_KVBM_MAX_TRANSFER_BATCH_SIZE
+                  value: "40"
                 - name: DYN_KVBM_LEADER_WORKER_INIT_TIMEOUT_SECS
                   value: "300"
                 - name: DYN_KVBM_METRICS

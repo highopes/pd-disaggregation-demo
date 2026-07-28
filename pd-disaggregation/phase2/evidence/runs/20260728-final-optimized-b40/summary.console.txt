@@ -1,0 +1,20 @@
+# Near-40K Cold Prefill vs Warm Direct GDS Reload
+
+| Metric | Cold | Warm |
+|---|---:|---:|
+| Input tokens | 38876 | 38876 |
+| Correct answer | True | True |
+| TTFT | 53.749 s | 11.692 s |
+| Total | 55.464 s | 13.417 s |
+| Cached/matched request tokens | 0 | 38656 |
+| Device→Disk offload blocks | 151 | — |
+| Disk→Device onboard blocks | — | 151 |
+
+- Run ID: `0728192841-041404`
+- Payload SHA-256 (byte-identical Cold/Warm): `b1ac99e6443b8b0eda4321ee8e5555fe398d10bbd7eb68e2df4761eb4c1bb1b9`
+- Expected/Cold/Warm: `845204|4885E9|ECCAD0` / `845204|4885E9|ECCAD0` / `845204|4885E9|ECCAD0`
+- Complete-KV gate: `151` blocks × `40` MiB = `6040` MiB actual GDS write/read
+- TTFT saved: 42.058 s (78.2%)
+- TTFT speedup: 4.597x
+- KVBM matched-token delta: 77312
+

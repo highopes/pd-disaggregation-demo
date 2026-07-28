@@ -1,12 +1,25 @@
 # Phase 2 final validation
 
-Validation date: 2026-07-25, Asia/Shanghai. Evidence run root: [`runs/20260725-135015`](runs/20260725-135015/).
+Final validation: 2026-07-28, Asia/Shanghai. Evidence: [`runs/20260728-final-nfsd64-samples3`](runs/20260728-final-nfsd64-samples3/).
 
-## 1. 最终结论
+## 当前最终结论
 
-`PHASE 2 PASS – DIRECT GDS`
+`PHASE 2 PASS – COMPLETE NEAR-40K KV DIRECT GDS REUSE`。
 
-HTTP 200 不是本结论的依据。结论同时满足 NFS/RDMA mount、cuFile/nvidia-fs Direct I/O、KVBM offload/onboard/match、三节点 CX-7/Nexus counter、相同 near-40K payload 冷/热正确答案和 P→D NIXL 证据。
+- 模型权重仍为 `Qwen/Qwen3-14B-FP8`（GPU load 15.33 GiB），不是 24 GB L4 无法承载的 FP16 权重版本。
+- KV cache=BF16、Triton attention、max context=39,168、block=256；KVBM 记录 `num_device_blocks=153,page_size=256,dtype_width_bytes=2,inner_dim=1024`。
+- 请求 input=38,874，完整命中=38,656 tokens；每次 KV 为 151 blocks × 40 MiB = 6,040 MiB，12,080 个 layer/K/V I/O。
+- Cold TTFT=50.392 s；三个完整 Warm TTFT=5.865/5.929/6.439 s，中位=5.929 s，speedup=8.499×，节省=88.2%。
+- Cold offload=151 blocks；三个 Warm onboard=151/151/151 blocks。node3 Cold storage RX=6,428,393,308 bytes；三个 Warm storage TX=19,289,974,248 bytes。
+- P→D NIXL 每次=6,080 MiB/12,160 descriptors，约 0.93–0.97 s；因此 200G RoCE P→D 不是 Warm TTFT 的主瓶颈。
+- KVBM concurrency=4/batch=40；NFS server 持久化 `nfsd=64`。`nvidia-fs` rw/peer stats 保持关闭，避免小 I/O 统计开销。
+- 三次 Warm 的 SHA-256、checkpoint 答案、usage cached tokens、KVBM block delta、NFSoRDMA bytes 和 NIXL descriptors 全部通过严格 Gate。
+
+## 历史 2026-07-25 结果（仅用于根因追溯）
+
+历史 evidence root: [`runs/20260725-135015`](runs/20260725-135015/)。其 1,560 MiB raw write/read 是实际传输量，不是显示层少算；旧 128/64 logical/physical mismatch 只能证明 GDS 路径 active，不能证明完整 KV。下列章节保留旧值，不得替代上面的 2026-07-28 最终证据。
+
+Historical result: `DIRECT GDS PATH ACTIVE; COMPLETE 40K KV REUSE NOT VALIDATED`.
 
 ## 2. Git / live state
 
@@ -28,11 +41,11 @@ Frontend=node3，Prefill=node1，Decode=node2；node3 同时提供独立的 vola
 
 ## 5. Current 40,960 / FP8 KV args
 
-Prefill/Decode 均保持 `--gpu-memory-utilization 0.90 --max-model-len 40960 --max-num-seqs 1 --kv-cache-dtype fp8 --calculate-kv-scales --no-enable-prefix-caching --block-size 128`。每张 L4 实测 GPU KV pool 54,016 tokens / 4.12 GiB。
+历史 Prefill/Decode 使用 `--block-size 128`，但 FlashInfer 启动日志明确选择物理 block 64；KVBM 随后记录 `page_size=128, inner_dim=512`。这正是半量传输的触发条件。后续 64-token/FP8 中间配置修复了完整性；当前最终配置见文首的 BF16/256-token Gate。
 
 ## 6. RAM filesystem / KVBM sizing
 
-node3 `/dev/ram0` 为 8 GiB，ext4 label `DYNAMO_G4_RAM`，挂载 `/srv/dynamo-g4`；KVBM disk cache 6 GB，实际 zero-fill 5,997,854,720 bytes。最终 ext4 6.0G used / 1.5G available，能完整容纳实际 39,994-token Prefix。详见 [`ram-storage-sizing.md`](ram-storage-sizing.md)。
+历史 node3 `/dev/ram0` 为 8 GiB，KVBM disk cache 6 GB、zero-fill 5,997,854,720 bytes。该文件能容纳当时实际传输的半量 KV，但旧 run 不能证明完整 Prefix 容量。当前 7 GB cache 保存一份 6,040 MiB near-40K BF16 KV；详见 [`ram-storage-sizing.md`](ram-storage-sizing.md)。
 
 ## 7. node3 memory before / after
 
@@ -52,7 +65,7 @@ node1 rule 为 `src_ip=172.31.230.111,dst_ip=172.31.230.113/32,tclass=106`，nod
 
 ## 11. Direct GDS judgement
 
-GDS 1.14.1.1：NFS Supported、Mellanox PeerDirect Enabled、L4 supported、IOMMU disabled、NVIDIA open driver supported。Prefill 有 `NVIDIA_GDS=enabled`、`NVIDIA_DRIVER_CAPABILITIES=all` 和 `/dev/nvidia-fs*`。恢复后 A/B 的 `nvidia-fs` direct read/write 各增加 1,560 MiB，page-cache=0、error=0，并与 NFSoRDMA counter 同向。因此是 Direct GDS，不是 compatibility mode。
+GDS 1.14.1.1：NFS Supported、Mellanox PeerDirect Enabled、L4 supported、IOMMU disabled、NVIDIA open driver supported。Prefill 有 `NVIDIA_GDS=enabled`、`NVIDIA_DRIVER_CAPABILITIES=all` 和 `/dev/nvidia-fs*`。历史 A/B 的 raw direct read/write 各增加 1,560 MiB、page-cache=0、error=0，并与 NFSoRDMA counter 同向；因此可以判定 Direct GDS 路径工作，但只能判定半量 KV 经过该路径。
 
 `/proc/driver/nvidia-fs/stats` 的 legacy `Mellanox PeerDirect Supported: False` 与 matching CUDA 12.9 `gdscheck`/实际 Direct counters 不一致；本判定以 matching userspace capability、device injection、cuFile I/O 和同次硬件 counter 组成的强证据链为准，保留该差异而不掩盖。
 
@@ -74,7 +87,7 @@ Cold 的 request-level cached tokens=0，KVBM before counters 全为 0；Fronten
 
 ## 16. Request A offload
 
-Cold 后 `kvbm_offload_blocks_d2d +312`；`nvidia-fs writes +24,960 ops / +1,560 MiB`；node3 RX RDMA +1,666,729,518 bytes、RX prio3 +1,668,526,586；Nexus node3 port Out +1,668,528,349、qos-group3 Tx +1,668,526,330。
+Cold 后 `kvbm_offload_blocks_d2d +312`；`nvidia-fs writes +24,960 ops / +1,560 MiB raw`。后者与 node3 RX RDMA +1,666,729,518 bytes 相互印证，说明实际只 Offload 了完整 KV 的一半，而不是 counter 少显示一半。
 
 ## 17. Request B payload / answer / time
 
@@ -82,11 +95,11 @@ Warm 使用逐字节相同 payload hash，input 39,994，HTTP 200，答案相同
 
 ## 18. Request B match / onboard / GDS read
 
-Warm `kvbm_onboard_blocks_d2d +312`、disk hit rate=0.5；`nvidia-fs reads +24,960 ops / +1,560 MiB`；node3 TX RDMA +1,667,328,928、TX prio3 +1,669,126,080；Nexus node3 In +1,669,126,329、node1 qos-group3 Tx +1,673,047,402。raw `kvbm_matched_tokens` delta=79,872 是 runtime 内部累计/双计数；请求 usage 的 39,936 是实际 match。
+Warm `kvbm_onboard_blocks_d2d +312`、`nvidia-fs reads +24,960 ops / +1,560 MiB raw`；node3 TX RDMA +1,667,328,928 bytes 与之吻合。request usage 虽报告 39,936 cached tokens，但实际仅 Reload 半量 KV，所以该命中值表示调度/索引判定，不是数据完整性证明。
 
 ## 19. Same-run timing / speedup
 
-TTFT saved 25.918 s，speedup 4.893×；total saved 25.920 s，speedup 3.923×。恢复前的独立 run 也得到 31.133→10.597 s / 2.938×，但最终展示采用持久化与 worker recovery 后的新 run。
+历史客户端记录 TTFT saved 25.918 s、speedup 4.893×。由于该 run 只 Reload 半量 KV 且可能利用 GPU 残留，这些 timing 仅作为故障分析记录，不能作为改进后 Demo 的性能结论。
 
 ## 20. Prefill compute / GDS reload durations
 
@@ -116,14 +129,14 @@ Cold/Warm Qwen API 均 HTTP 200 且正确回答；DGD Ready。CEE Hubble `v1.18.
 
 - node3 是单机、易失 RAM NFS server，无持久性/HA/scale-out；reboot 会清空 cache。
 - NFSv3 不支持此处 fallocate，KVBM 使用 4096-byte aligned O_DIRECT zero-fill fallback；初始化成功。
-- Dynamo 1.2.1/vLLM 的 `get_kv_cache_group_metadata` 缺失会记录 AttributeError 后回退到 `cache_config.block_size`；worker Ready 且实际 A/B 正常。
+- Dynamo 1.2.1/vLLM 的 `get_kv_cache_group_metadata` 缺失会记录 AttributeError 后回退到 `cache_config.block_size`；worker 虽然 Ready，但在 128/64 mismatch 下 A/B 数据不完整。
 - local prefix caching 按 baseline 要求禁用，因此 KV event consolidator warning 是预期；KVBM remote cache 仍工作。
 - node1/node3 时钟存在约两分钟偏差；同 host 客户端计时和 counter direction 不受影响。
-- systemd `daemon-reload` 首次使旧 Prefill 新 NVML 失败；只重建受影响 Pod 后，新 NVML/CUDA 和新 A/B 全部 PASS。CDI 是后续长期修复，不在本任务中覆盖现有 runtime。
+- systemd `daemon-reload` 首次使旧 Prefill 新 NVML 失败；重建受影响 Pod 后 NVML/CUDA 恢复，但当时的新 A/B 仍受本文记录的半量 KV 问题影响。CDI 是后续长期修复，不在本任务中覆盖现有 runtime。
 
 ## 27. Rollback result
 
-[`../scripts/rollback-phase2.sh`](../scripts/rollback-phase2.sh) `--dry-run` PASS，40K/FP8 baseline 和 Phase 2 manifest 均通过 Kubernetes server-side dry-run。组件脚本有 device/path/IP/marker/open-user gates；Nexus rollback 是 no-op；不碰 Phase 1 QoS。没有执行 destructive rollback，以保留用户要求的最终 Direct GDS Demo 状态。详见根文档的[回滚](../../../README.md#rollback)。
+[`../scripts/rollback-phase2.sh`](../scripts/rollback-phase2.sh) 的历史 `--dry-run` PASS；Nexus rollback 是 no-op，不碰 Phase 1 QoS。当前 BF16/256-token manifest 已通过 server dry-run、在线 rollout、完整 Cold+3 Warm Gate 和只读 evidence replay。详见根文档的[回滚](../../../README.md#rollback)。
 
 ## 28. 与真实 VAST G4 的差异
 

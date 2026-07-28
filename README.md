@@ -36,7 +36,11 @@
 1. **Phase 1，计算节点之间：** Prefill GPU → NIXL/UCX → RoCEv2 → Decode GPU，使用 GPUDirect RDMA，不把大块 KV 绕行管理网络。
 2. **Phase 2，远端存储与计算之间：** node3 RAM storage → NFSv3/RDMA → cuFile/`nvidia-fs` → node1 Prefill GPU，使用 Direct GDS；命中后再沿 Phase 1 路径把 KV 交给 Decode。
 
-最终正式 A/B 使用相同的 39,994-token payload，冷、热回答都正确；热请求命中 39,936 tokens。TTFT 从 `32.575 s` 降至 `6.657 s`，节省 `25.918 s`，为该次请求的 `4.893×`。Cold offload 与 Warm onboard 各 312 blocks，Direct GDS 写、读各增加 24,960 ops / 1,560 MiB；两次 P→D NIXL 都传输 3,130 MiB。
+2026-07-25 的归档 A/B 暴露了一个 KVBM/vLLM 集成缺陷：vLLM 将 128-token 逻辑块拆成两个 64-token FlashInfer 物理块，而 KVBM 仍按 128 注册、未展开 block ID，导致实际 Direct GDS 只写入/读取 1,560 MiB，只有完整 39,936-token FP8 KV（3,120 MiB）的一半。该历史结果只能证明 GDS 路径已打通，不能作为“完整 40K KV reuse”成功证据。
+
+最终性能版 Demo 保留 `Qwen/Qwen3-14B-FP8` 权重，但把 KV cache 改为 BF16、Triton attention，并将 Frontend/Prefill/Decode 统一为 256-token block；最大上下文按 L4 实测容量设为 39,168。正式流程是一个 unique Cold A 加三次逐字节相同的 Warm A，每次 Warm 都必须新增 151 个 Disk→Device onboard block并命中 38,656 token。单次完整 KV 为 `151 × 40 MiB = 6,040 MiB`，对应 12,080 个 layer/K/V I/O；脚本公开三个 Warm 样本，以中位数计算加速比，且不对 raw counter 做显示层倍增。
+
+2026-07-28 最终证据：Cold TTFT 50.392 s；Warm 5.865/5.929/6.439 s，中位 5.929 s；加速 8.499×，TTFT 减少 88.2%。每个 Warm 都完整 onboard 151 blocks，三次 storage RDMA TX 合计 19,289,974,248 bytes；P→D NIXL 每次约 6,080 MiB/12,160 descriptors。证据见 [`20260728-final-nfsd64-samples3`](pd-disaggregation/phase2/evidence/runs/20260728-final-nfsd64-samples3/comparison.md)。
 
 这些数字是本环境的功能与演示证据，不是容量测试，也不得外推成真实 VAST G4 或其他存储产品的性能基准。Phase 2 没有修改 Nexus；已有 Phase 1 VLAN/QoS/PFC 已覆盖 node1、node2、node3。
 
@@ -127,8 +131,8 @@ Kubernetes Primary Network 仍为 ISOVALENT Cilium。Frontend 不使用 `hostNet
 | GPU runtime | NVIDIA device plugin | `0.17.2` | 既有 legacy runtime；CDI 尚未迁移 |
 | Dynamo | platform/chart/runtime | `1.2.1` | chart SHA-256 见 [chart-source.md](pd-disaggregation/dynamo/chart-source.md) |
 | 推理 | vLLM | `0.20.1+cu129` | 运行容器内实测 |
-| 模型 | Qwen | `Qwen/Qwen3-14B-FP8` | 原生 max context 40,960 |
-| KV 配置 | vLLM/KVBM | FP8 KV；block 128；54,016-token GPU KV pool / 4.12 GiB | `max-num-seqs=1`，偏重单请求长上下文 |
+| 模型 | Qwen | `Qwen/Qwen3-14B-FP8` | FP8 权重；本 Demo max context 39,168 |
+| KV 配置 | vLLM/KVBM | BF16 KV；Triton attention；block 256；39,168-token GPU KV pool / 5.99 GiB | `max-num-seqs=1`；L4 仍加载 15.33 GiB FP8 权重，不是 FP16 权重模型 |
 | KV transport | NIXL | `0.10.1`, git `d5c127e5` | P→D |
 | Transport | UCX | `1.20.1` | CUDA、verbs、gdrcopy；不启用 TCP fallback |
 | RDMA plugin | Mellanox shared device plugin | `v1.5.3` | 资源名 `rdma/ib` |
@@ -138,7 +142,7 @@ Kubernetes Primary Network 仍为 ISOVALENT Cilium。Frontend 不使用 `hostNet
 | GDS userspace | `gds-tools-12-9` / `libcufile-12-9` | `1.14.1.1-1` | node1；matching `/usr/local/cuda-12.9` 工具 |
 | GDS kernel | `nvidia-fs-dkms` | `2.26.6-1` | exact-kernel DKMS module；不 reload NVIDIA driver |
 | Remote FS | Linux NFS | NFSv3 / `proto=rdma` / port `20049` | node3 server → node1 client |
-| Remote media | Linux `brd` + ext4 | `/dev/ram0`, 8 GiB, label `DYNAMO_G4_RAM` | KVBM disk cache 6 GB；易失 |
+| Remote media | Linux `brd` + ext4 | `/dev/ram0`, 8 GiB, label `DYNAMO_G4_RAM` | KVBM disk cache 7 GB，可容纳一份完整 near-40K BF16 KV；易失；nfsd=64 |
 | CNI/可观测性 | ISOVALENT Cilium CEE | `1.18.7-cee.1` | 保留企业版安装 |
 | Hubble | Enterprise | `1.13.4`；UI `1.3.12` | Timescape `1.8.4` 保持部署但不是本文入口 |
 | Security | Tetragon | `1.18.0` | 既有环境 |
@@ -501,7 +505,7 @@ ssh root@192.168.160.113 \
 
 对 node1 记录 GDS package candidate、kernel/header、driver DKMS、IOMMU、Secure Boot、`/proc/driver/nvidia-fs` 和当前 P/D；对 node3 记录内存、`brd` 使用情况、NFS packages/exports、OFED source/config/symvers 和 `rpcrdma` 状态。使用新的私有目录保存非敏感输出；仓库的 `phase2/backup/` 是本次历史回滚基线，不应被另一套系统盲目复用。
 
-RAM sizing Gate：node3 必须有足够可用内存；脚本要求 8 GiB RAM device 不超过物理内存 25%，创建后仍保留至少 35%/16 GiB 可用内存；`/dev/ram0`、`/srv/dynamo-g4` 不得已有未知 owner、mount、export 或 open user。本环境 8 GiB ext4 配 6 GB KVBM cache，实际容纳完整 near-40K prefix 后仍无 Kubernetes MemoryPressure。
+RAM sizing Gate：node3 必须有足够可用内存；脚本要求 8 GiB RAM device 不超过物理内存 25%，创建后仍保留至少 35%/16 GiB 可用内存；`/dev/ram0`、`/srv/dynamo-g4` 不得已有未知 owner、mount、export 或 open user。最终配置使用 7 GB KVBM cache：一份完整 near-40K BF16 KV 为 `151 × 40 MiB = 6,040 MiB`，小于 7,000,000,000-byte cache 文件，并能放入约 7.8 GiB usable 的 ext4。
 
 #### 2. 在 node1 安装 matching CUDA 12.9 GDS
 
@@ -604,7 +608,7 @@ sudo INSTALL_PACKAGE=1 \
   pd-disaggregation/phase2/nfs/node3-nfs-rdma-setup.sh
 ```
 
-若 package 已存在，直接省略 `INSTALL_PACKAGE=1`。`node3-nfs-rdma-setup.sh` 把允许范围锁定为 server `172.31.230.113`、client `172.31.230.111`、export `/srv/dynamo-g4`、file `/etc/exports.d/dynamo-phase2.exports`、RDMA port 20049，并要求本机拥有 server IP 和 RAM owner marker。它先记录 `nfs-kernel-server` 是否由本阶段安装、`nfs-server` 此前是否 active；若缺 package，内部会再做一次 apt simulation，而且只允许新增 `nfs-kernel-server` 本身，出现任何未审核的额外 install/replace 就拒绝。
+若 package 已存在，直接省略 `INSTALL_PACKAGE=1`。`node3-nfs-rdma-setup.sh` 把允许范围锁定为 server `172.31.230.113`、client `172.31.230.111`、export `/srv/dynamo-g4`、file `/etc/exports.d/dynamo-phase2.exports`、RDMA port 20049，并持久化 `/etc/nfs.conf.d/dynamo-phase2.conf` 的 `threads=64`。它要求本机拥有 server IP 和 RAM owner marker；若缺 package，内部会再做一次 apt simulation，而且只允许新增 `nfs-kernel-server` 本身。
 
 脚本创建的 export 内容是：
 
@@ -712,7 +716,7 @@ kubectl delete pod -n ai-serving phase2-gds-runtime-probe
 
 只看到 HTTP 200、文件内容正确、`gdscheck` 一行或 NFS mount 都不足以证明 Direct GDS。`/proc/driver/nvidia-fs/stats` 的 legacy `Mellanox PeerDirect Supported: False` 与 matching CUDA 12.9 `gdscheck` 和实际 direct counters 存在已记录差异，必须保留该差异并使用完整证据链判定。
 
-此处不要立即关闭 statistics；第 8–9 步还要用它记录真实 KVBM Direct GDS delta。完成正式 A/B 后再按第 9 步末尾恢复原值。
+性能演示前保持 `rw_stats_enabled=0`、`peer_stats_enabled=0`；这些统计会放大小 I/O 开销。正式 Gate 使用精确 KVBM block、BF16 几何、NFSoRDMA bytes、正确答案和 P→D NIXL descriptors 交叉验证完整数据量。如需低层 forensic counter，停掉 live KVBM 后单独启用统计，不把它混入客户计时。
 
 #### 8. 应用 KVBM + GDS DGD
 
@@ -725,7 +729,7 @@ kubectl apply --dry-run=server \
   -f pd-disaggregation/phase2/dynamo/qwen3-14b-pd-kvbm-gds.yaml
 ```
 
-确认 Phase 1 的模型、40,960 context、FP8 KV、P/D placement 与 UCX 参数未被回退；只有 Prefill 新增 PdConnector 的 DynamoConnector+NixlConnector、6 GB disk cache、GDS env/device 与 `/mnt/dynamo-g4` hostPath。然后：
+确认权重仍为 `Qwen/Qwen3-14B-FP8`、context=39,168、BF16 KV、Triton attention、P/D placement 与 UCX 参数；确认 Frontend `--kv-cache-block-size 256`、Prefill/Decode `--block-size 256`，Prefill KVBM transfer 为 concurrency=4/batch=40，并含 7 GB disk cache、GDS env/device 与 `/mnt/dynamo-g4` hostPath。然后：
 
 ```bash
 kubectl apply \
@@ -737,15 +741,15 @@ pd-disaggregation/phase2/scripts/validate-nfs-rdma.sh
 pd-disaggregation/phase2/scripts/validate-gds.sh
 ```
 
-应用该 DGD 会保留 Frontend/node3 和 Decode/node2 配置；Prefill/node1 从单独 `NixlConnector` 改为 `PdConnector`，内部串联 `DynamoConnector`（KVBM）与 `NixlConnector`（P→D）。它新增 `/mnt/dynamo-g4` hostPath、只读 `/run/udev`、`NVIDIA_GDS=enabled`、6 GB disk cache、300 秒 KVBM init timeout 和 6880 metrics；Decode 仍只使用 NIXL。因为更新同名单副本 DGD 会重建 Prefill，必须等待新的 Pod Ready，并检查新 Pod 的 NVML/CUDA，而不是沿用旧 Pod 名。
+应用该 DGD 会更新三个组件的 block size，并把 Prefill/node1 从单独 `NixlConnector` 改为 `PdConnector`，内部串联 `DynamoConnector`（KVBM）与 `NixlConnector`（P→D）。它新增 `/mnt/dynamo-g4` hostPath、只读 `/run/udev`、`NVIDIA_GDS=enabled`、7 GB disk cache、300 秒 KVBM init timeout 和 6880 metrics；Decode 仍只使用 NIXL。等待全部新 Pod Ready，并检查 Prefill 日志为 `num_device_blocks=153, page_size=256, dtype_width_bytes=2`、`inner_dim=1024` 和 `max_concurrent_transfers=4/max_transfer_batch_size=40`。
 
 三个 validator 的行为不同：
 
-- `validate-nfs-rdma.sh` 只读核对 mount source、NFSv3、`proto=rdma`、port 20049、marker、node1 route source，并经 SSH read-back node3 listener/export。
-- `validate-gds.sh` 要求 host `nvidia_fs`/device/stats 与 RDMA mount 存在，使用 matching CUDA 12.9 library 运行 `gdscheck`，核对 Prefill GDS env/device/mount 和 `G1->G3 direct offload enabled` 日志。普通模式还要求累计 direct read/write counters 已经大于 0；`--preflight` 模式不依赖历史 I/O，但要求 I/O statistics 已开启，供新 A/B 在发请求前检查能力。指定 `RUN_EVIDENCE` 时，它还要求该次 cold 的 direct write 和 warm 的 direct read 增量都大于 0，且 error counter 没有增长。
-- `validate-kvbm.sh` 要求 DGD Ready、Prefill spec 含 Pd/Dynamo/NixlConnector、40K/FP8 和 GDS 配置。普通模式要求 `kvbm_offload_blocks_d2d`、`kvbm_onboard_blocks_d2d`、`kvbm_matched_tokens` 都已经大于 0；`--preflight` 只要求三个 metric 存在，允许全新 cache 的值为 0。
+- `validate-nfs-rdma.sh` 核对 mount source、NFSv3、`proto=rdma`、port 20049、marker、node1 route source，并经 SSH read-back node3 listener/export、runtime threads=64 和持久配置。
+- `validate-gds.sh` 核对 host `nvidia_fs`/device、RDMA mount、Prefill GDS env/device/mount 和 `G1->G3 direct offload enabled`。`gdscheck -p` 与 live KVBM 并行时曾在 NVIDIA cuFile worker 内断言退出，因此客户预检默认不调用；停掉 KVBM 后可显式设 `PHASE2_RUN_GDSCHECK=1` 做离线诊断。指定 `RUN_EVIDENCE` 时，以 KVBM blocks 和 node3 NFSoRDMA bytes 验证完整 write/read。
+- `validate-kvbm.sh` 要求 DGD Ready、Pd/Dynamo/NixlConnector、39,168/BF16/256-token layout、4×40 transfer 和 GDS 配置。普通模式要求 offload/onboard/matched metrics 已增加；`--preflight` 允许全新 cache 为 0。
 
-KVBM 在 NFSv3 上不能使用 `fallocate`，本环境通过 `DYN_KVBM_DISK_ZEROFILL_FALLBACK=true` 启用 4 KiB 对齐 O_DIRECT zero-fill，最终创建 5,997,854,720-byte cache 文件；`DYN_KVBM_DISABLE_DISK_OFFLOAD_FILTER=true` 允许 Demo prefix 进入 disk tier。这是已知兼容/演示设置，不代表 NFS 提供 `fallocate`，也不应未经容量与淘汰策略评估复制到生产环境。
+KVBM 在 NFSv3 上不能使用 `fallocate`，本环境通过 `DYN_KVBM_DISK_ZEROFILL_FALLBACK=true` 启用 4 KiB 对齐 O_DIRECT zero-fill；7 GB cache 保存一份约 6.04 GiB near-40K BF16 KV。`DYN_KVBM_DISABLE_DISK_OFFLOAD_FILTER=true` 允许 Demo prefix 进入 disk tier。这是兼容/演示设置，不代表 NFS 提供 `fallocate`，也不应未经容量与淘汰策略评估复制到生产环境。
 
 #### 9. 正式 cold/warm A/B Gate
 
@@ -760,17 +764,18 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh --run-ab "$new_run"
 
 `demo-kv-offload-reload.sh` 会拒绝已存在的输出目录，随后执行以下完整流程：
 
-1. 在唯一 Ready Prefill Pod 内使用运行模型的真实 tokenizer，二分搜索 39,500–40,000 input tokens 的 prompt；生成随机 run ID、确定性期望答案和 payload SHA-256。
-2. 采集 before KVBM metrics、`nvidia-fs` stats、node1/2/3 RDMA/prio3/error counters、DGD/Pods；若 Nexus 凭据存在，再只读采集三个端口/queue counters，否则在 evidence 中明确标记 skipped。
-3. 发 streaming cold request，记录 SSE、HTTP、request IDs、TTFT/total/usage/答案；最长等待 300 秒确认 `kvbm_offload_blocks_d2d` 增长，再采集 after-cold。
-4. 对逐字节相同 payload 发 warm request，等待 onboard 和 matched counters 增长，再采集 after-warm 与三角色最近 30 分钟日志。
-5. `compare-prefill-vs-gds.py summarize` 严格要求 cold/warm HTTP 200、答案正确、payload hash 与 token 数一致、实际 input 在目标范围、warm cached tokens>0，以及 offload/onboard/matched delta>0；生成 `comparison.json`/`.md`。它不以“warm 必须更快”作为功能 Gate，避免把噪声当正确性。
+1. 在唯一 Ready Prefill Pod 内使用运行模型的真实 tokenizer 生成约 38,8xx-token 的 unique A；正文 25%/50%/75% 放置随机 checkpoint。
+2. 在 Frontend Pod 内直连 loopback 计时，避免外部 60 秒代理把 Cold TTFT 混入网关超时。
+3. 发 streaming Cold A，要求 cached tokens=0、Device→Disk offload 精确增加 151 blocks，并采集 storage RDMA RX。
+4. 连续发送三次逐字节相同的 Warm A；每次都必须命中 38,656 tokens、Disk→Device onboard 新增 151 blocks、答案正确。三次都是真实 6,040 MiB reload，不是 GPU 驻留复用。
+5. 公开三个 Warm TTFT，以中位数计算加速比、同时显示最佳值；保存每次 JSON、KVBM metrics、三角色日志和 host counters。
+6. `compare-prefill-vs-gds.py summarize` 严格核对相同 SHA-256、token 数、checkpoint、`151 × 40 MiB` 几何、三次 onboard 总计 453 blocks 和 storage RDMA bytes；生成 `comparison.json`/`.md`。
 
-`demo-phase2.sh --run-ab` 随后重新跑 NFS/GDS/KVBM validators，读取刚生成的 comparison 和 `nvidia-fs` before/after，硬性要求本次 Direct GDS write/read 的 ops 与 MiB 增量均大于 0、error counter 不增长，并打印 P→D NIXL 与 TTFT 摘要。`demo-phase2.sh --evidence <已有目录>` 使用相同严格 Gate 复核归档 evidence，但不发新请求。
+`demo-phase2.sh` 随后重新跑 NFS/GDS/KVBM validators，并要求 Cold storage RX 约等于 6,040 MiB、三次 Warm storage TX 约等于 18,120 MiB；每次 P→D NIXL 都必须为 6,080 MiB / 12,160 descriptors。nvidia-fs I/O statistics 在计时期间保持关闭，避免已确认的小 I/O 统计开销。
 
-A/B 必须满足：冷、热 payload hash 相同；使用运行中模型的真实 tokenizer；答案正确且一致；cold 出现 offload/direct writes；warm 出现 cached tokens/onboard/direct reads；P→D NIXL 两次都存在；node1/node2/node3 与 Nexus counters 方向一致且 errors/discards 为 0。不要只凭 TTFT 更快宣告通过。
+正式 Gate 必须满足：Cold/Warm hash 相同；三个 checkpoint 正确；Cold cache miss；每个 Warm 命中 38,656 tokens；每次完整 6,040 MiB GDS reload；四次完整 P→D NIXL；NFSoRDMA byte 数与理论数据量一致。TTFT speedup 是展示指标，不替代数据完整性 Gate。
 
-正式 evidence 已归档后，恢复第 7 步记录的统计开关原值：
+如需离线 forensic run，可临时开启统计；完成后必须恢复性能配置：
 
 ```bash
 printf '%s\n' "$rw_stats_before" \
@@ -779,7 +784,7 @@ printf '%s\n' "$peer_stats_before" \
   | sudo tee /sys/module/nvidia_fs/parameters/peer_stats_enabled >/dev/null
 ```
 
-如果当前 shell 已丢失变量，从 `nvidia-fs-stats-before.txt` 人工核对后再恢复，不要猜值。本环境 discovery 前两项均为 0；其他系统以自身记录为准。
+本环境最终值两项均为 0；其他系统以自身 discovery 记录为准。
 
 <a id="persistence"></a>
 
@@ -930,24 +935,17 @@ pd-disaggregation/phase2/scripts/validate-kvbm.sh \
   |& tee "$evidence_dir/10-kvbm.txt"
 ```
 
-期望：node1 mount 是 NFSv3 `proto=rdma` port 20049；node3 RAM marker、export/listener 和内存 Gate 正常；matching GDS 1.14.1.1 报告 NFS/PeerDirect enabled；Prefill 注入 GDS device/env；KVBM metrics、6 GB cache 和 PdConnector 配置正确；`nvidia-fs` direct I/O error/page-cache 为 0。
+期望：node1 mount 是 NFSv3 `proto=rdma` port 20049；node3 RAM marker、export/listener、nfsd=64 和内存 Gate 正常；Prefill 注入 GDS device/env；KVBM metrics、7 GB cache、256-token/BF16 layout、4×40 transfer 和 PdConnector 配置正确；`nvidia-fs` error 为 0。
 
 ### 6. 演示 cold offload 与 warm reload
 
-安全现场 Demo 默认实时检查当前链路，并复放已经归档的正式 A/B，不安装 package、不改 Nexus、不重建 RAM disk、不删除 Pod，也不跑 full-bandwidth benchmark：
+安全现场 Demo 默认实时检查当前链路并运行一次新的 Cold A → 三次完整 Warm A 验收；不安装 package、不改 Nexus、不重建 RAM disk、不删除 Pod：
 
 ```bash
 pd-disaggregation/phase2/scripts/demo-phase2.sh
 ```
 
-前半部分是当前环境实时状态, 后半部分是A/B测试结果,如果不加任何执行参数, 这个结果是一个基线参照结果,测于2026年7月25日：
-
-```text
-Cold GPU Prefill TTFT : 32.575 s
-Warm GDS Reload TTFT  :  6.657 s
-TTFT Saved            : 25.918 s
-TTFT Speedup          :  4.893 x
-```
+不带参数会自动创建新的 `*-full-kv` evidence 目录并发送一个 Cold 和三个 Warm near-40K 请求。若只需复核归档结果，显式使用 `--evidence RUN_DIR`；推荐使用 2026-07-28 的最终目录。
 
 若需要新的正式 A/B，显式指定一个不存在的目录, 比如：
 
@@ -956,7 +954,7 @@ new_run="pd-disaggregation/phase2/evidence/runs/$(date +%Y%m%d-%H%M%S)-ab"
 pd-disaggregation/phase2/scripts/demo-phase2.sh --run-ab "$new_run"
 ```
 
-工程师必须检查同一 payload SHA-256、冷/热正确答案、39,936 cached tokens、312 block offload/onboard、1,560 MiB Direct GDS write/read、两次 P→D NIXL 以及三端/Nexus counter，而不是只展示 4.893×。
+工程师必须检查 Cold/Warm SHA-256 相同、三个 checkpoint 答案、38,656 cached tokens、Cold 151-block offload、每个 Warm 151-block onboard、每次 6,040 MiB GDS、每次约 6,080 MiB P→D NIXL，以及三端 counter。脚本只有在这些条件全部满足后才显示 `PHASE 2 PASS – COMPLETE NEAR-40K KV DIRECT GDS REUSE`。
 
 注意, 测试结果中的kvbm_disk_cache_hit_rate是计算了最近1000次的所有请求的命中率, 包括了冷和热两类, 0.5说明热请求的实际命中率接近100%.
 
@@ -979,17 +977,17 @@ pd-disaggregation/scripts/validate-hubble-enterprise.sh \
 
 ### 演示前准备
 
-- 先执行 Phase 1/2 validators 和 `demo-phase2.sh` 默认复放；任何 Gate 失败时取消现场性能演示。
+- 在客户到场前执行一次新的 `demo-phase2.sh --run-ab <new-dir>`；只有完整 KV Gate PASS 才把该目录作为现场 `--evidence`。任何 Gate 失败时取消现场性能演示。
 - 浏览器打开既有 F5 发布的 Hubble UI Enterprise 与 fsomonitor Grafana，不新增入口或更改认证。
 - Grafana 设 Last 15 minutes、5–10 秒 refresh；Hubble 预设 namespace `ai-serving`。
 - 准备 `.183` API 终端与 node1 只读运维终端；先做一次短 warm-up。
-- 不在管理层现场做 Pod 删除、driver/module reload、Nexus write、RAM disk 重建或新 near-40K 压测。
+- 不在管理层现场做 Pod 删除、driver/module reload、Nexus write 或 RAM disk 重建；若不希望现场运行三个 near-40K 请求，只复核刚生成且已 PASS 的新 evidence。
 
 ### 1. 一张图说明两阶段价值（2 分钟）
 
 展示本文[整体架构](#architecture)：
 
-- Phase 1：Prefill 和 Decode 独立扩展，3,130–3,180 MiB 级 KV 经 CX-7/RoCE/GDR 传递。
+- Phase 1：Prefill 和 Decode 独立扩展，near-40K 请求约 3,125 MiB KV 经 CX-7/RoCE/GDR 传递。
 - Phase 2：相同 prefix 可从远端 KV storage 直接回到 Prefill GPU，减少重复 Prefill 计算；命中后仍走已经工作的 P→D 数据面。
 - 客户端仍访问 `qwen-openai`，无需理解后端拆分。
 
@@ -1026,10 +1024,10 @@ kubectl logs -n ai-serving "$decode" --since=15m \
 ### 4. 展示 Phase 2 “以存代算”（3 分钟）
 
 ```bash
-pd-disaggregation/phase2/scripts/demo-phase2.sh
+pd-disaggregation/phase2/scripts/demo-phase2.sh --evidence "$validated_run"
 ```
 
-展示归档 run 的相同 payload、正确答案、39,936-token cache hit、Cold offload/Warm onboard、Direct GDS counters，以及 `32.575 s → 6.657 s` TTFT。用一句话解释：热请求不是“模型算得更快”，而是此前计算得到的 prefix KV 从远端 storage 通过 Direct GDS 回到 GPU，避免重复执行绝大部分 Prefill。
+展示 Cold A 与三次 Warm A、三个远距离 checkpoint、每次 38,656-token cache hit、151-block offload/onboard、每次 6,040 MiB GDS/NFSoRDMA 数据量，以及 Warm 最佳值/中位数。用一句话解释：每次 Warm 的 onboard counter 都新增 151 blocks，storage server RDMA TX 也新增完整 payload，因此不是 GPU 驻留假象。
 
 必须同时显示 Direct GDS 与 P→D NIXL 证据，避免把普通 NFS cache 或 compatibility mode 误说成 GDS。
 
@@ -1068,7 +1066,7 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh
 - Nexus 仅使用环境中的 `NEXUS_USERNAME`/`NEXUS_PASSWORD`，使用后 unset；不写文件、不打印。
 - 不读取 Kubernetes Secret 值；验证现有引用和 policy 行为即可。
 - 证据目录使用 `umask 077`，提交前搜索 token、password、Authorization 和私钥特征。
-- Demo 脚本默认复放历史 A/B，避免现场制造长时高负载或不可逆状态。
+- Demo 脚本默认运行新的三请求完整 Gate；管理层现场若要避免 near-40K 负载，应显式使用刚生成且已经 PASS 的 `--evidence`，不得复放旧 128/64 evidence。
 
 [返回目录](#toc)
 
@@ -1078,6 +1076,8 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh
 
 | 问题 | 现象 | 原因 / 判断 | 当前措施 | 未来规划 |
 |---|---|---|---|---|
+| KVBM/vLLM logical/physical block mismatch | 历史 128-token/FlashInfer-64 配置只实际传输 1,560 MiB | 这是历史实际半量，不是显示 Bug | 最终 Demo 使用 Triton/BF16、三组件 block 256；每次硬性检查 151 blocks、12,080 layer/K/V I/O、6,040 MiB 与 RDMA bytes | 向 KVBM 上游修复/补测旧 logical-to-physical mapping；升级前保留完整字节 Gate |
+| Warm NFSoRDMA 抖动 | 8 个 nfsd 线程时，同一 6.04 GiB reload 在约 5.8–12.8 s 间波动 | RAM block device 不是瓶颈；NFS RPC 调度队列不足 | nfsd=64 持久化；KVBM concurrency=4/batch=40；三次 Warm 报中位数 | 真实存储上重新做线程、队列、连接与 P99 调优 |
 | `daemon-reload` 后 GPU Pod 丢失访问 | 宿主 `nvidia-smi` 正常；旧 Prefill Pod 新进程报 `Failed to initialize NVML: Unknown Error`，旧 vLLM 可能仍能回答 | systemd cgroup 与 NVIDIA legacy runtime hook 的高概率交互；缺少完整审计时间线，因此不写成唯一法证结论 | 维护窗口；host/Pod 对照；只重建实际失败的 PodClique worker；不 reload driver；随后复验 CUDA/GDR/GDS/A/B | 独立评估 CDI，增加维护后新进程 canary 与告警，设计 P/D 冗余 |
 | legacy PeerDirect 字段冲突 | `/proc/driver/nvidia-fs/stats` 显示 `Mellanox PeerDirect Supported: False`；matching CUDA 12.9 `gdscheck` 显示 Enabled | legacy stats 的检测路径与当前 Open driver/dmabuf 路径不一致 | 不隐藏差异；以 matching userspace、device injection、cuFile direct I/O、BAR1、RDMA/Nexus counters 组成强证据链 | 升级前按支持矩阵验证新版 `nvidia-fs`，保留 A/B 对照，不为消除一行输出破坏工作环境 |
 | `nvidia-fs` DKMS 初建 symvers 失败 | package 安装成功但模块出现 NVIDIA P2P symbol version 问题 | helper 不能正确处理当前压缩 `.ko.zst`；driver DKMS 已有 matching `Module.symvers` | 用同 driver/kernel 的 DKMS symvers 只重建 `nvidia-fs`；不重装/reload driver | 评估发行版与 NVIDIA 已修复组合；升级做 isolated build、签名、vermagic 与回归 |
@@ -1091,7 +1091,7 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh
 | NVCR 大层 401 | 普通 pull 在认证 realm 切换后重新下载 | 慢链路与短期 registry token/partial 处理 | 使用可恢复 pull 和 CX-7 OCI stream copy | 建内部 registry/cache，纳入镜像签名、SBOM 与预热流程 |
 | node4 CX-7 no-carrier | `ens65np1` 物理 link down | 任务前光模块/线缆/端口问题 | 当前 P/D/GDS 不依赖 node4 | 修复物理层后再做 MTU/PFC/RDMA/GDS 验收 |
 | node3 时钟偏差 | node3 约比 node1 慢 2 分钟，跨节点日志时间线不直观 | NTP/chrony 未完全同步 | 证据同时记录 request UUID、角色和本地时间，不只靠 timestamp | 统一 chrony/NTP source 并监控 offset |
-| 单次性能不可外推 | 本次 near-40K 得到 4.893×，但未做并发、长稳、故障或统计分布 | Demo 是功能 A/B，不是生产 benchmark | 所有材料明确 workload、payload、cache hit 和限制 | 设计多 prompt/并发/容量/尾时延/命中率/故障注入的正式 benchmark |
+| 单次性能不可外推 | 历史 near-40K 曾显示 4.893×，但该 run 存在半量 KV 问题，且未做并发、长稳、故障或统计分布 | Demo 是功能验证，不是生产 benchmark；历史 timing 不作为改进后结论 | 只展示通过 64-token 完整字节 Gate 的新 run，并明确 workload、cache hit 和限制 | 设计多 prompt/并发/容量/尾时延/命中率/故障注入的正式 benchmark |
 
 规划优先级建议：
 
@@ -1225,11 +1225,11 @@ modprobe -r nvidia_peermem
 | NVCR 恢复下载 | [image-download-recovery.md](pd-disaggregation/evidence/image-download-recovery.md) |
 | Phase 2 RAM 容量依据 | [ram-storage-sizing.md](pd-disaggregation/phase2/evidence/ram-storage-sizing.md) |
 | Phase 2 28 项最终验收 | [phase2-final-validation.md](pd-disaggregation/phase2/evidence/phase2-final-validation.md) |
-| 最终 post-persistence A/B | [comparison.md](pd-disaggregation/phase2/evidence/runs/20260725-135015/near40-ab-post-persistence/comparison.md) |
-| 最终 KVBM/GDS counter delta | [counter-deltas.md](pd-disaggregation/phase2/evidence/runs/20260725-135015/near40-ab-post-persistence/counter-deltas.md) |
+| 最终 near-40K Cold/Warm 性能与完整性 | [comparison.md](pd-disaggregation/phase2/evidence/runs/20260728-final-nfsd64-samples3/comparison.md) |
+| 最终 raw request/metrics/RDMA/NIXL evidence | [20260728-final-nfsd64-samples3](pd-disaggregation/phase2/evidence/runs/20260728-final-nfsd64-samples3/) |
 | NVML maintenance recovery | [nvml-daemon-reload-recovery.txt](pd-disaggregation/phase2/evidence/runs/20260725-135015/nvml-daemon-reload-recovery.txt) |
 | Phase 2 rollback dry-run | [rollback-dry-run.txt](pd-disaggregation/phase2/evidence/runs/20260725-135015/rollback-dry-run.txt) |
 
-最终 post-persistence run ID 为 `0725173741-6d792a`，payload SHA-256 为 `a4e86577fe41acc9f421ff312cb945aa1753090a78c767edc830659f5ba68904`。该标识用于关联归档证据，不含访问凭据。
+最终 run ID 为 `0728195704-a1eaf9`，payload SHA-256 为 `8f5e1c08f44df7c5bf8dfcb3ca155153867a30b5a82eac0db1007abe2493206f`。该标识用于关联归档证据，不含访问凭据。
 
 [返回目录](#toc)

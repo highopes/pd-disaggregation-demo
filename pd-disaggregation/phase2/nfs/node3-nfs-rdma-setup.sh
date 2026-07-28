@@ -6,6 +6,8 @@ CLIENT_IP="${CLIENT_IP:-172.31.230.111}"
 SERVER_IP="${SERVER_IP:-172.31.230.113}"
 RDMA_PORT="${RDMA_PORT:-20049}"
 EXPORT_FILE="${EXPORT_FILE:-/etc/exports.d/dynamo-phase2.exports}"
+NFS_CONFIG_FILE="${NFS_CONFIG_FILE:-/etc/nfs.conf.d/dynamo-phase2.conf}"
+NFSD_THREADS="${NFSD_THREADS:-64}"
 STATE_FILE="${STATE_FILE:-/var/lib/dynamo-phase2/nfs.env}"
 INSTALL_PACKAGE="${INSTALL_PACKAGE:-0}"
 
@@ -16,6 +18,8 @@ die() {
 
 [[ "$EXPORT_PATH" == "/srv/dynamo-g4" ]] || die "refusing unexpected export path"
 [[ "$EXPORT_FILE" == "/etc/exports.d/dynamo-phase2.exports" ]] || die "refusing unexpected export file"
+[[ "$NFS_CONFIG_FILE" == "/etc/nfs.conf.d/dynamo-phase2.conf" ]] || die "refusing unexpected NFS config file"
+[[ "$NFSD_THREADS" == "64" ]] || die "refusing unvalidated nfsd thread count"
 [[ "$CLIENT_IP" == "172.31.230.111" ]] || die "refusing unexpected client address"
 [[ "$SERVER_IP" == "172.31.230.113" ]] || die "refusing unexpected server address"
 [[ "$RDMA_PORT" == "20049" ]] || die "refusing unexpected RDMA port"
@@ -60,8 +64,18 @@ else
   printf '%s %s(rw,async,insecure,no_root_squash,no_subtree_check)\n' "$EXPORT_PATH" "$CLIENT_IP" > "$EXPORT_FILE"
 fi
 
+install -d -m 0755 /etc/nfs.conf.d
+expected_nfs_config=$(printf '[nfsd]\nthreads=%s' "$NFSD_THREADS")
+if [[ -e "$NFS_CONFIG_FILE" ]]; then
+  [[ "$(tr -d '\r' < "$NFS_CONFIG_FILE")" == "$expected_nfs_config" ]] \
+    || die "$NFS_CONFIG_FILE already exists with unexpected content"
+else
+  printf '[nfsd]\nthreads=%s\n' "$NFSD_THREADS" > "$NFS_CONFIG_FILE"
+fi
+
 modprobe rpcrdma
 systemctl start nfs-server
+rpc.nfsd "$NFSD_THREADS"
 exportfs -ra
 
 if ! grep -Eq "(^|[[:space:]])rdma[[:space:]]+$RDMA_PORT($|[[:space:]])" /proc/fs/nfsd/portlist; then

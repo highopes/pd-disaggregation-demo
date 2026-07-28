@@ -1,15 +1,20 @@
 # RAM storage sizing
 
-结论：node3 使用 8 GiB `/dev/ram0`，ext4 label `DYNAMO_G4_RAM`，挂载到 `/srv/dynamo-g4`；KVBM 配置 6 GB disk cache。该容量通过实际 39,994-token Prefix 的完整 offload/reload，而非按字符数估算。
+最终配置：node3 使用 8 GiB `/dev/ram0`、ext4 label `DYNAMO_G4_RAM`、挂载点 `/srv/dynamo-g4`；KVBM disk cache 为 7 GB，保存一份完整 near-40K BF16 KV。
 
-## 依据
+## 容量计算
 
-- node3 `MemTotal=49,331,120 kB`（约 47.0 GiB）。建立 RAM block 后的初始 `MemAvailable=28,868,960 kB`。
-- 最终 KVBM 持有 5,997,854,720 bytes 的已分配临时文件；ext4 显示 7.8 GiB usable、6.0 GiB used、1.5 GiB available。
-- 最终 node3 `MemAvailable=21,032,412 kB`（约 20.1 GiB），Kubernetes `MemoryPressure=False`。
-- vLLM 每个 worker 的 GPU KV pool 是 54,016 tokens / 4.12 GiB；应用最大上下文仍是 40,960，完整 39,994-token Prefix 可装入单个 6 GB KVBM cache。
-- 冷请求实际 offload 312 blocks、1,560 MiB Direct GDS writes；热请求实际 onboard 312 blocks、1,560 MiB Direct GDS reads。缓存容量留有文件系统和运行期开销余量。
+- 模型权重是 `Qwen/Qwen3-14B-FP8`；只有 KV cache 使用 BF16（2 bytes/element）。
+- 每个 256-token block：`40 layers × K/V × 256 × 8 KV heads × 128 head dim × 2 bytes = 40 MiB`。
+- 最终请求 input=38,874；完整可复用 prefix=`floor(38,874/256)×256=38,656 tokens`。
+- `38,656/256=151 blocks`，每份完整 KV=`151×40=6,040 MiB=6,333,399,040 bytes`。
+- KVBM 7,000,000,000-byte cache 足以保存该 KV；8 GiB ext4 实测约 7.8 GiB usable，也能容纳预分配文件和文件系统开销。
+- vLLM GPU KV pool=39,168 tokens/153 blocks/5.99 GiB；请求保留物理 block 和输出 margin，避免 exact-capacity 请求永不启动或运行时 OOM。
 
-启动脚本限制 RAM device 只能为 `/dev/ramN`、挂载点只能为 `/srv/dynamo-g4`，并要求请求容量不超过物理内存 25%、保留至少 35%/16 GiB 可用内存。回滚在卸载前验证 block device、marker、export 和 open users，避免误操作真实业务文件系统。
+## 历史证据更正
 
-原始证据：[`node3-start-ram-storage.txt`](runs/20260725-135015/node3-start-ram-storage.txt)、[`node3-kubernetes-memory.txt`](runs/20260725-135015/node3-kubernetes-memory.txt)、[`persistence-after.txt`](runs/20260725-135015/persistence-after.txt)。
+2026-07-25 的 128-token logical / 64-token FlashInfer physical 配置只实际写入/读取 1,560 MiB；这不是显示层少一半。后续 64-token/FP8 完整性配置能够传输 3,120 MiB，但 Warm 仍受 49,920 个 64 KiB 分层 I/O 限制。最终 BF16/256-token 配置把分层 I/O 降为 12,080 个 512 KiB 操作，并以 6,040 MiB 完整数据量通过 Gate。
+
+启动脚本仍限制 RAM device 为 `/dev/ramN`、挂载点为 `/srv/dynamo-g4`，并要求 8 GiB 请求不超过物理内存 25%、保留至少 35%/16 GiB 可用内存。NFS server 最终使用 64 个 nfsd threads；回滚在卸载前验证 block device、marker、export 和 open users。
+
+最终证据：[`20260728-final-nfsd64-samples3`](runs/20260728-final-nfsd64-samples3/comparison.md)。历史原始证据仍保留在 [`20260725-135015`](runs/20260725-135015/)。
