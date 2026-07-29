@@ -1,0 +1,25 @@
+{
+  "label": "warm-3",
+  "http_status": 200,
+  "endpoint": "http://127.0.0.1:8000",
+  "sent_request_id": "phase2-0729165453-d7f4b5-warm-3",
+  "response_x_request_id": "phase2-0729165453-d7f4b5-warm-3",
+  "dynamo_response_id": "chatcmpl-cd4afa4b-d5ca-49de-a12c-20c3e7fd06bc",
+  "payload_sha256": "f28fc57faa2e887025481b6b8e992a6307014b6e962834fb43a9b634f6cc95af",
+  "first_event_seconds": 6.02015411388129,
+  "ttft_seconds": 6.020191761665046,
+  "total_seconds": 7.744189489632845,
+  "answer": "ED360D|6EF941|563971",
+  "expected_answer": "ED360D|6EF941|563971",
+  "answer_correct": true,
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 38875,
+    "completion_tokens": 19,
+    "total_tokens": 38894,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 38656
+    }
+  }
+}

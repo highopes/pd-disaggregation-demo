@@ -6,8 +6,10 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 PHASE2_DIR=$(cd -- "$SCRIPT_DIR/.." && pwd)
 REPO_ROOT=$(cd -- "$PHASE2_DIR/../.." && pwd)
 COMPARE="$SCRIPT_DIR/compare-prefill-vs-gds.py"
+ROCE_TOOL="$SCRIPT_DIR/roce-throughput.py"
 NAMESPACE="${NAMESPACE:-ai-serving}"
 OUTPUT_DIR="${1:-$PHASE2_DIR/evidence/runs/$(date +%Y%m%d-%H%M%S)-ab}"
+ROCE_SAMPLE_INTERVAL_MS="${ROCE_SAMPLE_INTERVAL_MS:-50}"
 
 die() {
   echo "ERROR: $*" >&2
@@ -15,8 +17,67 @@ die() {
 }
 
 [[ -x "$COMPARE" ]] || die "comparison script is not executable: $COMPARE"
+[[ -f "$ROCE_TOOL" ]] || die "RoCE measurement tool is absent: $ROCE_TOOL"
 [[ ! -e "$OUTPUT_DIR" ]] || die "refusing non-new output directory: $OUTPUT_DIR"
 command -v jq >/dev/null 2>&1 || die "jq is required"
+
+roce_sampler_pids=()
+roce_sampler_files=()
+
+stop_roce_samplers() {
+  local pid
+  if (( ${#roce_sampler_pids[@]} == 0 )); then
+    return 0
+  fi
+  sleep 0.1
+  for pid in "${roce_sampler_pids[@]}"; do
+    kill -TERM "$pid" >/dev/null 2>&1 || true
+  done
+  for pid in "${roce_sampler_pids[@]}"; do
+    wait "$pid" >/dev/null 2>&1 || true
+  done
+  roce_sampler_pids=()
+  roce_sampler_files=()
+}
+
+start_roce_samplers() {
+  local label=$1
+  local node
+  local address
+  local output_file
+  local error_file
+  local attempt
+  local ready
+  (( ${#roce_sampler_pids[@]} == 0 )) || die "RoCE samplers are already running"
+  for node in node2 node3; do
+    case "$node" in
+      node2) address=192.168.160.112 ;;
+      node3) address=192.168.160.113 ;;
+    esac
+    output_file="$OUTPUT_DIR/roce-${label}-${node}.csv"
+    error_file="$OUTPUT_DIR/roce-${label}-${node}.stderr.txt"
+    ssh -o BatchMode=yes "root@$address" \
+      python3 - sample --interval-ms "$ROCE_SAMPLE_INTERVAL_MS" \
+      < "$ROCE_TOOL" > "$output_file" 2> "$error_file" &
+    roce_sampler_pids+=("$!")
+    roce_sampler_files+=("$output_file")
+  done
+
+  for attempt in $(seq 1 100); do
+    ready=1
+    for output_file in "${roce_sampler_files[@]}"; do
+      if [[ ! -s "$output_file" ]] || (( $(wc -l < "$output_file") < 2 )); then
+        ready=0
+        break
+      fi
+    done
+    (( ready == 1 )) && return 0
+    sleep 0.05
+  done
+  die "RoCE counter samplers did not become ready"
+}
+
+trap 'stop_roce_samplers' EXIT
 
 ready_pod() {
   local app_label=$1
@@ -150,6 +211,7 @@ capture_snapshot before
 cold_offload_before=$(metric_value "$OUTPUT_DIR/metrics-before.txt" kvbm_offload_blocks_d2d)
 
 echo '=== Sending cold request and waiting for Device-to-Disk offload ==='
+start_roce_samplers cold
 set +e
 run_inpod_request cold
 cold_rc=$?
@@ -159,6 +221,7 @@ if (( cold_rc != 0 )); then
   die "cold request failed with exit code $cold_rc; partial evidence retained in $OUTPUT_DIR"
 fi
 wait_for_counter_delta kvbm_offload_blocks_d2d "$cold_offload_before" "$expected_blocks" 300
+stop_roce_samplers
 capture_snapshot after-cold
 
 warm_onboard_before=$(metric_value "$OUTPUT_DIR/metrics-after-cold.txt" kvbm_onboard_blocks_d2d)
@@ -171,6 +234,7 @@ for sample in 1 2 3; do
   if (( sample > 1 )); then
     label="warm-${sample}"
   fi
+  start_roce_samplers "$label"
   set +e
   run_inpod_request "$label"
   sample_rc=$?
@@ -181,6 +245,7 @@ for sample in 1 2 3; do
   fi
   wait_for_counter_delta kvbm_onboard_blocks_d2d "$warm_onboard_before" "$expected_blocks" 300
   wait_for_counter_delta kvbm_matched_tokens "$warm_matched_before" "$expected_cached_tokens" 300
+  stop_roce_samplers
   warm_onboard_before=$(live_metric_value kvbm_onboard_blocks_d2d)
   warm_matched_before=$(live_metric_value kvbm_matched_tokens)
 done

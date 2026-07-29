@@ -1,0 +1,6 @@
+NAME           READY   BACKEND   AGE
+qwen3-14b-pd   True    vllm      6d5h
+NAME                                     READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
+qwen3-14b-pd-0-frontend-hkz2p            1/1     Running   0          21h   10.244.2.6        csco-k8s-03   <none>           <none>
+qwen3-14b-pd-0-vllmdecodeworker-vq8d8    1/1     Running   0          21h   192.168.160.112   csco-k8s-02   <none>           <none>
+qwen3-14b-pd-0-vllmprefillworker-x85xc   1/1     Running   0          21h   192.168.160.111   csco-k8s-01   <none>           <none>

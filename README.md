@@ -11,6 +11,7 @@
 ## 目录
 
 - [目标、边界与最终结果](#scope)
+- [术语与专有名词](#terminology)
 - [整体架构](#architecture)
 - [节点与 GPU 角色](#node-roles)
 - [软硬件版本](#versions)
@@ -50,6 +51,83 @@
 - Nexus 工具只从当前 shell 读取 `NEXUS_USERNAME`、`NEXUS_PASSWORD`，不得打印、保存或写入命令行参数。
 - 不为了 GDS 重装或 reload 正在工作的 NVIDIA driver，不用 GPU Operator 覆盖既有 driver/toolkit/device-plugin 生命周期。
 - Phase 2 的 RAM disk 是易失介质，重启后由受控 systemd unit 重建；它不提供持久性、HA 或 scale-out。
+
+[返回目录](#toc)
+
+<a id="terminology"></a>
+
+## 术语与专有名词
+
+本节统一说明本文中的特殊用词。部分词汇在其他产品或文档中可能有更宽泛的含义；阅读本 Demo 时，以这里的定义为准。
+
+### 验收、度量与 KV 几何
+
+| 术语 | 本文中的含义 |
+|---|---|
+| **Gate（门禁/验收门槛）** | 一个必须满足的硬性验收条件，而不是 Kubernetes 对象或某个软件组件。只有相关观测值和证据全部符合预期，Gate 才能标记为 `PASS`；否则应停止进入下一阶段。日志中孤立的 `PASS` 字样不能代替证据。 |
+| **Capability Gate** | 对环境能力的前置验收，例如 GPU、RDMA、GDS、存储挂载、模型可用性及数据路径是否满足演示要求。 |
+| **完整性 Gate** | 验证命中的确是完整、可复用的远端 KV，而不只是发生了少量 I/O 或局部命中。本文通常同时检查 `cached_tokens`、block 数、GDS 读写量和 NIXL 描述符数量。 |
+| **Preflight（预检）** | 正式演示前执行的只读或低风险检查，用来尽早发现网卡、GPU、驱动、容器、模型、挂载点或端口配置问题。 |
+| **Evidence（证据）** | 可复核的原始输出及其汇总，例如请求结果、Pod 日志、`nvidia-smi`、RDMA/GDS 计数器和时间戳。结论必须能由这些数据重新推导。 |
+| **Counter / Delta（计数器/增量）** | Counter 是累计值；Delta 是同一计数器在操作前后的差值。Demo 使用 Delta 将本次请求产生的 GDS/RDMA 活动与历史流量区分开。 |
+| **Geometry（几何、KV 几何、块几何）** | 这里不是指图形学，而是指由模型结构、KV 数据类型和缓存块大小共同决定的容量与 I/O 数量关系。它用于从 token/block 数推导应传输多少 KV、产生多少次 layer/K/V I/O，并据此判断数据是否完整。 |
+| **TTFT（Time To First Token）** | 从客户端发出请求到收到第一个输出 token 的端到端时间。Warm TTFT 不等于单纯的 3.1/6.0 GiB 网络传输时间，它还可能包含查找、onboard、残余 prefill、调度、P→D 传输和首个 decode。 |
+| **Cold / Warm** | Cold 请求没有可复用的远端 KV，需要执行完整 prefill；Warm 请求使用相同前缀并从远端命中、恢复 KV。本文的 Warm 验收还要求能证明 KV 来自远端 reload，而不是仍驻留在 GPU 中。 |
+| **P50 / Median / P90** | 延迟分位数。P50 与 Median 均表示中位数；P90 表示 90% 的样本不超过该值。样本很少时，分位数只用于演示对比，不代表生产流量统计。 |
+
+当前 Demo 的 KV 几何可以这样读取：
+
+```text
+单个完整 block 的 KV 大小
+= 40 layers × 2 (K/V) × 256 tokens × 8 KV heads × 128 head_dim × 2 bytes (BF16)
+= 40 MiB
+
+38,874 个输入 token
+= 151 个完整 block + 218 个 token 的尾部非完整 block
+
+可复用的完整 KV
+= 151 blocks × 40 MiB
+= 6,040 MiB
+
+完整 block 的 GDS layer/K/V I/O 数
+= 151 blocks × 40 layers × 2 (K/V)
+= 12,080 次
+```
+
+因此，`6,040 MiB` 和 `12,080` 次 I/O 是完整远端 KV 的预期量。P→D 阶段可能还携带尾部非完整 block，所以会看到 `152 × 40 × 2 = 12,160` 个 NIXL descriptors；这与 GDS 的 `12,080` 次完整块 I/O 并不矛盾。
+
+### 模型与 KV Cache
+
+| 术语 | 本文中的含义 |
+|---|---|
+| **Token / Context（词元/上下文）** | Token 是模型处理文本的基本单位；Context 是一次请求中模型可见的 token 序列。`near-40K` 表示接近 40K token，并非恰好 40,000。 |
+| **Prefill** | 对输入上下文进行前向计算并生成各层 KV Cache 的阶段。长上下文 Cold TTFT 的主要计算成本通常发生在这里。 |
+| **Decode** | 利用已有 KV Cache 逐 token 生成输出的阶段。 |
+| **KV Cache** | Transformer attention 为历史 token 保存的 Key/Value 张量。复用 KV 可以跳过相同前缀的大部分 prefill 计算。 |
+| **Block / Page（块/页）** | KV Cache 的固定粒度管理单位。本文配置为每个 block 256 token；只有完整且满足复用条件的块才计入完整远端 KV。 |
+| **Logical / Physical block（逻辑块/物理块）** | 逻辑块描述请求前缀中的 KV 位置；物理块是 GPU、CPU 或存储后端实际保存数据的空间。两者数量可能因分配、尾块或回收策略不同而不完全相等。 |
+| **Reusable prefix / `cached_tokens`（可复用前缀）** | Warm 请求真正跳过 prefill 的连续前缀长度。它通常按完整 block 对齐，因此可能小于输入 token 总数；尾部非完整 block 仍需计算或传输。 |
+| **Cache hit / miss（命中/未命中）** | Hit 表示找到了可复用 KV；Miss 表示必须重新计算。只看到“hit”不足以证明完整复用，还要核对命中 token 数和数据路径计数器。 |
+| **Offload / Onboard / Reload** | Offload：KV 从 GPU/内存写到远端存储；Onboard：从远端存储读回计算侧；Reload：对 Warm 请求恢复 KV 的整体过程。Reload 可能包含 onboard、元数据处理和后续 P→D 传输。 |
+| **完整 KV** | 指覆盖所有可复用完整 block、所有模型层及 K/V 两类张量的数据。它不包含不足一个 block 的尾部 token。 |
+| **Descriptor（描述符）** | NIXL 用来描述一次分段内存传输区域的元数据单元。Descriptor 数反映分段粒度，不能直接当作 token 数或 GDS I/O 次数。 |
+| **MB / MiB、GB / GiB** | MB/GB 是十进制单位，MiB/GiB 是二进制单位（`1 MiB = 1,048,576 bytes`）。部分组件日志虽标为 MB，内部统计可能更接近 MiB；做完整性判断时应优先使用字节数或同源计数器。 |
+
+### 组件与数据路径
+
+| 术语 | 本文中的含义 |
+|---|---|
+| **P/D（Prefill/Decode 分离）** | Prefill 与 Decode 由不同 worker 执行。P worker 计算或恢复前缀 KV，再将 Decode 所需 KV 传给 D worker。 |
+| **P→D** | KV 从 Prefill worker 到 Decode worker 的传输阶段。它与远端存储的 offload/onboard 是两段不同的数据路径。 |
+| **DGD（DynamoGraphDeployment）** | NVIDIA Dynamo 在 Kubernetes 中声明和编排推理拓扑的自定义资源。 |
+| **NIXL** | 用于抽象和执行 KV/张量数据移动的传输层；可根据环境使用 UCX、GDS 等后端。 |
+| **UCX** | 面向高性能网络和内存传输的通信框架；本 Demo 中承载部分 NIXL P→D 数据移动。 |
+| **RDMA / RoCEv2** | RDMA 允许节点绕过传统内核网络栈直接访问远端内存；RoCEv2 是在以太网上承载 RDMA 的协议。链路标称带宽不等于端到端 Warm TTFT。 |
+| **GDR（GPUDirect RDMA）** | 网络设备直接访问 GPU 显存的数据路径，减少 CPU bounce buffer 和拷贝。它解决的是网络到 GPU 的路径，不等同于 GDS。 |
+| **GDS（GPUDirect Storage）/ Direct GDS** | 存储数据直接进出 GPU 显存的数据路径。本文用 `Direct GDS` 强调真实 cuFile/GDS I/O，而不是普通 POSIX I/O 后再由 CPU 拷贝到 GPU。 |
+| **cuFile / `nvidia-fs`** | cuFile 是 GDS 的用户态接口；`nvidia-fs` 是相关内核模块。模块存在只是必要条件之一，仍需用 I/O 计数器证明请求实际走过 GDS。 |
+| **NFSoRDMA** | NFS over RDMA：NFS 客户端通过 RDMA transport 访问远端文件系统。它描述文件系统网络路径，与 P→D 的 UCX/RDMA 路径不是同一段流量。 |
+| **RAM-backed storage emulator** | 使用远端节点内存作为后端介质的存储模拟器，用于弱化磁盘本身的影响，突出网络、GDS 与 KV reuse 数据路径；它不代表生产级持久化存储。 |
 
 [返回目录](#toc)
 
@@ -768,10 +846,10 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh --run-ab "$new_run"
 2. 在 Frontend Pod 内直连 loopback 计时，避免外部 60 秒代理把 Cold TTFT 混入网关超时。
 3. 发 streaming Cold A，要求 cached tokens=0、Device→Disk offload 精确增加 151 blocks，并采集 storage RDMA RX。
 4. 连续发送三次逐字节相同的 Warm A；每次都必须命中 38,656 tokens、Disk→Device onboard 新增 151 blocks、答案正确。三次都是真实 6,040 MiB reload，不是 GPU 驻留复用。
-5. 公开三个 Warm TTFT，以中位数计算加速比、同时显示最佳值；保存每次 JSON、KVBM metrics、三角色日志和 host counters。
+5. 公开三个 Warm TTFT，以中位数计算加速比、同时显示最佳值；保存每次 JSON、KVBM metrics、三角色日志和 host counters。请求期间还以默认 50 ms 间隔旁路采样 node2/node3 RoCE 端口硬件 counter，不在 Prefill/node1 上轮询。
 6. `compare-prefill-vs-gds.py summarize` 严格核对相同 SHA-256、token 数、checkpoint、`151 × 40 MiB` 几何、三次 onboard 总计 453 blocks 和 storage RDMA bytes；生成 `comparison.json`/`.md`。
 
-`demo-phase2.sh` 随后重新跑 NFS/GDS/KVBM validators，并要求 Cold storage RX 约等于 6,040 MiB、三次 Warm storage TX 约等于 18,120 MiB；每次 P→D NIXL 都必须为 6,080 MiB / 12,160 descriptors。nvidia-fs I/O statistics 在计时期间保持关闭，避免已确认的小 I/O 统计开销。
+`demo-phase2.sh` 随后重新跑 NFS/GDS/KVBM validators，并要求 Cold storage RX 约等于 6,040 MiB、三次 Warm storage TX 约等于 18,120 MiB；每次 P→D NIXL 都必须为 6,080 MiB / 12,160 descriptors。它还输出 P→D、NFS Offload、每次 NFS Reload 的实际 RoCE bytes、耗时、MiB/s 和 Gbps，并保存 `roce-throughput.json`。P→D 使用 node2 RX 硬件 byte delta 与 NIXL 实际 xfer time；NFS 使用 node3 RX/TX 首尾活动跨度。对于随 Prefill 间歇发生的 Offload，另显示 50 ms sampled-busy 吞吐下界，避免把计算空档误称为链路传输时间。nvidia-fs I/O statistics 在计时期间保持关闭，避免已确认的小 I/O 统计开销。
 
 正式 Gate 必须满足：Cold/Warm hash 相同；三个 checkpoint 正确；Cold cache miss；每个 Warm 命中 38,656 tokens；每次完整 6,040 MiB GDS reload；四次完整 P→D NIXL；NFSoRDMA byte 数与理论数据量一致。TTFT speedup 是展示指标，不替代数据完整性 Gate。
 

@@ -1,0 +1,19 @@
+
+=== Measured RoCE throughput (NIC hardware port counters) ===
+P->D Cold              : 6,166.2 MiB / 0.960 s = 6,425.6 MiB/s (53.90 Gbps)
+P->D Warm 1            : 6,166.2 MiB / 0.970 s = 6,354.7 MiB/s (53.31 Gbps)
+P->D Warm 2            : 6,166.2 MiB / 1.177 s = 5,240.0 MiB/s (43.96 Gbps)
+P->D Warm 3            : 6,166.2 MiB / 0.916 s = 6,731.2 MiB/s (56.47 Gbps)
+NFS Offload Cold       : 6,130.6 MiB / 48.900 s = 125.4 MiB/s (1.05 Gbps)
+  sampled-busy floor   : >= 659.1 MiB/s (>= 5.53 Gbps); 9.301 s occupied sample bins
+NFS Reload Warm 1      : 6,132.1 MiB / 6.800 s = 901.8 MiB/s (7.56 Gbps)
+  sampled-busy floor   : >= 901.8 MiB/s (>= 7.56 Gbps); 6.800 s occupied sample bins
+NFS Reload Warm 2      : 6,132.1 MiB / 5.900 s = 1,039.3 MiB/s (8.72 Gbps)
+  sampled-busy floor   : >= 1,057.3 MiB/s (>= 8.87 Gbps); 5.800 s occupied sample bins
+NFS Reload Warm 3      : 6,132.1 MiB / 4.300 s = 1,426.1 MiB/s (11.96 Gbps)
+  sampled-busy floor   : >= 1,426.1 MiB/s (>= 11.96 Gbps); 4.300 s occupied sample bins
+P->D Warm median       : 6,354.7 MiB/s (53.31 Gbps)
+NFS Reload Warm median : 1,039.3 MiB/s (8.72 Gbps)
+Measurement scope      : NIC RoCE bytes; P->D uses NIXL xfer time, NFS uses first-to-last NIC activity
+NFS sampling resolution : 50.0 ms; busy rate is a conservative lower bound
+RoCE evidence JSON     : /root/ns_ai-serving/pd-disaggregation/phase2/evidence/runs/20260729-172642-full-kv/roce-throughput.json

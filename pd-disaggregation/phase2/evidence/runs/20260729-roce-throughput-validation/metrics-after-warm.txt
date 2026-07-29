@@ -1,0 +1,39 @@
+# HELP kvbm_disk_cache_hit_rate Disk cache hit rate (0.0-1.0) from the sliding window
+# TYPE kvbm_disk_cache_hit_rate gauge
+kvbm_disk_cache_hit_rate 0.7878788113594055
+# HELP kvbm_host_cache_hit_rate Host cache hit rate (0.0-1.0) from the sliding window
+# TYPE kvbm_host_cache_hit_rate gauge
+kvbm_host_cache_hit_rate 0
+# HELP kvbm_matched_tokens The number of matched tokens
+# TYPE kvbm_matched_tokens counter
+kvbm_matched_tokens 2010112
+# HELP kvbm_object_cache_hit_rate Object storage cache hit rate (0.0-1.0) from the sliding window
+# TYPE kvbm_object_cache_hit_rate gauge
+kvbm_object_cache_hit_rate 0
+# HELP kvbm_object_read_failures The number of failed object storage read operations (blocks)
+# TYPE kvbm_object_read_failures counter
+kvbm_object_read_failures 0
+# HELP kvbm_object_write_failures The number of failed object storage write operations (blocks)
+# TYPE kvbm_object_write_failures counter
+kvbm_object_write_failures 0
+# HELP kvbm_offload_blocks_d2d The number of offload blocks from device to disk (bypassing host memory)
+# TYPE kvbm_offload_blocks_d2d counter
+kvbm_offload_blocks_d2d 1057
+# HELP kvbm_offload_blocks_d2h The number of offload blocks from device to host
+# TYPE kvbm_offload_blocks_d2h counter
+kvbm_offload_blocks_d2h 0
+# HELP kvbm_offload_blocks_d2o The number of offload blocks from device to object storage
+# TYPE kvbm_offload_blocks_d2o counter
+kvbm_offload_blocks_d2o 0
+# HELP kvbm_offload_blocks_h2d The number of offload blocks from host to disk
+# TYPE kvbm_offload_blocks_h2d counter
+kvbm_offload_blocks_h2d 0
+# HELP kvbm_onboard_blocks_d2d The number of onboard blocks from disk to device
+# TYPE kvbm_onboard_blocks_d2d counter
+kvbm_onboard_blocks_d2d 3926
+# HELP kvbm_onboard_blocks_h2d The number of onboard blocks from host to device
+# TYPE kvbm_onboard_blocks_h2d counter
+kvbm_onboard_blocks_h2d 0
+# HELP kvbm_onboard_blocks_o2d The number of onboard blocks from object storage to device
+# TYPE kvbm_onboard_blocks_o2d counter
+kvbm_onboard_blocks_o2d 0

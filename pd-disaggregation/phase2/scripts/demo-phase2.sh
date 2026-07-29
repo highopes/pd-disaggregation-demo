@@ -42,6 +42,20 @@ fi
 
 comparison="$RUN_DIR/comparison.json"
 [[ -f "$comparison" ]] || { echo "FAIL: comparison absent: $comparison" >&2; exit 1; }
+
+if compgen -G "$RUN_DIR/roce-*-node2.csv" >/dev/null && \
+   compgen -G "$RUN_DIR/roce-*-node3.csv" >/dev/null; then
+  if ! python3 "$SCRIPT_DIR/roce-throughput.py" summarize --run-dir "$RUN_DIR" \
+    > "$RUN_DIR/roce-throughput.console.txt"; then
+    echo "WARNING: RoCE throughput calculation failed; strict KV reuse gates continue unchanged" >&2
+    cat "$RUN_DIR/roce-throughput.console.txt" >&2 || true
+  else
+    cat "$RUN_DIR/roce-throughput.console.txt"
+  fi
+else
+  echo "RoCE throughput        : unavailable in legacy evidence; run a new --run-ab test to sample it"
+fi
+
 python3 - "$comparison" <<'PY'
 import json
 import re
@@ -131,11 +145,11 @@ nixl = []
 for line in decode_log.splitlines():
     if "KV Transfer metrics:" not in line:
         continue
-    mb = re.search(r"Avg MB per transfer=([0-9.]+)", line)
+    mib = re.search(r"Avg MB per transfer=([0-9.]+)", line)
     descriptors = re.search(r"Avg number of descriptors=([0-9.]+)", line)
-    if not mb or not descriptors:
+    if not mib or not descriptors:
         continue
-    nixl.append((line, float(mb.group(1)), float(descriptors.group(1))))
+    nixl.append((line, float(mib.group(1)), float(descriptors.group(1))))
 expectations = [
     ("Cold", expected_pd_mib, expected_pd_descriptors),
 ]
@@ -171,6 +185,8 @@ for (label, wanted_mib, wanted_desc), (line, observed_mib, observed_desc) in zip
             f"expected {wanted_mib} MiB/{wanted_desc} descriptors"
         )
     detail = line.split("KV Transfer metrics:", 1)[-1].strip()
+    detail = detail.replace("Avg MB per transfer=", "Avg MiB per transfer=")
+    detail = detail.replace("Throughput (MB/s)=", "Throughput (MiB/s)=")
     print(f"P->D NIXL {label:<11}: {detail}")
 print(f"Evidence directory     : {run_dir}")
 print("\nPHASE 2 PASS – COMPLETE NEAR-40K KV DIRECT GDS REUSE")
