@@ -939,15 +939,15 @@ pd-disaggregation/phase2/scripts/validate-kvbm.sh \
 
 ### 6. 演示 cold offload 与 warm reload
 
-安全现场 Demo 默认实时检查当前链路并运行一次新的 Cold A → 三次完整 Warm A 验收；不安装 package、不改 Nexus、不重建 RAM disk、不删除 Pod：
+安全现场 Demo 默认实时检查当前链路并运行一次新的 Cold A → 三次完整 Warm A 验收；不会对当前部署和配置发生改动：
 
 ```bash
 pd-disaggregation/phase2/scripts/demo-phase2.sh
 ```
 
-不带参数会自动创建新的 `*-full-kv` evidence 目录并发送一个 Cold 和三个 Warm near-40K 请求。若只需复核归档结果，显式使用 `--evidence RUN_DIR`；推荐使用 2026-07-28 的最终目录。
+不带参数会自动创建新的带有当前日期时间的 `*-full-kv` evidence 目录并发送一个 Cold 和三个 Warm near-40K 请求。若只需复核归档结果，显式使用 `--evidence RUN_DIR`；推荐使用 2026-07-28 的最终目录。
 
-若需要新的正式 A/B，显式指定一个不存在的目录, 比如：
+也可以自定义一个新目录来发起新测试, 这样所有记录会归档到你指定的目录, 比如：
 
 ```bash
 new_run="pd-disaggregation/phase2/evidence/runs/$(date +%Y%m%d-%H%M%S)-ab"
@@ -955,8 +955,6 @@ pd-disaggregation/phase2/scripts/demo-phase2.sh --run-ab "$new_run"
 ```
 
 工程师必须检查 Cold/Warm SHA-256 相同、三个 checkpoint 答案、38,656 cached tokens、Cold 151-block offload、每个 Warm 151-block onboard、每次 6,040 MiB GDS、每次约 6,080 MiB P→D NIXL，以及三端 counter。脚本只有在这些条件全部满足后才显示 `PHASE 2 PASS – COMPLETE NEAR-40K KV DIRECT GDS REUSE`。
-
-注意, 测试结果中的kvbm_disk_cache_hit_rate是计算了最近1000次的所有请求的命中率, 包括了冷和热两类, 0.5说明热请求的实际命中率接近100%.
 
 ### 7. API 安全与企业可观测性回归
 
